@@ -202,7 +202,11 @@ class UniformAffineQuantizer(nn.Module):
         )
 
     def _dequantize(self, input: Tensor) -> Tensor:
-        return (input - self._zero_point) * self._scaler
+        if torch.all(input == input.floor()).item():
+            return (input - self._zero_point) * self._scaler
+        else:
+            """ verifing the quantization """
+            raise ValueError("The input tensor is not quantized.")
 
     def forward(self, x: Tensor) -> Tensor:
         return self._dequantize(self._quantize(x))
@@ -622,41 +626,6 @@ def create_AdaRound_Quantizer(scheme, org_weight, args):
     return AdaRoundQuantizer(org_weight, args)
 
 
-# Origin Bn fonlding function (2)
-def _fold_bn(conv_module, bn_module):
-    w = conv_module.weight.data
-    y_mean = bn_module.running_mean
-    y_var = bn_module.running_var
-    safe_std = torch.sqrt(y_var + bn_module.eps)
-    w_view = (conv_module.out_channels, 1, 1, 1)
-    if bn_module.affine:
-        weight = w * (bn_module.weight / safe_std).view(w_view)
-        beta = bn_module.bias - bn_module.weight * y_mean / safe_std
-        if conv_module.bias is not None:
-            bias = bn_module.weight * conv_module.bias / safe_std + beta
-        else:
-            bias = beta
-    else:
-        weight = w / safe_std.view(w_view)
-        beta = -y_mean / safe_std
-        if conv_module.bias is not None:
-            bias = conv_module.bias / safe_std + beta
-        else:
-            bias = beta
-    return weight, bias
-
-
-# Origin Bn fonlding function (1)
-def fold_bn_into_conv(conv_module, bn_module):
-    w, b = _fold_bn(conv_module, bn_module)
-    if conv_module.bias is None:
-        conv_module.bias = nn.Parameter(b)
-    else:
-        conv_module.bias.data = b
-    conv_module.weight.data = w
-    # set bn running stats
-    bn_module.running_mean = bn_module.bias.data
-    bn_module.running_var = bn_module.weight.data**2
 
 
 quantizerDict = {

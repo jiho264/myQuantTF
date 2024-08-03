@@ -1,7 +1,7 @@
 import torch, time, argparse
 import torch.nn as nn
 
-from utils.utils import (
+from utils.quantizer import (
     seed_all,
     GetDataset,
     evaluate,
@@ -9,7 +9,7 @@ from utils.utils import (
     StraightThrough,
 )
 from utils.data_utils import save_inp_oup_data, _get_train_samples
-from utils.quant_encoderblock import QuantEncoder
+from utils.quant_ViT import QuantViT
 import torchvision.models.vision_transformer as vision_transformer
 from torchvision.models.vision_transformer import Encoder, EncoderBlock, MLPBlock
 
@@ -50,45 +50,8 @@ def main(weight_quant_params={}, act_quant_params={}, args={}):
         **kwargs,
     )   
     """
-    _model_dict = dict(
-        patch_size=16,
-        num_layers=12,
-        num_heads=12,
-        hidden_dim=768,
-        mlp_dim=3072,
-        weights=vision_transformer.ViT_B_16_Weights.IMAGENET1K_V1,
-        progress=True,
-    )
-    for name0, module0 in model.named_children():
-        # for name0, module0 in model.named_modules():
-        _encoderBlockDict = None
-        if isinstance(module0, nn.Conv2d):
-            # name0 == conv_proj
-            print("conv_proj", name0)
-        elif isinstance(module0, Encoder):
-            # dropout -> {0~11} -> LN
-            setattr(model, name0, QuantEncoder(orgEncoder=module0))
+    model = QuantViT(model)
 
-            # for name1, module1 in module0.named_children():
-            #     if isinstance(module1, nn.Dropout):
-            #         print("encoder.dropout", name1)
-            #     elif isinstance(module1, nn.Sequential):
-            #         for encodername, encodermodule in module1.named_children():
-            #             ## each EncoderBlocks
-
-            #             if isinstance(encodermodule, EncoderBlock):
-            #                 # print("encoder.block", encodername)
-            #                 setattr(
-            #                     module1,
-            #                     encodername,
-            #                     QuantEncoderBlock(orgEncoderBlock=encodermodule),
-            #                 )
-
-            #     elif isinstance(module1, nn.LayerNorm):
-            #         print("encoder.LN", name1)
-
-    # dd = model(torch.randn(4, 3, 224, 224).to("cuda"))
-    # exit()
     _len_eval_batches = len(test_loader)
 
     _top1, _ = evaluate(
