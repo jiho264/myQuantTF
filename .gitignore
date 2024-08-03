@@ -1,0 +1,12 @@
+data/
+/resnet18_cifar10/
+**/**.pth
+**.tar
+**.tar.gz
+**/__pycache__/
+**.**.pt
+tempCodeRunnerFile.py
+tempCodeRunnerFile.sh
+tempCodeRunnerFile.python
+**.pt
+**.pth
