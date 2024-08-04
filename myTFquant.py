@@ -27,6 +27,7 @@ def main(weight_quant_params={}, act_quant_params={}, args={}):
         "num_samples": 1024,
     }
     print(args)
+
     if args["arch"] == "ViT_B_16":
         model = vision_transformer.vit_b_16(
             weights=vision_transformer.ViT_B_16_Weights.IMAGENET1K_V1
@@ -38,35 +39,19 @@ def main(weight_quant_params={}, act_quant_params={}, args={}):
     _batch_size = args["batch_size"]
 
     train_loader, test_loader = GetDataset(batch_size=_batch_size)
-    """
-    return _vision_transformer(
-        patch_size=16,
-        num_layers=12,
-        num_heads=12,
-        hidden_dim=768,
-        mlp_dim=3072,
-        weights=weights,
-        progress=progress,
-        **kwargs,
-    )   
-    """
-    model = QuantViT(model)
 
-    _len_eval_batches = len(test_loader)
+    weight_quant_params = {"scheme": "MinMaxQuantizer", "dstDtype": "INT8"}
+    act_quant_params = {}
+    model = QuantViT(model, weight_quant_params, act_quant_params)
+    model.w_quant_switch_order = True
+    model.eval().to("cuda")
 
-    _top1, _ = evaluate(
-        model, test_loader, neval_batches=_len_eval_batches, device="cuda"
+    # model.w_quant_switch = True
+
+    _top1, _ = evaluate(model, test_loader, len(test_loader), "cuda")
+    print(
+        f"\n    Quantized model Evaluation accuracy on 50000 images, {_top1.avg:2.3f}%"
     )
-    # for benchmarking
-    if _len_eval_batches == len(test_loader):
-        print(
-            f"\n    Quantized model Evaluation accuracy on 50000 images, {_top1.avg:2.3f}%"
-        )
-    # for debugging
-    else:
-        print(
-            f"\n    Quantized model Evaluation accuracy on {_len_eval_batches * _batch_size} images, {_top1.avg:2.3f}%"
-        )
 
     #     ...
     # elif isinstance(module0, nn.MultiheadAttention):

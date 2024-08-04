@@ -5,9 +5,11 @@ from torchvision.models.vision_transformer import Encoder, EncoderBlock, MLPBloc
 
 from collections import OrderedDict
 
-from .quantizer import MinMaxQuantizer
+
+from .quantizer import quantizerDict
 
 
+# class QuantMLPBlock(QuantBaseModule):
 class QuantMLPBlock(nn.Module):
     def __init__(
         self,
@@ -23,17 +25,17 @@ class QuantMLPBlock(nn.Module):
             (4): Dropout(p=0.0, inplace=False)
             )
         """
-        self.linear_1 = orgMLPBlock.get_submodule("0")
+        self.linear_1 = QuantLayer(orgMLPBlock.get_submodule("0"))
         # print(self.linear_1.weight.shape)  # torch.Size([3072, 768])
         self.gelu = orgMLPBlock.get_submodule("1")
         self.dropout_1 = orgMLPBlock.get_submodule("2")
-        self.linear_2 = orgMLPBlock.get_submodule("3")
+        self.linear_2 = QuantLayer(orgMLPBlock.get_submodule("3"))
         # print(self.linear_2.weight.shape)  # torch.Size([768, 3072])
         self.dropout_2 = orgMLPBlock.get_submodule("4")
         print("    - QuantMLPBlock is created")
 
     def forward(self, input: torch.Tensor):
-        # print("P", end="")
+
         x = self.linear_1(input)
         x = self.gelu(x)
         x = self.dropout_1(x)
@@ -42,6 +44,7 @@ class QuantMLPBlock(nn.Module):
         return x
 
 
+# class QuantEncoderBlock(QuantBaseModule):
 class QuantEncoderBlock(nn.Module):
     """Transformer encoder block."""
 
@@ -85,6 +88,7 @@ class QuantEncoderBlock(nn.Module):
         return x + y
 
 
+# class QuantEncoder(QuantBaseModule):
 class QuantEncoder(nn.Module):
     def __init__(self, orgEncoder: Encoder):
         super().__init__()
@@ -110,7 +114,46 @@ class QuantEncoder(nn.Module):
         return self.ln(self.layers(self.dropout(input)))
 
 
-class QuantLayer(nn.Module):
+class QuantBaseModule(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.w_quant_switch = False
+        self.a_quant_switch = False
+        self.w_inited = False
+        self.a_inited = False
+        self.weight_quantizer = None
+        self.activation_quantizer = None
+
+    def init_weight_quantizer(self, org_tensor, args):
+        if self.w_inited == True:
+            raise Exception("Weight quantizer is already inited.")
+        self.weight_quantizer = quantizerDict[args.get("scheme")](
+            org_tensor=org_tensor, args=args
+        )
+        self.w_inited = True
+
+    def init_activation_quantizer(self, org_tensor, args):
+        if self.a_inited == True:
+            raise Exception("Activation quantizer is already inited.")
+        self.activation_quantizer = quantizerDict[args.get("scheme")](
+            org_tensor=org_tensor, args=args
+        )
+        self.a_inited = True
+
+    def forward_w(self, input):
+        if self.w_quant_switch == True:
+            return self.weight_quantizer(input)
+        else:
+            return input
+
+    def forward_a(self, input):
+        if self.a_quant_switch == True:
+            return self.activation_quantizer(input)
+        else:
+            return input
+
+
+class QuantLayer(QuantBaseModule):
     def __init__(self, orgModule):
         super().__init__()
         """forward function setting"""
@@ -126,30 +169,23 @@ class QuantLayer(nn.Module):
             self.fwd_kwargs = dict()
             self.fwd_func = F.linear
 
-        self.w_quant_switch = False
         self.weight = orgModule.weight.clone().detach()
         self.bias = (
             orgModule.bias.clone().detach() if orgModule.bias is not None else None
         )
-        print(self.weight.shape, self.bias.shape)
-        # print(self.conv.weight.shape) # torch.Size([768, 3, 16, 16])
-        # print(self.linear.weight.shape)  # torch.Size([1000, 768])
         print("  QuantLayer is created")
 
     def forward(self, input: torch.Tensor):
-        """convolution"""
-        if self.w_quant_switch == True:
-            # print("q", end="")
-            weight = self.weight_quantizer(self.weight)
-        else:
-            # print(".", end="")
-            weight = self.weight
-        # return self.fwd_func(input, weight, **self.fwd_kwargs)
-        return self.fwd_func(input, weight, self.bias, **self.fwd_kwargs)
+        _weight = self.forward_w(self.weight)
+
+        x = self.fwd_func(input, _weight, self.bias, **self.fwd_kwargs)
+
+        return self.forward_a(x)
 
 
+# class QuantViT(QuantBaseModule):
 class QuantViT(nn.Module):
-    def __init__(self, orgViT):
+    def __init__(self, orgViT, argsW: dict = {}, argsA: dict = {}):
         super().__init__()
         self.image_size = orgViT.image_size
         self.patch_size = orgViT.patch_size
@@ -176,6 +212,10 @@ class QuantViT(nn.Module):
             # heads_layers["head"] = nn.Linear(representation_size, num_classes)
 
         self.heads = nn.Sequential(heads_layers)
+
+        self.w_quant_switch_order, self.a_quant_switch_order = False, False
+        self.argsW = argsW
+        self.argsA = argsA
 
         print("QuantViT is created")
 
@@ -206,7 +246,25 @@ class QuantViT(nn.Module):
 
         return x
 
+    def _quant_switch(self):
+        for name, module in self.named_modules():
+            if hasattr(module, "w_quant_switch"):
+                module.w_quant_switch = self.w_quant_switch_order
+                if module.w_inited == False:
+                    print(name, end="")
+                    module.init_weight_quantizer(module.weight, self.argsW)
+            if hasattr(module, "a_quant_switch"):
+                module.a_quant_switch = self.a_quant_switch_order
+                if module.a_inited == False:
+                    pass
+
+                    # [ ] implement activation quantizer
+                    # You have to prepare the activation values before quantization
+                    # raise Exception("Activation quantizer is not implemented yet.")
+
     def forward(self, x: torch.Tensor):
+        self._quant_switch()
+
         # Reshape and permute the input tensor
         x = self._process_input(x)
         n = x.shape[0]
