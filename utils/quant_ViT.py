@@ -46,7 +46,6 @@ class QuantBaseModule(nn.Module):
             return input
 
 
-# class QuantMLPBlock(QuantBaseModule):
 class QuantMLPBlock(nn.Module):
     def __init__(
         self,
@@ -176,7 +175,6 @@ class QuantMultiheadAttention(nn.MultiheadAttention):
         return out
 
 
-# class QuantEncoderBlock(QuantBaseModule):
 class QuantEncoderBlock(nn.Module):
     """Transformer encoder block."""
 
@@ -223,7 +221,6 @@ class QuantEncoderBlock(nn.Module):
         return x + y
 
 
-# class QuantEncoder(QuantBaseModule):
 class QuantEncoder(nn.Module):
     def __init__(self, orgEncoder: Encoder):
         super().__init__()
@@ -279,7 +276,6 @@ class QuantLayer(QuantBaseModule):
         return self.forward_activation_quantizer(x)
 
 
-# class QuantViT(QuantBaseModule):
 class QuantViT(nn.Module):
     def __init__(self, orgViT, argsW: dict = {}, argsA: dict = {}):
         super().__init__()
@@ -346,14 +342,15 @@ class QuantViT(nn.Module):
         for name, module in self.named_modules():
             if hasattr(module, "w_quant_switch"):
                 module.w_quant_switch = self.w_quant_switch_order
-                if module.w_inited == False and hasattr(module, "weight"):
-                    print(name, end="")
-                    module.init_weight_quantizer(module.weight, self.argsW)
+                if self.w_quant_switch_order:
+                    if module.w_inited == False and hasattr(module, "weight"):
+                        print(name, end="")
+                        module.init_weight_quantizer(module.weight, self.argsW)
             if hasattr(module, "a_quant_switch"):
                 module.a_quant_switch = self.a_quant_switch_order
-                if module.a_inited == False:
-                    pass
-
+                if self.a_quant_switch_order:
+                    if module.a_inited == False:
+                        pass
                     # [ ] implement activation quantizer
                     # You have to prepare the activation values before quantization
                     # raise Exception("Activation quantizer is not implemented yet.")

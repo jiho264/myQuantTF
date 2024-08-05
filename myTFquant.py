@@ -1,17 +1,9 @@
 import torch, time, argparse
 import torch.nn as nn
 
-from utils.quantizer import (
-    seed_all,
-    GetDataset,
-    evaluate,
-    quantizerDict,
-    StraightThrough,
-)
-from utils.data_utils import save_inp_oup_data, _get_train_samples
+from utils.data_utils import save_inp_oup_data, _get_train_samples, GetDataset, evaluate
 from utils.quant_ViT import QuantViT
 import torchvision.models.vision_transformer as vision_transformer
-from torchvision.models.vision_transformer import Encoder, EncoderBlock, MLPBlock
 
 
 #################################################################################################
