@@ -1,12 +1,55 @@
-import torch
+import torch, math
 import torch.nn as nn
 import torch.nn.functional as F
 from torchvision.models.vision_transformer import Encoder, EncoderBlock, MLPBlock
 
 from collections import OrderedDict
+from typing import Optional, Tuple
+
+import torch
+from torch import Tensor
 
 
 from .quantizer import quantizerDict
+
+
+class QuantBaseModule(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.w_quant_switch = False
+        self.a_quant_switch = False
+        self.w_inited = False
+        self.a_inited = False
+        self.weight_quantizer = None
+        self.activation_quantizer = None
+
+    def init_weight_quantizer(self, org_tensor, args):
+        if self.w_inited == True:
+            raise Exception("Weight quantizer is already inited.")
+        self.weight_quantizer = quantizerDict[args.get("scheme")](
+            org_tensor=org_tensor, args=args
+        )
+        self.w_inited = True
+
+    def init_activation_quantizer(self, org_tensor, args):
+        if self.a_inited == True:
+            raise Exception("Activation quantizer is already inited.")
+        self.activation_quantizer = quantizerDict[args.get("scheme")](
+            org_tensor=org_tensor, args=args
+        )
+        self.a_inited = True
+
+    def forward_weight_quantizer(self, input):
+        if self.w_quant_switch == True:
+            return self.weight_quantizer(input)
+        else:
+            return input
+
+    def forward_activation_quantizer(self, input):
+        if self.a_quant_switch == True:
+            return self.activation_quantizer(input)
+        else:
+            return input
 
 
 # class QuantMLPBlock(QuantBaseModule):
@@ -44,6 +87,85 @@ class QuantMLPBlock(nn.Module):
         return x
 
 
+class QuantMultiheadAttention(nn.MultiheadAttention, QuantBaseModule):
+    def __init__(self, orgMultiheadAttention):
+        super().__init__(
+            orgMultiheadAttention.embed_dim,
+            orgMultiheadAttention.num_heads,
+            dropout=orgMultiheadAttention.dropout,
+            batch_first=orgMultiheadAttention.batch_first,
+        )
+        self.__dict__.update(orgMultiheadAttention.__dict__)
+
+        print("    - QuantMultiheadAttention is created")
+
+        self.ORG_MSA_FORWARD_FUNC = torch._native_multi_head_attention
+
+    def QuantMSA(self, *args, **kwargs):
+        """
+        return torch._native_multi_head_attention(
+            [0] query, >> shape : torch.Size([batch, 197, 768])
+            [1] key,   >> shape : torch.Size([batch, 197, 768])
+            [2] value, >> shape : torch.Size([batch, 197, 768])
+            [3] self.embed_dim, >> 768
+            [4] self.num_heads, >> 12
+            [5] self.in_proj_weight, >> shape : torch.Size([2304, 768])
+            [6] self.in_proj_bias,   >> shape : torch.Size([2304])
+            [7] self.out_proj.weight, >> shape : torch.Size([768, 768])
+            [8] self.out_proj.bias,   >> shape : torch.Size([768])
+            [9] merged_mask, >> None
+            [10] need_weights, >> False
+            [11] average_attn_weights, >> True
+            [12] mask_type) >> None
+        """
+        query, key, value = args[0], args[1], args[2]
+
+        bsz, tgt_len, embed_dim = query.shape
+        _, src_len, _ = key.shape
+
+        q, k, v = F._in_projection_packed(
+            query, key, value, self.in_proj_weight, self.in_proj_bias
+        )
+        q = q.view(bsz, tgt_len, self.num_heads, self.head_dim).transpose(1, 2)
+        k = k.view(bsz, src_len, self.num_heads, self.head_dim).transpose(1, 2)
+        v = v.view(bsz, src_len, self.num_heads, self.head_dim).transpose(1, 2)
+
+        # Efficient implementation equivalent to the following:
+        attn_weight = q @ k.transpose(-2, -1) / math.sqrt(q.size(-1))
+        attn_weight = torch.softmax(attn_weight, dim=-1)
+
+        attn_output = attn_weight @ v
+        attn_output = (
+            attn_output.permute(0, 2, 1, 3).contiguous().view(bsz, tgt_len, embed_dim)
+        )
+        attn_output = F.linear(attn_output, self.out_proj.weight, self.out_proj.bias)
+
+        return attn_output, attn_weight
+        """torch.Size([128, 197, 768]) torch.Size([128, 12, 197, 197])"""
+
+    def forward(self, *args, **kwargs):
+        """
+        class MultiheadAttention.forward(
+        self,
+        [0] query: Tensor,
+        [1] key: Tensor,
+        [2] value: Tensor,
+        [3] key_padding_mask: Optional[Tensor] = None,
+        [4] need_weights: bool = True,
+        [5] attn_mask: Optional[Tensor] = None,
+        [6] average_attn_weights: bool = True,
+        [7] is_causal : bool = False) -> Tuple[Tensor, Optional[Tensor]]:
+        """
+
+        torch._native_multi_head_attention = self.QuantMSA
+        _result = super().forward(*args, **kwargs)
+        torch._native_multi_head_attention = self.ORG_MSA_FORWARD_FUNC
+
+        return _result
+        """torch.Size([128, 197, 768]) torch.Size([128, 197, 197])"""
+        """torch.Size([128, 197, 768]) torch.Size([128, 12, 197, 197])"""
+
+
 # class QuantEncoderBlock(QuantBaseModule):
 class QuantEncoderBlock(nn.Module):
     """Transformer encoder block."""
@@ -59,7 +181,8 @@ class QuantEncoderBlock(nn.Module):
         ## nn.LayerNorm : LayerNorm((768,), eps=1e-06, elementwise_affine=True)
         self.ln_1 = orgEncoderBlock.ln_1
         ## nn.MultiheadAttention
-        self.self_attention = orgEncoderBlock.self_attention
+        self.self_attention = QuantMultiheadAttention(orgEncoderBlock.self_attention)
+        # self.self_attention = orgEncoderBlock.self_attention
         ## nn.Dropout : Dropout(p=0.0, inplace=False)
         self.dropout = orgEncoderBlock.dropout
 
@@ -78,8 +201,10 @@ class QuantEncoderBlock(nn.Module):
             f"Expected (batch_size, seq_length, hidden_dim) got {input.shape}",
         )
         x = self.ln_1(input)
-        x, _ = self.self_attention(x, x, x, need_weights=False)
-        # x, _ = self.self_attention(x, x, x, need_weights=True) # @jiho264, modify for attention map
+        # x, _ = self.self_attention(x, x, x, need_weights=False)
+        x, _ = self.self_attention(
+            x, x, x, need_weights=True
+        )  # @jiho264, modify for attention map
         x = self.dropout(x)
         x = x + input
 
@@ -114,45 +239,6 @@ class QuantEncoder(nn.Module):
         return self.ln(self.layers(self.dropout(input)))
 
 
-class QuantBaseModule(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.w_quant_switch = False
-        self.a_quant_switch = False
-        self.w_inited = False
-        self.a_inited = False
-        self.weight_quantizer = None
-        self.activation_quantizer = None
-
-    def init_weight_quantizer(self, org_tensor, args):
-        if self.w_inited == True:
-            raise Exception("Weight quantizer is already inited.")
-        self.weight_quantizer = quantizerDict[args.get("scheme")](
-            org_tensor=org_tensor, args=args
-        )
-        self.w_inited = True
-
-    def init_activation_quantizer(self, org_tensor, args):
-        if self.a_inited == True:
-            raise Exception("Activation quantizer is already inited.")
-        self.activation_quantizer = quantizerDict[args.get("scheme")](
-            org_tensor=org_tensor, args=args
-        )
-        self.a_inited = True
-
-    def forward_w(self, input):
-        if self.w_quant_switch == True:
-            return self.weight_quantizer(input)
-        else:
-            return input
-
-    def forward_a(self, input):
-        if self.a_quant_switch == True:
-            return self.activation_quantizer(input)
-        else:
-            return input
-
-
 class QuantLayer(QuantBaseModule):
     def __init__(self, orgModule):
         super().__init__()
@@ -176,11 +262,11 @@ class QuantLayer(QuantBaseModule):
         print("  QuantLayer is created")
 
     def forward(self, input: torch.Tensor):
-        _weight = self.forward_w(self.weight)
+        _weight = self.forward_weight_quantizer(self.weight)
 
         x = self.fwd_func(input, _weight, self.bias, **self.fwd_kwargs)
 
-        return self.forward_a(x)
+        return self.forward_activation_quantizer(x)
 
 
 # class QuantViT(QuantBaseModule):
@@ -250,7 +336,7 @@ class QuantViT(nn.Module):
         for name, module in self.named_modules():
             if hasattr(module, "w_quant_switch"):
                 module.w_quant_switch = self.w_quant_switch_order
-                if module.w_inited == False:
+                if module.w_inited == False and hasattr(module, "weight"):
                     print(name, end="")
                     module.init_weight_quantizer(module.weight, self.argsW)
             if hasattr(module, "a_quant_switch"):

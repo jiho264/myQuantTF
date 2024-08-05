@@ -43,7 +43,7 @@ def main(weight_quant_params={}, act_quant_params={}, args={}):
     weight_quant_params = {"scheme": "MinMaxQuantizer", "dstDtype": "INT8"}
     act_quant_params = {}
     model = QuantViT(model, weight_quant_params, act_quant_params)
-    model.w_quant_switch_order = True
+    # model.w_quant_switch_order = True
     model.eval().to("cuda")
 
     # model.w_quant_switch = True
