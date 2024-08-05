@@ -2,13 +2,7 @@ import torch, math
 import torch.nn as nn
 import torch.nn.functional as F
 from torchvision.models.vision_transformer import Encoder, EncoderBlock, MLPBlock
-
 from collections import OrderedDict
-from typing import Optional, Tuple
-
-import torch
-from torch import Tensor
-
 
 from .quantizer import quantizerDict
 
@@ -87,7 +81,7 @@ class QuantMLPBlock(nn.Module):
         return x
 
 
-class QuantMultiheadAttention(nn.MultiheadAttention, QuantBaseModule):
+class QuantMultiheadAttention(nn.MultiheadAttention):
     def __init__(self, orgMultiheadAttention):
         super().__init__(
             orgMultiheadAttention.embed_dim,
@@ -97,73 +91,89 @@ class QuantMultiheadAttention(nn.MultiheadAttention, QuantBaseModule):
         )
         self.__dict__.update(orgMultiheadAttention.__dict__)
 
-        print("    - QuantMultiheadAttention is created")
-
         self.ORG_MSA_FORWARD_FUNC = torch._native_multi_head_attention
+
+        self.attn_map_activation_quantizer = None
+        self.attn_out_activation_quantizer = None
+
+        # make in_proj module
+        in_proj = nn.Linear(
+            in_features=self.in_proj_weight.shape[1],  # 768
+            out_features=self.in_proj_weight.shape[0],  # 2304 = 768 * 3
+            bias=True,
+        )
+        in_proj.weight = self.in_proj_weight
+        in_proj.bias = self.in_proj_bias
+
+        self.in_proj = QuantLayer(in_proj)
+        self.out_proj = QuantLayer(self.out_proj)
+
+        print("    - QuantMultiheadAttention is created")
 
     def QuantMSA(self, *args, **kwargs):
         """
         return torch._native_multi_head_attention(
-            [0] query, >> shape : torch.Size([batch, 197, 768])
-            [1] key,   >> shape : torch.Size([batch, 197, 768])
-            [2] value, >> shape : torch.Size([batch, 197, 768])
-            [3] self.embed_dim, >> 768
-            [4] self.num_heads, >> 12
-            [5] self.in_proj_weight, >> shape : torch.Size([2304, 768])
-            [6] self.in_proj_bias,   >> shape : torch.Size([2304])
-            [7] self.out_proj.weight, >> shape : torch.Size([768, 768])
-            [8] self.out_proj.bias,   >> shape : torch.Size([768])
-            [9] merged_mask, >> None
-            [10] need_weights, >> False
-            [11] average_attn_weights, >> True
-            [12] mask_type) >> None
+            args[0] : query, >> shape : torch.Size([batch, 197, 768])
+            args[1] : key,   >> shape : torch.Size([batch, 197, 768])
+            args[2] : value, >> shape : torch.Size([batch, 197, 768])
+            args[3] : self.embed_dim, >> 768
+            args[4] : self.num_heads, >> 12
+            args[5] : self.in_proj_weight, >> shape : torch.Size([2304, 768])
+            args[6] : self.in_proj_bias,   >> shape : torch.Size([2304])
+            args[7] : self.out_proj.weight, >> shape : torch.Size([768, 768])
+            args[8] : self.out_proj.bias,   >> shape : torch.Size([768])
+            args[9] : merged_mask, >> None
+            args[10]: need_weights, >> False
+            args[11]: average_attn_weights, >> True
+            args[12]: mask_type) >> None
         """
-        query, key, value = args[0], args[1], args[2]
+        query, key, value = args[0], args[0], args[0]
+        ## >> torch.Size([128, 197, 768])
+
+        proj = self.in_proj(query)  # with W_qkv
+        ## >> torch.Size([128, 197, 2304])
+
+        proj = (
+            proj.unflatten(-1, (3, query.size(-1)))
+            .unsqueeze(0)
+            .transpose(0, -2)
+            .squeeze(-2)
+            .contiguous()
+        )  ## >> torch.Size([3, 128, 197, 768])
 
         bsz, tgt_len, embed_dim = query.shape
         _, src_len, _ = key.shape
 
-        q, k, v = F._in_projection_packed(
-            query, key, value, self.in_proj_weight, self.in_proj_bias
-        )
-        q = q.view(bsz, tgt_len, self.num_heads, self.head_dim).transpose(1, 2)
-        k = k.view(bsz, src_len, self.num_heads, self.head_dim).transpose(1, 2)
-        v = v.view(bsz, src_len, self.num_heads, self.head_dim).transpose(1, 2)
+        q = proj[0].view(bsz, tgt_len, self.num_heads, self.head_dim).transpose(1, 2)
+        k = proj[1].view(bsz, src_len, self.num_heads, self.head_dim).transpose(1, 2)
+        v = proj[2].view(bsz, src_len, self.num_heads, self.head_dim).transpose(1, 2)
 
-        # Efficient implementation equivalent to the following:
-        attn_weight = q @ k.transpose(-2, -1) / math.sqrt(q.size(-1))
-        attn_weight = torch.softmax(attn_weight, dim=-1)
+        attn_map = q @ k.transpose(-2, -1) / math.sqrt(q.size(-1))
+        ## >> torch.Size([128, 12, 197, 197])
+        attn_map = torch.softmax(attn_map, dim=-1)
+        ## >> torch.Size([128, 12, 197, 197])
 
-        attn_output = attn_weight @ v
+        attn_output = attn_map @ v
+        ## >> torch.Size([128, 12, 197, 64])
+
         attn_output = (
             attn_output.permute(0, 2, 1, 3).contiguous().view(bsz, tgt_len, embed_dim)
         )
-        attn_output = F.linear(attn_output, self.out_proj.weight, self.out_proj.bias)
+        ## >> torch.Size([128, 197, 768])
 
-        return attn_output, attn_weight
+        attn_output = self.out_proj(attn_output)  # with W_out
+        ## >> torch.Size([128, 197, 768])
+
+        return attn_output, attn_map
         """torch.Size([128, 197, 768]) torch.Size([128, 12, 197, 197])"""
 
     def forward(self, *args, **kwargs):
-        """
-        class MultiheadAttention.forward(
-        self,
-        [0] query: Tensor,
-        [1] key: Tensor,
-        [2] value: Tensor,
-        [3] key_padding_mask: Optional[Tensor] = None,
-        [4] need_weights: bool = True,
-        [5] attn_mask: Optional[Tensor] = None,
-        [6] average_attn_weights: bool = True,
-        [7] is_causal : bool = False) -> Tuple[Tensor, Optional[Tensor]]:
-        """
 
         torch._native_multi_head_attention = self.QuantMSA
-        _result = super().forward(*args, **kwargs)
+        out = super().forward(*args, **kwargs)
         torch._native_multi_head_attention = self.ORG_MSA_FORWARD_FUNC
 
-        return _result
-        """torch.Size([128, 197, 768]) torch.Size([128, 197, 197])"""
-        """torch.Size([128, 197, 768]) torch.Size([128, 12, 197, 197])"""
+        return out
 
 
 # class QuantEncoderBlock(QuantBaseModule):
