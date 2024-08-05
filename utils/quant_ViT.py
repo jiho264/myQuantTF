@@ -7,7 +7,7 @@ from collections import OrderedDict
 from .quantizer import quantizerDict
 
 
-class QuantBaseModule(nn.Module):
+class QuantControlModule(nn.Module):
     def __init__(self):
         super().__init__()
         self.w_quant_switch = False
@@ -246,7 +246,7 @@ class QuantEncoder(nn.Module):
         return self.ln(self.layers(self.dropout(input)))
 
 
-class QuantLayer(QuantBaseModule):
+class QuantLayer(QuantControlModule):
     def __init__(self, orgModule):
         super().__init__()
         """forward function setting"""
@@ -279,18 +279,7 @@ class QuantLayer(QuantBaseModule):
 class QuantViT(nn.Module):
     def __init__(self, orgViT, argsW: dict = {}, argsA: dict = {}):
         super().__init__()
-        self.image_size = orgViT.image_size
-        self.patch_size = orgViT.patch_size
-        self.hidden_dim = orgViT.hidden_dim
-        self.mlp_dim = orgViT.mlp_dim
-        self.attention_dropout = orgViT.attention_dropout
-        self.dropout = orgViT.dropout
-        self.num_classes = orgViT.num_classes
-        self.representation_size = orgViT.representation_size  # <- None
-        self.norm_layer = orgViT.norm_layer
-        self.seq_length = orgViT.seq_length
-
-        self.class_token = orgViT.class_token
+        self.__dict__.update(orgViT.__dict__)
         self.conv_proj = QuantLayer(orgViT.conv_proj)
         self.encoder = QuantEncoder(orgViT.encoder)
 
@@ -340,14 +329,15 @@ class QuantViT(nn.Module):
 
     def _quant_switch(self):
         for name, module in self.named_modules():
-            if hasattr(module, "w_quant_switch"):
+            if isinstance(module, QuantControlModule):
                 module.w_quant_switch = self.w_quant_switch_order
+                module.a_quant_switch = self.a_quant_switch_order
+
                 if self.w_quant_switch_order:
                     if module.w_inited == False and hasattr(module, "weight"):
                         print(name, end="")
                         module.init_weight_quantizer(module.weight, self.argsW)
-            if hasattr(module, "a_quant_switch"):
-                module.a_quant_switch = self.a_quant_switch_order
+
                 if self.a_quant_switch_order:
                     if module.a_inited == False:
                         pass
