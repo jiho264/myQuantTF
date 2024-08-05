@@ -148,12 +148,15 @@ class QuantMultiheadAttention(nn.MultiheadAttention):
         v = proj[2].view(bsz, src_len, self.num_heads, self.head_dim).transpose(1, 2)
 
         attn_map = q @ k.transpose(-2, -1) / math.sqrt(q.size(-1))
+        # [ ] Add activation quantizer
         ## >> torch.Size([128, 12, 197, 197])
         attn_map = torch.softmax(attn_map, dim=-1)
         ## >> torch.Size([128, 12, 197, 197])
+        # [ ] Add activation quantizer
 
         attn_output = attn_map @ v
         ## >> torch.Size([128, 12, 197, 64])
+        # [ ] Add activation quantizer
 
         attn_output = (
             attn_output.permute(0, 2, 1, 3).contiguous().view(bsz, tgt_len, embed_dim)
