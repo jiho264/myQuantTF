@@ -32,13 +32,15 @@ def main(weight_quant_params={}, act_quant_params={}, args={}):
 
     train_loader, test_loader = GetDataset(batch_size=_batch_size)
 
-    weight_quant_params = {"scheme": "MinMaxQuantizer", "dstDtype": "INT8"}
-    act_quant_params = {}
-    model = QuantViT(model, weight_quant_params, act_quant_params)
-    model.w_quant_switch_order = True
-    model.eval().to("cuda")
+    weight_quant_params = {"scheme": "MinMaxQuantizer", "bit_width": 8}
+    # act_quant_params = {"scheme": "DynamicMinMaxQuantizer", "bit_width": 32}
 
-    # model.w_quant_switch = True
+    model = QuantViT(model, weight_quant_params, act_quant_params)
+
+    model.w_quant_switch_order = False if weight_quant_params == {} else True
+    model.a_quant_switch_order = False if act_quant_params == {} else True
+
+    model.eval().to("cuda")
 
     _top1, _ = evaluate(model, test_loader, len(test_loader), "cuda")
     print(

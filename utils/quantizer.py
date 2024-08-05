@@ -17,18 +17,13 @@ class UniformAffineQuantizer(nn.Module):
         example... 
             args = {
                 "scheme": "AbsMaxQuantizer",
-                "dstDtype": "INT8",
+                "bit_width": 8,
             }
         """
-        _DtypeStr = args.get("dstDtype")
-        assert _DtypeStr in [
-            "INT8",
-            "INT4",
-        ], f"Unknown quantization type: {_DtypeStr}. Only support INT8, INT4. \n \
-            If using INT8 with output of the ReLU activation function, we will use UINT8 instead. \n \
-            Therefore, please only determine the BIT WITDH."
+        bit_width = args.get("bit_width")
+        assert bit_width in [4, 8, 16, 32]
 
-        self._n_bits = int(_DtypeStr[-1])  # "INT8" -> 8
+        self._n_bits = int(bit_width)  # "INT8" -> 8
         self._repr_min, self._repr_max = None, None
 
         # self.per_channel = args.get("per_channel") if args.get("per_channel") else False
@@ -149,9 +144,45 @@ class MinMaxQuantizer(UniformAffineQuantizer):
         # Always using same equation.
         self.compute_qparams(_min, _max)
 
+class DynamicMinMaxQuantizer(UniformAffineQuantizer):
+    def __init__(self, org_tensor, args):
+        assert org_tensor == None, "DynamicMinMaxQuantizer should not have org_tensor."
+        super().__init__(org_tensor=torch.randn((128, 197, 768)),args=args)
+        # self.per_channel == always True
+
+    def _define_repr_min_max(self, input: Tensor):
+        if self.one_side_dist is None:
+            self.one_side_dist = (
+                "pos" if input.min() >= 0.0 else "neg" if input.max() <= 0.0 else "no"
+            )
+        if self.one_side_dist != "no":
+            self._repr_min = 0  # "UINT8" -> 0
+            self._repr_max = 2 ** (self._n_bits) - 1  # "UINT8" -> 255
+            # print(f"    1D search with UINT{self._n_bits}")
+        else:  # 2-d search
+            self._repr_min = -(2 ** (self._n_bits - 1))  # "INT8" -> -128
+            self._repr_max = 2 ** (self._n_bits - 1) - 1  # "INT8" -> 127
+            # print(f"    2D search with INT{self._n_bits}")
+
+    def forward(self, input):
+        self._define_repr_min_max(input)
+        self._n_ch = len(input.size()) if self.per_channel else 1
+
+        if self.per_channel == True:
+            _min = input.view(input.size(0), -1).min(dim=1).values
+            _max = input.view(input.size(0), -1).max(dim=1).values
+        else:
+            _min = input.min()
+            _max = input.max()
+        self.compute_qparams(_min, _max)
+
+        return super().forward(input)
+
+
 quantizerDict = {
     "AbsMaxQuantizer": AbsMaxQuantizer,
     "MinMaxQuantizer": MinMaxQuantizer,
+    "DynamicMinMaxQuantizer": DynamicMinMaxQuantizer,
     # "NormQuantizer": NormQuantizer,
     # "OrgNormQuantizerCode": OrgNormQuantizerCode,
 }

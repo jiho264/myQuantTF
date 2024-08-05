@@ -340,7 +340,8 @@ class QuantViT(nn.Module):
 
                 if self.a_quant_switch_order:
                     if module.a_inited == False:
-                        pass
+                        print(name, "act", end="")
+                        module.init_activation_quantizer(None, self.argsA)
                     # [ ] implement activation quantizer
                     # You have to prepare the activation values before quantization
                     # raise Exception("Activation quantizer is not implemented yet.")
