@@ -203,6 +203,7 @@ class QuantMultiheadAttention(nn.MultiheadAttention):
         query, key, value = args[0], args[0], args[0]
         ## >> torch.Size([128, 197, 768])
 
+        """ INT GEMM -> return INT32 -> return INT8 """
         proj = self.in_proj(query)  # with W_qkv
         ## >> torch.Size([128, 197, 2304])
         # scaler.shape = ([2304, 1])
@@ -222,15 +223,23 @@ class QuantMultiheadAttention(nn.MultiheadAttention):
         k = proj[1].view(bsz, src_len, self.num_heads, self.head_dim).transpose(1, 2)
         v = proj[2].view(bsz, src_len, self.num_heads, self.head_dim).transpose(1, 2)
 
-        attn_map = q @ k.transpose(-2, -1) / math.sqrt(q.size(-1))  # 2D
+        """ INT GEMM -> return INT32 """
+        attn_map = q @ k.transpose(-2, -1) / math.sqrt(q.size(-1))
+        # torch.save(attn_map, "attn_map_qk.pt") # 여기 min, max가 -26, 27으로 관찰됨. 일단은
         attn_map = self.attnMapActivationQuantizer(attn_map)
-        ## >> torch.Size([128, 12, 197, 197])
-        # scaler.shape = ([128, 1, 1, 1])
 
+        ## >> torch.Size([128, 12, 197, 197])
+
+        """ INT32 -> return log softmax INT8 """
+        # [ ] implement log softmax quantizer
         attn_map = torch.softmax(attn_map, dim=-1)  # 1D
+        # torch.save(attn_map, "attn_map_softmax.pt")
         attn_map = self.attnMapSoftmaxActivationQuantizer(attn_map)
         ## >> torch.Size([128, 12, 197, 197])
 
+        # exit()
+
+        """ INT GEMM -> return INT32 -> return INT8 """
         attn_output = attn_map @ v  # 2D
         attn_map = self.attnOutActivationQuantizer(attn_output)
         ## >> torch.Size([128, 12, 197, 64])
@@ -240,6 +249,7 @@ class QuantMultiheadAttention(nn.MultiheadAttention):
         )
         ## >> torch.Size([128, 197, 768])
 
+        """ INT GEMM -> return INT32 -> return INT8 """
         attn_output = self.out_proj(attn_output)  # with W_out
         ## >> torch.Size([128, 197, 768])
 

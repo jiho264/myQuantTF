@@ -22,8 +22,8 @@ def main(main_args={}, args_w={}, args_a={}, args_attn={}, args_ln={}):
         raise NotImplementedError
     model.eval().to("cuda")
 
-    args_w = {"scheme": "MinMaxQuantizer", "bit_width": 4, "per_channel": True}
-    args_a = {"scheme": "DynamicMinMaxQuantizer", "bit_width": 8, "per_channel": True}
+    # args_w = {"scheme": "MinMaxQuantizer", "bit_width": 4, "per_channel": True}
+    # args_a = {"scheme": "DynamicMinMaxQuantizer", "bit_width": 8, "per_channel": True}
     args_attn, args_ln = args_a, args_a
     # args_attn = {"scheme": "DynamicMinMaxQuantizer", "bit_width": 4, "per_channel": False}
     # args_attn = {"scheme": "DynamicMinMaxQuantizer", "bit_width": 4, "per_channel": False}
