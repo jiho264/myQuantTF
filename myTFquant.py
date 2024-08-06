@@ -6,21 +6,15 @@ from utils.quant_ViT import QuantViT
 import torchvision.models.vision_transformer as vision_transformer
 
 
-#################################################################################################
-## 3. Main function
-#################################################################################################
-
-
-# def main(weight_quant_params, act_quant_params, args):
-def main(weight_quant_params={}, act_quant_params={}, args={}):
-    args = {
+def main(main_args={}, args_w={}, args_a={}, args_attn={}, args_ln={}):
+    main_args = {
         "arch": "ViT_B_16",
         "batch_size": 128,
         "num_samples": 1024,
     }
-    print(args)
+    print(main_args)
 
-    if args["arch"] == "ViT_B_16":
+    if main_args["arch"] == "ViT_B_16":
         model = vision_transformer.vit_b_16(
             weights=vision_transformer.ViT_B_16_Weights.IMAGENET1K_V1
         )
@@ -28,180 +22,34 @@ def main(weight_quant_params={}, act_quant_params={}, args={}):
         raise NotImplementedError
     model.eval().to("cuda")
 
-    _batch_size = args["batch_size"]
+    args_w = {"scheme": "MinMaxQuantizer", "bit_width": 4, "per_channel": True}
+    args_a = {"scheme": "DynamicMinMaxQuantizer", "bit_width": 8, "per_channel": True}
+    args_attn, args_ln = args_a, args_a
+    # args_attn = {"scheme": "DynamicMinMaxQuantizer", "bit_width": 4, "per_channel": False}
+    # args_attn = {"scheme": "DynamicMinMaxQuantizer", "bit_width": 4, "per_channel": False}
+    # args_ln = {"scheme": "MinMaxQuantizer", "bit_width": 4, "per_channel": False}
 
-    train_loader, test_loader = GetDataset(batch_size=_batch_size)
+    model = QuantViT(model, args_w, args_a, args_attn, args_ln)
 
-    weight_quant_params = {"scheme": "MinMaxQuantizer", "bit_width": 8}
-    # act_quant_params = {"scheme": "DynamicMinMaxQuantizer", "bit_width": 32}
-
-    model = QuantViT(model, weight_quant_params, act_quant_params)
-
-    model.w_quant_switch_order = False if weight_quant_params == {} else True
-    model.a_quant_switch_order = False if act_quant_params == {} else True
+    if type(model) == QuantViT:
+        print(f"Weight quantization parameter : {args_w}")
+        print(f"Activation quantization parameter : {args_a}")
+        print(f"Attention quantization parameter : {args_attn}")
+        print(f"LayerNorm quantization parameter : {args_ln}")
+        model.model_w_quant = False if args_w == {} else True
+        model.model_a_quant = False if args_a == {} else True
+        model.model_attn_quant = False if args_attn == {} else True
+        model.model_ln_quant = False if args_ln == {} else True
 
     model.eval().to("cuda")
 
+    _batch_size = main_args["batch_size"]
+
+    train_loader, test_loader = GetDataset(batch_size=_batch_size)
     _top1, _ = evaluate(model, test_loader, len(test_loader), "cuda")
     print(
         f"\n    Quantized model Evaluation accuracy on 50000 images, {_top1.avg:2.3f}%"
     )
-
-    #     ...
-    # elif isinstance(module0, nn.MultiheadAttention):
-    #     print(f"MSA : {name0}")
-    # elif isinstance(module0, MLPBlock):
-    #     print(f"MLP : {name0}")
-    # elif isinstance(module0, nn.LayerNorm):
-    #     print(f"LN : {name0}")
-    # elif isinstance(module0, nn.Linear):
-    #     print(f"Linear : {name0}")
-
-    # def block_refactor(module, weight_quant_params, act_quant_params):
-    #     first_conv, first_bn = None, None
-    #     # if W4A4 with head_stem_8bit
-    #     head_stem_weight_quant_params = weight_quant_params.copy()
-    #     head_stem_act_quant_params = act_quant_params.copy()
-
-    #     if args.get("head_stem_8bit") == True:
-    #         head_stem_weight_quant_params.update(dict(dstDtype="INT8"))
-    #         head_stem_act_quant_params.update(dict(dstDtype="INT8"))
-
-    #     for name, child_module in module.named_children():
-    #         if isinstance(child_module, nn.Conv2d):
-    #             """For first ConvBnRelu"""
-    #             if name == "conv1":
-    #                 first_conv = child_module
-    #                 setattr(module, name, StraightThrough())
-    #         elif isinstance(child_module, (nn.BatchNorm2d)):
-    #             """For first ConvBnRelu"""
-    #             if name == "bn1":
-    #                 first_bn = child_module
-    #                 setattr(module, name, StraightThrough())
-    #         elif isinstance(child_module, (nn.ReLU)):
-    #             """For first ConvBnRelu"""
-    #             setattr(
-    #                 module,
-    #                 "conv1",
-    #                 QuantLayer(
-    #                     conv_module=first_conv,
-    #                     bn_module=first_bn,
-    #                     act_module=child_module,
-    #                     w_quant_args=head_stem_weight_quant_params,
-    #                     a_quant_args=head_stem_act_quant_params,
-    #                     folding=args["folding"],
-    #                 ),
-    #             )
-    #             setattr(module, name, StraightThrough())
-    #         elif isinstance(child_module, (nn.Sequential)):
-    #             """For each Blocks"""
-    #             for blockname, blockmodule in child_module.named_children():
-    #                 if isinstance(blockmodule, (resnet.BasicBlock)):
-    #                     setattr(
-    #                         child_module,
-    #                         blockname,
-    #                         QuantBasicBlock(
-    #                             org_basicblock=blockmodule,
-    #                             w_quant_args=weight_quant_params,
-    #                             a_quant_args=act_quant_params,
-    #                             folding=args["folding"],
-    #                         ),
-    #                     )
-    #                     print(f"- Quant Block {blockname} making done !")
-    #         elif isinstance(child_module, (nn.Linear)):
-    #             # only for FC layer
-    #             if name == "fc":
-    #                 setattr(
-    #                     module,
-    #                     name,
-    #                     QuantLayer(
-    #                         conv_module=child_module,
-    #                         w_quant_args=head_stem_weight_quant_params,
-    #                         a_quant_args=head_stem_act_quant_params,
-    #                     ),
-    #                 )
-
-    # print("Replace to QuantLayer")
-    # with torch.no_grad():
-    #     block_refactor(model, weight_quant_params, act_quant_params)
-
-    # print("Qparams computing done!")
-
-    # # Count the number of QuantMoQuantLayerdule
-    # num_layers = 0
-    # num_bn = 0
-    # for name, module in model.named_modules():
-    #     if isinstance(module, QuantLayer):
-    #         num_layers += 1
-    #         print(f"    QuantLayer: {name}, {module.weight.shape}")
-    #         if module.folding == True:
-    #             num_bn += 1
-    #         # ### for BN folding effect viewer
-    #         # _str = None
-    #         # if name == "conv1":
-    #         #     if args["folding"] == True:
-    #         #         _str = (
-    #         #             f"weights_firstconv_org_folded_{weight_quant_params["dstDtype"]}.pt"
-    #         #         )
-    #         #     else:
-    #         #         _str = (
-    #         #             f"weights_firstconv_org_nonfold_{weight_quant_params["dstDtype"]}.pt"
-    #         #         )
-
-    #         # if name == "layer4.1.conv2":
-    #         #     if args["folding"] == True:
-    #         #         _str = (
-    #         #             f"weights_lastconv_org_folded_{weight_quant_params["dstDtype"]}.pt"
-    #         #         )
-    #         #     else:
-    #         #         _str = (
-    #         #             f"weights_lastconv_org_nonfold_{weight_quant_params["dstDtype"]}.pt"
-    #         #         )
-    #         # if _str != None:
-    #         #     torch.save(
-    #         #         [
-    #         #             module.weight,
-    #         #             module.weight_quantizer._scaler,
-    #         #             module.weight_quantizer._zero_point,
-    #         #             module.weight_quantizer._n_bits,
-    #         #         ],
-    #         #         _str,
-    #         #     )
-    # print(f"Total QuantModule: {num_layers}, Folded BN layers : {num_bn}")
-
-    # if "AdaRound" in weight_quant_params:
-    #     if weight_quant_params["AdaRound"] == True:
-    #         runAdaRound(
-    #             model,
-    #             train_loader,
-    #             num_samples=args["num_samples"],
-    #             batch_size=args["batch_size_AdaRound"],
-    #             num_layers=num_layers,
-    #             lr=args["lr"],
-    #         )
-    #         print(f"AdaRound values computing done!")
-    # if "BRECQ" in weight_quant_params:
-    #     if weight_quant_params["BRECQ"] == True:
-    #         runBRECQ(
-    #             model,
-    #             train_loader,
-    #             num_samples=args["num_samples"],
-    #             batch_size=args["batch_size_AdaRound"],
-    #             num_layers=num_layers,
-    #             lr=args["lr"],
-    #         )
-    #         print(f"BRECQ values computing done!")
-    # if "PDquant" in weight_quant_params:
-    #     if weight_quant_params["PDquant"] == True:
-    #         runPDquant(
-    #             model,
-    #             train_loader,
-    #             num_samples=args["num_samples"],
-    #             batch_size=args["batch_size_AdaRound"],
-    #             num_layers=num_layers,
-    #             lr=args["lr"],
-    #         )
-    #         print("PDQuant computing done!")
 
 
 if __name__ == "__main__":

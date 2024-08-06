@@ -1,13 +1,6 @@
-import torch, tqdm
+import torch
 from torch import Tensor
-
-
-#################################################################################################
-## 2. Quantized module
-#################################################################################################
-
 import torch.nn as nn
-import torch.nn.functional as F
 
 
 class UniformAffineQuantizer(nn.Module):
@@ -18,6 +11,7 @@ class UniformAffineQuantizer(nn.Module):
             args = {
                 "scheme": "AbsMaxQuantizer",
                 "bit_width": 8,
+                "per_channel": False,
             }
         """
         bit_width = args.get("bit_width")
@@ -26,9 +20,7 @@ class UniformAffineQuantizer(nn.Module):
         self._n_bits = int(bit_width)  # "INT8" -> 8
         self._repr_min, self._repr_max = None, None
 
-        # self.per_channel = args.get("per_channel") if args.get("per_channel") else False
-        # always using per_channel quantization
-        self.per_channel = True
+        self.per_channel = args.get("per_channel") if args.get("per_channel") else False
         self._n_ch = len(org_tensor.size()) if self.per_channel else 1
         self._scaler = None
         self._zero_point = None
@@ -148,7 +140,6 @@ class DynamicMinMaxQuantizer(UniformAffineQuantizer):
     def __init__(self, org_tensor, args):
         assert org_tensor == None, "DynamicMinMaxQuantizer should not have org_tensor."
         super().__init__(org_tensor=torch.randn((128, 197, 768)),args=args)
-        # self.per_channel == always True
 
     def _define_repr_min_max(self, input: Tensor):
         if self.one_side_dist is None:
@@ -165,16 +156,17 @@ class DynamicMinMaxQuantizer(UniformAffineQuantizer):
             # print(f"    2D search with INT{self._n_bits}")
 
     def forward(self, input):
-        self._define_repr_min_max(input)
-        self._n_ch = len(input.size()) if self.per_channel else 1
+        with torch.no_grad():
+            self._define_repr_min_max(input)
+            self._n_ch = len(input.size()) if self.per_channel else 1
 
-        if self.per_channel == True:
-            _min = input.view(input.size(0), -1).min(dim=1).values
-            _max = input.view(input.size(0), -1).max(dim=1).values
-        else:
-            _min = input.min()
-            _max = input.max()
-        self.compute_qparams(_min, _max)
+            if self.per_channel == True:
+                _min = input.view(input.size(0), -1).min(dim=1).values
+                _max = input.view(input.size(0), -1).max(dim=1).values
+            else:
+                _min = input.min()
+                _max = input.max()
+            self.compute_qparams(_min, _max)
 
         return super().forward(input)
 
