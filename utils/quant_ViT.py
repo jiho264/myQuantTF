@@ -111,7 +111,15 @@ class QuantAttnMap(QuantControlModule):
         """
         super().__init__()
 
+        # case [3]
+        self.is_result_of_mm_with_attn_with_value = False
+
     def forward(self, input: torch.Tensor):
+        ## debug for MovingAvgMinMaxQuantizer.
+        ## check for working in the every result of Attn @ V 
+        # if self.is_result_of_mm_with_attn_with_value == True:
+        #     print(self.activationQuantizer._ready_to_quantize, end="")
+        #     print(self.activationQuantizer._scaler)
         return self.forward_activation_quantizer(input)
 
 
@@ -188,9 +196,15 @@ class QuantMultiheadAttention(nn.MultiheadAttention):
 
         self.in_proj = QuantLinearLayer(in_proj)
 
+        # [1] Q @ K
         self.attnMapActivationQuantizer = QuantAttnMap()
+        # [2] Attn = Softmax()
         self.attnMapSoftmaxActivationQuantizer = QuantAttnMap()
+        # [3] Attn @ V
         self.attnOutActivationQuantizer = QuantAttnMap()
+        # using QuantAttnMap class but different purpose
+        # only for activation quantization.
+        self.attnOutActivationQuantizer.is_result_of_mm_with_attn_with_value = True
 
         self.out_proj = QuantLinearLayer(OUT_PROJ)
 
@@ -240,17 +254,18 @@ class QuantMultiheadAttention(nn.MultiheadAttention):
         attn_map = q @ k.transpose(-2, -1) / math.sqrt(q.size(-1))
         # torch.save(attn_map, "attn_map_qk.pt") # 여기 min, max가 -26, 27으로 관찰됨. 일단은
         attn_map = self.attnMapActivationQuantizer(attn_map)
-
+        
         ## >> torch.Size([128, 12, 197, 197])
 
         """ INT32 -> return log softmax INT8 """
         # [ ] implement log softmax quantizer
         attn_map = torch.softmax(attn_map, dim=-1)  # 1D
+        zeta = 1
+        gamma = -0.0001
+        attn_map = torch.clip((zeta - gamma) * attn_map + gamma, 0, 1)
         # torch.save(attn_map, "attn_map_softmax.pt")
         attn_map = self.attnMapSoftmaxActivationQuantizer(attn_map)
         ## >> torch.Size([128, 12, 197, 197])
-
-        # exit()
 
         """ INT GEMM -> return INT32 -> return INT8 """
         attn_output = attn_map @ v  # 2D
@@ -397,8 +412,8 @@ class QuantViT(nn.Module):
 
     def _quant_switch(self):
         for name, module in self.named_modules():
-            """The quantizer for Linear layer"""
             if isinstance(module, QuantLinearLayer):
+                """The quantizer for Linear layer"""
                 module.do_w_quant = self.model_w_quant
                 module.do_a_quant = self.model_a_quant
                 if self.model_w_quant:
@@ -411,19 +426,27 @@ class QuantViT(nn.Module):
                         print(f"[Activation] {name}    ", end="")
                         module.init_activation_quantizer(None, self.args_a)
 
-            """ The quantizer for MultiheadAttention """
-            if isinstance(module, QuantAttnMap):
-                module.do_a_quant = self.model_attn_quant
-                if self.model_attn_quant:
-                    if module.a_inited == False:
-                        print(name, "attention quantizer is inited.")
-                        module.init_activation_quantizer(None, self.args_attn)
-                        # [ ] implement activation quantizer
-                        # You have to prepare the activation values before quantization
-                        # raise Exception("Activation quantizer is not implemented yet.")
+            elif isinstance(module, QuantAttnMap):
+                if module.is_result_of_mm_with_attn_with_value == True:
+                    """ The quantizer for Attention Map ( result of Attn @ V ) """
+                    module.do_a_quant = self.model_a_quant
+                    if self.model_a_quant:
+                        if module.a_inited == False:
+                            print(f"[Activation] {name}    ", end="")
+                            module.init_activation_quantizer(None, self.args_a)
+                else:
+                    """ The quantizer for MultiheadAttention ( Softmax process ) """
+                    module.do_a_quant = self.model_attn_quant
+                    if self.model_attn_quant:
+                        if module.a_inited == False:
+                            print(name, "attention quantizer is inited.")
+                            module.init_activation_quantizer(None, self.args_attn)
+                            # [ ] implement activation quantizer
+                            # You have to prepare the activation values before quantization
+                            # raise Exception("Activation quantizer is not implemented yet.")
 
-            """ The quantizer for LayerNorm """
-            if isinstance(module, QuantLayerNorm):
+            elif isinstance(module, QuantLayerNorm):
+                """ The quantizer for LayerNorm """
                 module.do_a_quant = self.model_ln_quant
                 if self.model_ln_quant:
                     if module.a_inited == False:
@@ -435,6 +458,10 @@ class QuantViT(nn.Module):
 
     def forward(self, x: torch.Tensor):
         self._quant_switch()
+        ## debug for MovingAvgMinMaxQuantizer. 
+        ## check for working in the first conv_proj layer.
+        # print(self.conv_proj.activationQuantizer._ready_to_quantize, end="")
+        # print(self.conv_proj.activationQuantizer._scaler)
         return self.orgforward(x)
 
 
