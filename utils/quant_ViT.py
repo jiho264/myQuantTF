@@ -20,6 +20,13 @@ class QuantControlModule(nn.Module):
     def init_weight_quantizer(self, org_tensor: Tensor, args: dict):
         if self.w_inited == True:
             raise Exception("Weight quantizer is already inited.")
+
+        if args["scheme"] in ["MinMaxQuantizer"]:
+            # using only MinMaxQuantizer
+            pass
+        else:
+            raise NotImplementedError
+
         self.weightQuantizer = quantizerDict[args.get("scheme")](
             org_tensor=org_tensor, args=args
         )
@@ -28,6 +35,12 @@ class QuantControlModule(nn.Module):
     def init_activation_quantizer(self, org_tensor: Tensor, args: dict):
         if self.a_inited == True:
             raise Exception("Activation quantizer is already inited.")
+
+        if args["scheme"] in ["DynamicMinMaxQuantizer", "MovingAvgMinMaxQuantizer"]:
+            # using only DynamicMinMaxQuantizer, MovingAvgMinMaxQuantizer
+            pass
+        else:
+            raise NotImplementedError
 
         self.activationQuantizer = quantizerDict[args.get("scheme")](
             org_tensor=org_tensor, args=args
@@ -379,97 +392,50 @@ class QuantViT(nn.Module):
         self.args_a = args_a
         self.model_a_quant = False if self.args_a == {} else True
 
+        self.orgforward = orgViT.forward
         print("QuantViT is created")
 
     def _quant_switch(self):
         for name, module in self.named_modules():
+            """The quantizer for Linear layer"""
             if isinstance(module, QuantLinearLayer):
                 module.do_w_quant = self.model_w_quant
                 module.do_a_quant = self.model_a_quant
-
                 if self.model_w_quant:
                     if module.w_inited == False and hasattr(module, "weight"):
-                        print(name, end="")
+                        print(f"[Weight] {name}    ", end="")
                         module.init_weight_quantizer(module.weight, self.args_w)
 
                 if self.model_a_quant:
                     if module.a_inited == False:
-                        if self.args_a["scheme"] == "DynamicMinMaxQuantizer":
-                            module.init_activation_quantizer(None, self.args_a)
-                        else:
-                            print(name, "activation quantizer is inited.")
-                            raise Exception(
-                                "Activation quantizer is not implemented yet."
-                            )
-                            # [ ] implement activation quantizer
-                            # You have to prepare the activation values before quantization
-                            # raise Exception("Activation quantizer is not implemented yet.")
+                        print(f"[Activation] {name}    ", end="")
+                        module.init_activation_quantizer(None, self.args_a)
 
+            """ The quantizer for MultiheadAttention """
             if isinstance(module, QuantAttnMap):
                 module.do_a_quant = self.model_attn_quant
                 if self.model_attn_quant:
                     if module.a_inited == False:
                         print(name, "attention quantizer is inited.")
                         module.init_activation_quantizer(None, self.args_attn)
-                    # [ ] implement activation quantizer
-                    # You have to prepare the activation values before quantization
-                    # raise Exception("Activation quantizer is not implemented yet.")
+                        # [ ] implement activation quantizer
+                        # You have to prepare the activation values before quantization
+                        # raise Exception("Activation quantizer is not implemented yet.")
+
+            """ The quantizer for LayerNorm """
             if isinstance(module, QuantLayerNorm):
                 module.do_a_quant = self.model_ln_quant
                 if self.model_ln_quant:
                     if module.a_inited == False:
                         print(name, "LN quantizer is inited.")
                         module.init_activation_quantizer(None, self.args_attn)
-                    # [ ] implement activation quantizer
-                    # You have to prepare the activation values before quantization
-                    # raise Exception("Activation quantizer is not implemented yet
-
-    def _process_input(self, x: torch.Tensor) -> torch.Tensor:
-        n, c, h, w = x.shape
-        p = self.patch_size
-        torch._assert(
-            h == self.image_size,
-            f"Wrong image height! Expected {self.image_size} but got {h}!",
-        )
-        torch._assert(
-            w == self.image_size,
-            f"Wrong image width! Expected {self.image_size} but got {w}!",
-        )
-        n_h = h // p
-        n_w = w // p
-
-        # (n, c, h, w) -> (n, hidden_dim, n_h, n_w)
-        x = self.conv_proj(x)
-        # (n, hidden_dim, n_h, n_w) -> (n, hidden_dim, (n_h * n_w))
-        x = x.reshape(n, self.hidden_dim, n_h * n_w)
-
-        # (n, hidden_dim, (n_h * n_w)) -> (n, (n_h * n_w), hidden_dim)
-        # The self attention layer expects inputs in the format (N, S, E)
-        # where S is the source sequence length, N is the batch size, E is the
-        # embedding dimension
-        x = x.permute(0, 2, 1)
-
-        return x
+                        # [ ] implement activation quantizer
+                        # You have to prepare the activation values before quantization
+                        # raise Exception("Activation quantizer is not implemented yet
 
     def forward(self, x: torch.Tensor):
         self._quant_switch()
-
-        # Reshape and permute the input tensor
-        x = self._process_input(x)
-        n = x.shape[0]
-
-        # Expand the class token to the full batch
-        batch_class_token = self.class_token.expand(n, -1, -1)
-        x = torch.cat([batch_class_token, x], dim=1)
-
-        x = self.encoder(x)
-
-        # Classifier "token" as used by standard language architectures
-        x = x[:, 0]
-
-        x = self.heads(x)
-
-        return x
+        return self.orgforward(x)
 
 
 """

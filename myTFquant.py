@@ -22,13 +22,21 @@ def main(main_args={}, args_w={}, args_a={}, args_attn={}, args_ln={}):
         raise NotImplementedError
     model.eval().to("cuda")
 
-    # args_w = {"scheme": "MinMaxQuantizer", "bit_width": 4, "per_channel": True}
-    # args_a = {"scheme": "DynamicMinMaxQuantizer", "bit_width": 8, "per_channel": True}
-    args_attn, args_ln = args_a, args_a
+    args_w = {"scheme": "MinMaxQuantizer", "bit_width": 4, "per_channel": True}
+    args_a = {
+        "scheme": "MovingAvgMinMaxQuantizer",
+        "bit_width": 8,
+        # below values are default in the class
+        # "per_channel": False,
+        # "momentum": 0.9,
+        # "batches": 16,
+    }
+    # args_a = {}
+    # args_attn, args_ln = args_a, args_a
     # args_attn = {"scheme": "DynamicMinMaxQuantizer", "bit_width": 4, "per_channel": False}
     # args_attn = {"scheme": "DynamicMinMaxQuantizer", "bit_width": 4, "per_channel": False}
     # args_ln = {"scheme": "MinMaxQuantizer", "bit_width": 4, "per_channel": False}
-
+    
     model = QuantViT(model, args_w, args_a, args_attn, args_ln)
 
     if type(model) == QuantViT:
@@ -44,8 +52,14 @@ def main(main_args={}, args_w={}, args_a={}, args_attn={}, args_ln={}):
     model.eval().to("cuda")
 
     _batch_size = main_args["batch_size"]
-
     train_loader, test_loader = GetDataset(batch_size=_batch_size)
+
+    if args_a != {}:
+        """ calibration for activation """
+        _, _ = evaluate(model, test_loader, 16, "cuda")
+        print("Calibration done \n")
+
+    """ evaluation """
     _top1, _ = evaluate(model, test_loader, len(test_loader), "cuda")
     print(
         f"\n    Quantized model Evaluation accuracy on 50000 images, {_top1.avg:2.3f}%"

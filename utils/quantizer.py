@@ -66,11 +66,7 @@ class UniformAffineQuantizer(nn.Module):
         )
 
     def _dequantize(self, input: Tensor) -> Tensor:
-        if torch.all(input == input.floor()).item():
-            return (input - self._zero_point) * self._scaler
-        else:
-            """ verifing the quantization """
-            raise ValueError("The input tensor is not quantized.")
+        return (input - self._zero_point) * self._scaler
 
     def forward(self, x: Tensor) -> Tensor:
         return self._dequantize(self._quantize(x))
@@ -136,10 +132,11 @@ class MinMaxQuantizer(UniformAffineQuantizer):
         # Always using same equation.
         self.compute_qparams(_min, _max)
 
+
 class DynamicMinMaxQuantizer(UniformAffineQuantizer):
     def __init__(self, org_tensor, args):
         assert org_tensor == None, "DynamicMinMaxQuantizer should not have org_tensor."
-        super().__init__(org_tensor=torch.randn((128, 197, 768)),args=args)
+        super().__init__(org_tensor=torch.randn((128, 197, 768)), args=args)
 
     def _define_repr_min_max(self, input: Tensor):
         if self.one_side_dist is None:
@@ -171,10 +168,78 @@ class DynamicMinMaxQuantizer(UniformAffineQuantizer):
         return super().forward(input)
 
 
+class MovingAvgMinMaxQuantizer(UniformAffineQuantizer):
+    def __init__(self, org_tensor, args):
+        """
+        In the [ MovingAvgMinMaxQuantizer ]
+            - [self.a_inited = False] DOSE NOT MEAN init process was completed.
+            - JUST represent that the "make instance" process was completed.
+
+        There are verify process in the forward function.
+            - if not computed yet, forward with org pass.
+            - if computed, forward with quantized pass.
+            This process is controlled by [self.ready_to_quantize] flag.
+
+        DESIGNED FOR PER-LAYER SCHEME.
+        """
+        assert (
+            org_tensor == None
+        ), "MovingAvgMinMaxQuantizer should not have org_tensor."
+        super().__init__(org_tensor=torch.randn((128, 197, 768)), args=args)
+
+        # 0.9 is default value in the white paper.
+        self._m = args.get("momentum") if args.get("momentum") else 0.9
+        self._batches = args.get("batches") if args.get("batches") else 16
+        self.per_channel = True
+
+        self._ready_to_quantize = False
+        self._computed_batches_cnt = 0
+        self._threshold_batches = int((1 / (1 - self._m)))
+        self.first_n_times_min = []
+        self.first_n_times_max = []
+        self._min, self._max = None, None
+
+    def _update_moving_avg(self, input):
+        with torch.no_grad():
+            """calibration process"""
+            if self._computed_batches_cnt < self._threshold_batches:
+                ## >> save first n times min, max
+                self._computed_batches_cnt += 1
+                self.first_n_times_min.append(input.min())
+                self.first_n_times_max.append(input.max())
+
+            elif self._computed_batches_cnt == self._threshold_batches:
+                ## >> compute the mean of first n times min, max
+                self._computed_batches_cnt += 1
+                assert len(self.first_n_times_min) == self._threshold_batches
+                self._min = torch.tensor(self.first_n_times_min).mean()
+                self._max = torch.tensor(self.first_n_times_max).mean()
+
+            elif self._computed_batches_cnt > self._threshold_batches:
+                ## >> update min, max with momentum ( moving average )
+                self._computed_batches_cnt += 1
+                self._min = self._min * self._m + (1 - self._m) * input.min()
+                self._max = self._max * self._m + (1 - self._m) * input.max()
+
+            """ determine the quantization parameter """
+            if self._computed_batches_cnt == self._batches:
+                # if 16 == 16, calibration is done.
+                self.compute_qparams(self._min, self._max)
+                self._ready_to_quantize = True
+
+    def forward(self, input: Tensor) -> Tensor:
+        if self._ready_to_quantize == False:
+            self._update_moving_avg(input)
+            return input
+        else:
+            return super().forward(input)
+
+
 quantizerDict = {
     "AbsMaxQuantizer": AbsMaxQuantizer,
     "MinMaxQuantizer": MinMaxQuantizer,
     "DynamicMinMaxQuantizer": DynamicMinMaxQuantizer,
+    "MovingAvgMinMaxQuantizer": MovingAvgMinMaxQuantizer,
     # "NormQuantizer": NormQuantizer,
     # "OrgNormQuantizerCode": OrgNormQuantizerCode,
 }
