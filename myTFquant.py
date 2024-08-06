@@ -31,7 +31,7 @@ def main(main_args={}, args_w={}, args_a={}, args_attn={}, args_ln={}):
         # "momentum": 0.9,
         # "batches": 16,
     }
-    # args_a = {}
+    args_a = {}
     # args_attn, args_ln = args_a, args_a
     # args_attn = {"scheme": "DynamicMinMaxQuantizer", "bit_width": 4, "per_channel": False}
     # args_attn = {"scheme": "DynamicMinMaxQuantizer", "bit_width": 4, "per_channel": False}

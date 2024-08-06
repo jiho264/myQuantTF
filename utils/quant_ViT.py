@@ -254,7 +254,10 @@ class QuantMultiheadAttention(nn.MultiheadAttention):
         attn_map = q @ k.transpose(-2, -1) / math.sqrt(q.size(-1))
         # torch.save(attn_map, "attn_map_qk.pt") # 여기 min, max가 -26, 27으로 관찰됨. 일단은
         attn_map = self.attnMapActivationQuantizer(attn_map)
-        
+        """
+        [][][][][] 여기 INT32로 리턴할거면 act quant 안 해도됨
+        [][][][][] 근데 int8 값에 softmax 씡울거면 act quant 한 번 해야함
+        """
         ## >> torch.Size([128, 12, 197, 197])
 
         """ INT32 -> return log softmax INT8 """
@@ -262,7 +265,7 @@ class QuantMultiheadAttention(nn.MultiheadAttention):
         attn_map = torch.softmax(attn_map, dim=-1)  # 1D
         zeta = 1
         gamma = -0.0001
-        attn_map = torch.clip((zeta - gamma) * attn_map + gamma, 0, 1)
+        # attn_map = torch.clip((zeta - gamma) * attn_map + gamma, 0, 1)
         # torch.save(attn_map, "attn_map_softmax.pt")
         attn_map = self.attnMapSoftmaxActivationQuantizer(attn_map)
         ## >> torch.Size([128, 12, 197, 197])
