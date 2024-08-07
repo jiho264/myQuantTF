@@ -72,40 +72,6 @@ class UniformAffineQuantizer(nn.Module):
         return self._dequantize(self._quantize(x))
 
 
-class AbsMaxQuantizer(UniformAffineQuantizer):
-    def __init__(self, org_tensor, args):
-        """
-        [ Absolute Maximum Quantization ]
-        - When zero_point is zero, the quantization range is symmetric.
-            (Uniform Symmetric Quantization)
-        - range: [-max(abs(x)), max(abs(x))]
-        """
-        super(AbsMaxQuantizer, self).__init__(org_tensor, args)
-
-        _AbsMax = None
-        if self.per_channel == True:
-            _AbsMax = org_tensor.view(org_tensor.size(0), -1).abs().max(dim=1).values
-        else:
-            _AbsMax = org_tensor.abs().max()
-
-        if self.one_side_dist == "no":
-            # if s8, scaler = 2 * org_weight.abs().max() / (127 - (-128))
-            #               = org_weight.abs().max() - (-org_weight.abs().max()) / (127 - (-128))
-            self.compute_qparams(-_AbsMax, _AbsMax)
-            # will convert to (-max, max) -> (-128, 127)
-        elif self.one_side_dist == "pos":
-            # if u8, scaler = org_weight.abs().max() / (255 - 0)
-            self.compute_qparams(torch.zeros_like(_AbsMax), _AbsMax)
-            # will convert to (0, max) -> (0, 255)
-        else:
-            print("This distribution is unexpected. plaese check the input data.")
-            # self.compute_qparams(_AbsMax, torch.zeros_like(_AbsMax))
-            raise ValueError("Unknown distribution type.")
-
-        # if s8 or u8, zero_point = 0
-        self.zero_point = torch.zeros_like(self._scaler)
-
-
 class MinMaxQuantizer(UniformAffineQuantizer):
     def __init__(self, org_tensor, args):
         """

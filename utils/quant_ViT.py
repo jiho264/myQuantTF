@@ -19,14 +19,26 @@ class QuantBase(nn.Module):
             raise Exception("Weight quantizer is already inited.")
 
         if org_tensor != None:
-            self.Quantizer = quantizerDict[args.get("scheme")](
-                org_tensor=org_tensor, args=args
-            )
+            if args.get["scheme"] in ["MinMaxQuantizer"]:
+                self.Quantizer = quantizerDict[args.get("scheme")](
+                    org_tensor=org_tensor, args=args
+                )
+            else:
+                raise Exception(
+                    "Only MinMaxQuantizer is supported for weight quantization."
+                )
         else:
-            # FIXME
-            self.Quantizer = quantizerDict[args.get("scheme")](
-                org_tensor=None, args=args
-            )
+            if args.get["scheme"] in [
+                "DynamicMinMaxQuantizer",
+                "MovingAvgMinMaxQuantizer",
+            ]:
+                self.Quantizer = quantizerDict[args.get("scheme")](
+                    org_tensor=None, args=args
+                )
+            else:
+                raise Exception(
+                    "Only DynamicMinMaxQuantizer, MovingAvgMinMaxQuantizer are supported for activation quantization."
+                )
         self.__inited = True
 
     def forward(self, input: Tensor) -> Tensor:
@@ -273,10 +285,7 @@ class QuantMultiheadAttention(nn.MultiheadAttention):
 class QuantEncoderBlock(nn.Module):
     """Transformer encoder block."""
 
-    def __init__(
-        self,
-        orgEncoderBlock: EncoderBlock,
-    ):
+    def __init__(self, orgEncoderBlock: EncoderBlock):
         super().__init__()
         self.num_heads = orgEncoderBlock.num_heads
 
