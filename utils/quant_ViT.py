@@ -116,7 +116,7 @@ class QuantAttnMap(QuantControlModule):
 
     def forward(self, input: torch.Tensor):
         ## debug for MovingAvgMinMaxQuantizer.
-        ## check for working in the every result of Attn @ V 
+        ## check for working in the every result of Attn @ V
         # if self.is_result_of_mm_with_attn_with_value == True:
         #     print(self.activationQuantizer._ready_to_quantize, end="")
         #     print(self.activationQuantizer._scaler)
@@ -417,30 +417,30 @@ class QuantViT(nn.Module):
         for name, module in self.named_modules():
             if isinstance(module, QuantLinearLayer):
                 """The quantizer for Linear layer"""
-                module.do_w_quant = self.model_w_quant
-                module.do_a_quant = self.model_a_quant
                 if self.model_w_quant:
+                    module.do_w_quant = self.model_w_quant
                     if module.w_inited == False and hasattr(module, "weight"):
                         print(f"[Weight] {name}    ", end="")
                         module.init_weight_quantizer(module.weight, self.args_w)
 
-                if self.model_a_quant:
+                if self.model_a_quant and name != "heads.head":
+                    module.do_a_quant = self.model_a_quant
                     if module.a_inited == False:
                         print(f"[Activation] {name}    ", end="")
                         module.init_activation_quantizer(None, self.args_a)
 
             elif isinstance(module, QuantAttnMap):
                 if module.is_result_of_mm_with_attn_with_value == True:
-                    """ The quantizer for Attention Map ( result of Attn @ V ) """
-                    module.do_a_quant = self.model_a_quant
+                    """The quantizer for Attention Map ( result of Attn @ V )"""
                     if self.model_a_quant:
+                        module.do_a_quant = self.model_a_quant
                         if module.a_inited == False:
                             print(f"[Activation] {name}    ", end="")
                             module.init_activation_quantizer(None, self.args_a)
                 else:
-                    """ The quantizer for MultiheadAttention ( Softmax process ) """
-                    module.do_a_quant = self.model_attn_quant
+                    """The quantizer for MultiheadAttention ( Softmax process )"""
                     if self.model_attn_quant:
+                        module.do_a_quant = self.model_attn_quant
                         if module.a_inited == False:
                             print(name, "attention quantizer is inited.")
                             module.init_activation_quantizer(None, self.args_attn)
@@ -449,9 +449,9 @@ class QuantViT(nn.Module):
                             # raise Exception("Activation quantizer is not implemented yet.")
 
             elif isinstance(module, QuantLayerNorm):
-                """ The quantizer for LayerNorm """
-                module.do_a_quant = self.model_ln_quant
+                """The quantizer for LayerNorm"""
                 if self.model_ln_quant:
+                    module.do_a_quant = self.model_ln_quant
                     if module.a_inited == False:
                         print(name, "LN quantizer is inited.")
                         module.init_activation_quantizer(None, self.args_attn)
@@ -461,7 +461,7 @@ class QuantViT(nn.Module):
 
     def forward(self, x: torch.Tensor):
         self._quant_switch()
-        ## debug for MovingAvgMinMaxQuantizer. 
+        ## debug for MovingAvgMinMaxQuantizer.
         ## check for working in the first conv_proj layer.
         # print(self.conv_proj.activationQuantizer._ready_to_quantize, end="")
         # print(self.conv_proj.activationQuantizer._scaler)
