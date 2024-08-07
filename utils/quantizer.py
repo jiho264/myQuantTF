@@ -202,7 +202,6 @@ class MovingAvgMinMaxQuantizer(UniformAffineQuantizer):
 
 
 quantizerDict = {
-    "AbsMaxQuantizer": AbsMaxQuantizer,
     "MinMaxQuantizer": MinMaxQuantizer,
     "DynamicMinMaxQuantizer": DynamicMinMaxQuantizer,
     "MovingAvgMinMaxQuantizer": MovingAvgMinMaxQuantizer,

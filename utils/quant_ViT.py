@@ -19,7 +19,7 @@ class QuantBase(nn.Module):
             raise Exception("Weight quantizer is already inited.")
 
         if org_tensor != None:
-            if args.get["scheme"] in ["MinMaxQuantizer"]:
+            if args.get("scheme") in ["MinMaxQuantizer"]:
                 self.Quantizer = quantizerDict[args.get("scheme")](
                     org_tensor=org_tensor, args=args
                 )
@@ -28,7 +28,7 @@ class QuantBase(nn.Module):
                     "Only MinMaxQuantizer is supported for weight quantization."
                 )
         else:
-            if args.get["scheme"] in [
+            if args.get("scheme") in [
                 "DynamicMinMaxQuantizer",
                 "MovingAvgMinMaxQuantizer",
             ]:
@@ -239,7 +239,7 @@ class QuantMultiheadAttention(nn.MultiheadAttention):
         """ INT GEMM -> return INT32 """
         attn_map = q @ k.transpose(-2, -1) / math.sqrt(q.size(-1))
         # torch.save(attn_map, "attn_map_qk.pt") # 여기 min, max가 -26, 27으로 관찰됨. 일단은
-        attn_map = self.attnMapActivationQuantizer(attn_map)
+        # attn_map = self.attnMapActivationQuantizer(attn_map)
         """
         [][][][][] 여기 INT32로 리턴할거면 act quant 안 해도됨
         [][][][][] 근데 int8 값에 softmax 씡울거면 act quant 한 번 해야함
@@ -384,14 +384,11 @@ class QuantViT(nn.Module):
                         module.activationQuantizer.init_quantizer(args_a)
                         print("[A]", name)
             elif isinstance(module, QuantAttnMap):
-                if args_a and module.type_of_step == "Q@K":
+                if args_a and module.type_of_step in ["Q@K", "Attn@V"]:
                     module.activationQuantizer.init_quantizer(args_a)
                     print("[A]", name)
                 elif args_attn and module.type_of_step == "Softmax(Attn)":
                     module.activationQuantizer.init_quantizer(args_attn)
-                    print("[A]", name)
-                elif args_a and module.type_of_step == "Attn@V":
-                    module.activationQuantizer.init_quantizer(args_a)
                     print("[A]", name)
             elif isinstance(module, QuantLayerNorm):
                 if args_ln:
@@ -405,12 +402,10 @@ class QuantViT(nn.Module):
                 module.weightQuantizer.do_quant = self.model_w_quant
                 module.activationQuantizer.do_quant = self.model_a_quant
             elif isinstance(module, QuantAttnMap):
-                if module.type_of_step == "Q@K":
+                if module.type_of_step in ["Q@K", "Attn@V"]:
                     module.activationQuantizer.do_quant = self.model_a_quant
                 elif module.type_of_step == "Softmax(Attn)":
                     module.activationQuantizer.do_quant = self.model_attn_quant
-                elif module.type_of_step == "Attn@V":
-                    module.activationQuantizer.do_quant = self.model_a_quant
             elif isinstance(module, QuantLayerNorm):
                 module.activationQuantizer.do_quant = self.model_ln_quant
 
