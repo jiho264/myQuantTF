@@ -4,63 +4,36 @@ import torch.nn.functional as F
 from torchvision.models.vision_transformer import Encoder, EncoderBlock, MLPBlock
 from collections import OrderedDict
 from torch import Tensor
-from .quantizer import quantizerDict
+from .quantizer import quantizerDict, StraightThrough
 
 
-class QuantControlModule(nn.Module):
+class QuantBase(nn.Module):
     def __init__(self):
         super().__init__()
-        self.do_w_quant = False
-        self.do_a_quant = False
-        self.w_inited = False
-        self.a_inited = False
-        self.weightQuantizer = None
-        self.activationQuantizer = None
+        self.do_quant = False
+        self.__inited = False
+        self.Quantizer = StraightThrough()
 
-    def init_weight_quantizer(self, org_tensor: Tensor, args: dict):
-        if self.w_inited == True:
+    def init_quantizer(self, args: dict, org_tensor=None):
+        if self.__inited == True:
             raise Exception("Weight quantizer is already inited.")
 
-        if args["scheme"] in ["MinMaxQuantizer"]:
-            # using only MinMaxQuantizer
-            pass
+        if org_tensor != None:
+            self.Quantizer = quantizerDict[args.get("scheme")](
+                org_tensor=org_tensor, args=args
+            )
         else:
-            raise NotImplementedError
+            # FIXME
+            self.Quantizer = quantizerDict[args.get("scheme")](
+                org_tensor=None, args=args
+            )
+        self.__inited = True
 
-        self.weightQuantizer = quantizerDict[args.get("scheme")](
-            org_tensor=org_tensor, args=args
-        )
-        self.w_inited = True
-
-    def init_activation_quantizer(self, org_tensor: Tensor, args: dict):
-        if self.a_inited == True:
-            raise Exception("Activation quantizer is already inited.")
-
-        if args["scheme"] in ["DynamicMinMaxQuantizer", "MovingAvgMinMaxQuantizer"]:
-            # using only DynamicMinMaxQuantizer, MovingAvgMinMaxQuantizer
-            pass
-        else:
-            raise NotImplementedError
-
-        self.activationQuantizer = quantizerDict[args.get("scheme")](
-            org_tensor=org_tensor, args=args
-        )
-        self.a_inited = True
-
-    def forward_weight_quantizer(self, input: Tensor) -> Tensor:
-        if self.do_w_quant == True:
-            return self.weightQuantizer(input)
-        else:
-            return input
-
-    def forward_activation_quantizer(self, input: Tensor) -> Tensor:
-        if self.do_a_quant == True:
-            return self.activationQuantizer(input)
-        else:
-            return input
+    def forward(self, input: Tensor) -> Tensor:
+        return self.Quantizer(input) if self.do_quant else input
 
 
-class QuantLinearLayer(QuantControlModule):
+class QuantLinearLayer(nn.Module):
     def __init__(self, orgModule):
         super().__init__()
         """forward function setting"""
@@ -81,84 +54,85 @@ class QuantLinearLayer(QuantControlModule):
             orgModule.bias.clone().detach() if orgModule.bias is not None else None
         )
 
-        print("  QuantLayer is created")
+        self.weightQuantizer = QuantBase()
+        self.activationQuantizer = QuantBase()
 
     def forward(self, input: torch.Tensor):
-        _weight = self.forward_weight_quantizer(self.weight)
+        _weight = self.weightQuantizer(self.weight)
 
         x = self.fwd_func(input, _weight, self.bias, **self.fwd_kwargs)
 
-        return self.forward_activation_quantizer(x)
+        return self.activationQuantizer(x)
 
 
-class QuantAttnMap(QuantControlModule):
+class QuantAttnMap(nn.Module):
     def __init__(self):
         """
-        Only for attention map
+        self.type_of_step = [Q@K, Softmax(Attn), Attn@V]
 
-        [1] result of attention map
+        [1] Q @ K -> args_a
         attn_map = q @ k.transpose(-2, -1) / math.sqrt(q.size(-1))
         ## >> torch.Size([128, 12, 197, 197])
 
-        [2] result of softmax
+        [2] Softmax(Attn) -> args_attn
         attn_map = torch.softmax(attn_map, dim=-1)
         ## >> torch.Size([128, 12, 197, 197])
 
-        [3] result of attention output
+        [3] Attn @ V -> args_a
         attn_output = attn_map @ v
         ## >> torch.Size([128, 12, 197, 64])
 
         """
         super().__init__()
-
-        # case [3]
-        self.is_result_of_mm_with_attn_with_value = False
+        self.type_of_step = (
+            None  # [Q@K, Softmax(Attn), Attn@V] defined by QuantViT's init
+        )
+        self.activationQuantizer = QuantBase()
 
     def forward(self, input: torch.Tensor):
-        ## debug for MovingAvgMinMaxQuantizer.
-        ## check for working in the every result of Attn @ V
-        # if self.is_result_of_mm_with_attn_with_value == True:
-        #     print(self.activationQuantizer._ready_to_quantize, end="")
-        #     print(self.activationQuantizer._scaler)
-        return self.forward_activation_quantizer(input)
+        return self.activationQuantizer(input)
 
 
-class QuantLayerNorm(QuantControlModule):
+class QuantLayerNorm(nn.Module):
     def __init__(self, orgLayerNorm):
         super().__init__()
-        self.__dict__.update(orgLayerNorm.__dict__)
 
-        print("    - QuantLayerNorm is created")
+        self.normalized_shape = orgLayerNorm.normalized_shape
+        self.weight = orgLayerNorm.weight.clone().detach()
+        self.bias = orgLayerNorm.bias.clone().detach()
+        self.eps = orgLayerNorm.eps
+
+        self.activationQuantizer = QuantBase()
 
     def forward(self, input: torch.Tensor):
-        return self.forward_activation_quantizer(
+        return self.activationQuantizer(
             F.layer_norm(input, self.normalized_shape, self.weight, self.bias, self.eps)
         )
 
 
+##############################################################################################################
+#################################    MODEL ARCH    ###########################################################
+##############################################################################################################
+
+
 class QuantMLPBlock(nn.Module):
-    def __init__(
-        self,
-        orgMLPBlock: MLPBlock,
-    ):
+    def __init__(self, orgMLPBlock: MLPBlock):
         super().__init__()
-        """
-        MLPBlock(
-            (0): Linear(in_features=768, out_features=3072, bias=True)
-            (1): GELU(approximate='none')
-            (2): Dropout(p=0.0, inplace=False)
-            (3): Linear(in_features=3072, out_features=768, bias=True)
-            (4): Dropout(p=0.0, inplace=False)
-            )
-        """
+
         self.linear_1 = QuantLinearLayer(orgMLPBlock.get_submodule("0"))
-        # print(self.linear_1.weight.shape)  # torch.Size([3072, 768])
+        # Linear(in_features=768, out_features=3072, bias=True)
+
         self.gelu = orgMLPBlock.get_submodule("1")
+        # GELU(approximate='none')
+
         self.dropout_1 = orgMLPBlock.get_submodule("2")
+        # Dropout(p=0.0, inplace=False)
+
         self.linear_2 = QuantLinearLayer(orgMLPBlock.get_submodule("3"))
-        # print(self.linear_2.weight.shape)  # torch.Size([768, 3072])
+        # Linear(in_features=3072, out_features=768, bias=True)
+
         self.dropout_2 = orgMLPBlock.get_submodule("4")
-        print("    - QuantMLPBlock is created")
+        # Dropout(p=0.0, inplace=False)
 
     def forward(self, input: torch.Tensor):
 
@@ -198,17 +172,17 @@ class QuantMultiheadAttention(nn.MultiheadAttention):
 
         # [1] Q @ K
         self.attnMapActivationQuantizer = QuantAttnMap()
+        self.attnMapActivationQuantizer.type_of_step = "Q@K"
         # [2] Attn = Softmax()
         self.attnMapSoftmaxActivationQuantizer = QuantAttnMap()
+        self.attnMapSoftmaxActivationQuantizer.type_of_step = "Softmax(Attn)"
         # [3] Attn @ V
         self.attnOutActivationQuantizer = QuantAttnMap()
-        # using QuantAttnMap class but different purpose
-        # only for activation quantization.
-        self.attnOutActivationQuantizer.is_result_of_mm_with_attn_with_value = True
+        self.attnMapActivationQuantizer.type_of_step = "Attn@V"
 
         self.out_proj = QuantLinearLayer(OUT_PROJ)
 
-        print("    - QuantMultiheadAttention is created")
+        # print("    - QuantMultiheadAttention is created")
 
     def QuantMSA(self, *args, **kwargs):
         """
@@ -306,36 +280,29 @@ class QuantEncoderBlock(nn.Module):
         super().__init__()
         self.num_heads = orgEncoderBlock.num_heads
 
-        # Attention block
         ## nn.LayerNorm : LayerNorm((768,), eps=1e-06, elementwise_affine=True)
-        # self.ln_1 = orgEncoderBlock.ln_1
         self.ln_1 = QuantLayerNorm(orgEncoderBlock.ln_1)
+
         ## nn.MultiheadAttention
         self.self_attention = QuantMultiheadAttention(orgEncoderBlock.self_attention)
-        # self.self_attention = orgEncoderBlock.self_attention
+
         ## nn.Dropout : Dropout(p=0.0, inplace=False)
         self.dropout = orgEncoderBlock.dropout
 
-        # MLP block
         ## nn.LayerNorm : LayerNorm((768,), eps=1e-06, elementwise_affine=True)
-        # self.ln_2 = orgEncoderBlock.ln_2
         self.ln_2 = QuantLayerNorm(orgEncoderBlock.ln_2)
+
         ## MLPBlock
-        # self.mlp = orgEncoderBlock.mlp
         self.mlp = QuantMLPBlock(orgEncoderBlock.mlp)
-        print("    QuantEncoderBlock is created")
 
     def forward(self, input: torch.Tensor):
-        # print("B", end="")
         torch._assert(
             input.dim() == 3,
             f"Expected (batch_size, seq_length, hidden_dim) got {input.shape}",
         )
+
         x = self.ln_1(input)
-        # x, _ = self.self_attention(x, x, x, need_weights=False)
-        x, _ = self.self_attention(
-            x, x, x, need_weights=True
-        )  # @jiho264, modify for attention map
+        x, _ = self.self_attention(x, x, x, need_weights=False)
         x = self.dropout(x)
         x = x + input
 
@@ -357,9 +324,7 @@ class QuantEncoder(nn.Module):
                 orgEncoderBlock=orgEncoderBlock
             )
         self.layers = nn.Sequential(layers)
-        # self.ln = orgEncoder.ln
         self.ln = QuantLayerNorm(orgEncoder.ln)
-        print("QuantEncoder is created")
 
     def forward(self, input: torch.Tensor):
         torch._assert(
@@ -395,76 +360,45 @@ class QuantViT(nn.Module):
 
         self.heads = nn.Sequential(heads_layers)
 
-        self.args_attn = args_attn
-        self.model_attn_quant = False if self.args_attn == {} else True
+        self.model_w_quant = False if args_w == {} else True
+        self.model_a_quant = False if args_a == {} else True
+        self.model_attn_quant = False if args_attn == {} else True
+        self.model_ln_quant = False if args_ln == {} else True
 
-        self.args_ln = args_ln
-        self.model_ln_quant = False if self.args_ln == {} else True
-
-        self.args_w = args_w
-        self.model_w_quant = False if self.args_w == {} else True
-        self.model_a_quant = False
-        # for init weight quantizer, temporarily do not using activation quantizer
-        self._quant_switch()
-
-        self.args_a = args_a
-        self.model_a_quant = False if self.args_a == {} else True
+        for name, module in self.named_modules():
+            if isinstance(module, QuantLinearLayer):
+                if args_w:
+                    module.weightQuantizer.init_quantizer(args_w, module.weight)
+                if args_a:
+                    module.activationQuantizer.init_quantizer(args_a)
+            elif isinstance(module, QuantAttnMap):
+                if module.type_of_step == "Q@K":
+                    if args_attn:
+                        module.activationQuantizer.init_quantizer(args_a)
+                elif module.type_of_step == "Softmax(Attn)":
+                    if args_attn:
+                        module.activationQuantizer.init_quantizer(args_attn)
+                elif module.type_of_step == "Attn@V":
+                    if args_attn:
+                        module.activationQuantizer.init_quantizer(args_a)
+            elif isinstance(module, QuantLayerNorm):
+                if args_ln:
+                    module.activationQuantizer.init_quantizer(args_ln)
 
         self.orgforward = orgViT.forward
-        print("QuantViT is created")
 
     def _quant_switch(self):
         for name, module in self.named_modules():
             if isinstance(module, QuantLinearLayer):
-                """The quantizer for Linear layer"""
-                if self.model_w_quant:
-                    module.do_w_quant = self.model_w_quant
-                    if module.w_inited == False and hasattr(module, "weight"):
-                        print(f"[Weight] {name}    ", end="")
-                        module.init_weight_quantizer(module.weight, self.args_w)
-
-                if self.model_a_quant and name != "heads.head":
-                    module.do_a_quant = self.model_a_quant
-                    if module.a_inited == False:
-                        print(f"[Activation] {name}    ", end="")
-                        module.init_activation_quantizer(None, self.args_a)
-
+                module.weightQuantizer.do_quant = self.model_w_quant
+                module.activationQuantizer.do_quant = self.model_a_quant
             elif isinstance(module, QuantAttnMap):
-                if module.is_result_of_mm_with_attn_with_value == True:
-                    """The quantizer for Attention Map ( result of Attn @ V )"""
-                    if self.model_a_quant:
-                        module.do_a_quant = self.model_a_quant
-                        if module.a_inited == False:
-                            print(f"[Activation] {name}    ", end="")
-                            module.init_activation_quantizer(None, self.args_a)
-                else:
-                    """The quantizer for MultiheadAttention ( Softmax process )"""
-                    if self.model_attn_quant:
-                        module.do_a_quant = self.model_attn_quant
-                        if module.a_inited == False:
-                            print(name, "attention quantizer is inited.")
-                            module.init_activation_quantizer(None, self.args_attn)
-                            # [ ] implement activation quantizer
-                            # You have to prepare the activation values before quantization
-                            # raise Exception("Activation quantizer is not implemented yet.")
-
+                module.activationQuantizer.do_quant = self.model_attn_quant
             elif isinstance(module, QuantLayerNorm):
-                """The quantizer for LayerNorm"""
-                if self.model_ln_quant:
-                    module.do_a_quant = self.model_ln_quant
-                    if module.a_inited == False:
-                        print(name, "LN quantizer is inited.")
-                        module.init_activation_quantizer(None, self.args_attn)
-                        # [ ] implement activation quantizer
-                        # You have to prepare the activation values before quantization
-                        # raise Exception("Activation quantizer is not implemented yet
+                module.activationQuantizer.do_quant = self.model_ln_quant
 
     def forward(self, x: torch.Tensor):
         self._quant_switch()
-        ## debug for MovingAvgMinMaxQuantizer.
-        ## check for working in the first conv_proj layer.
-        # print(self.conv_proj.activationQuantizer._ready_to_quantize, end="")
-        # print(self.conv_proj.activationQuantizer._scaler)
         return self.orgforward(x)
 
 
