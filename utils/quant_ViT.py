@@ -178,7 +178,7 @@ class QuantMultiheadAttention(nn.MultiheadAttention):
         self.attnMapSoftmaxActivationQuantizer.type_of_step = "Softmax(Attn)"
         # [3] Attn @ V
         self.attnOutActivationQuantizer = QuantAttnMap()
-        self.attnMapActivationQuantizer.type_of_step = "Attn@V"
+        self.attnOutActivationQuantizer.type_of_step = "Attn@V"
 
         self.out_proj = QuantLinearLayer(OUT_PROJ)
 
@@ -369,22 +369,25 @@ class QuantViT(nn.Module):
             if isinstance(module, QuantLinearLayer):
                 if args_w:
                     module.weightQuantizer.init_quantizer(args_w, module.weight)
+                    print("[W]", name)
                 if args_a:
-                    module.activationQuantizer.init_quantizer(args_a)
+                    if name != "heads.head":
+                        module.activationQuantizer.init_quantizer(args_a)
+                        print("[A]", name)
             elif isinstance(module, QuantAttnMap):
-                if module.type_of_step == "Q@K":
-                    if args_attn:
-                        module.activationQuantizer.init_quantizer(args_a)
-                elif module.type_of_step == "Softmax(Attn)":
-                    if args_attn:
-                        module.activationQuantizer.init_quantizer(args_attn)
-                elif module.type_of_step == "Attn@V":
-                    if args_attn:
-                        module.activationQuantizer.init_quantizer(args_a)
+                if args_a and module.type_of_step == "Q@K":
+                    module.activationQuantizer.init_quantizer(args_a)
+                    print("[A]", name)
+                elif args_attn and module.type_of_step == "Softmax(Attn)":
+                    module.activationQuantizer.init_quantizer(args_attn)
+                    print("[A]", name)
+                elif args_a and module.type_of_step == "Attn@V":
+                    module.activationQuantizer.init_quantizer(args_a)
+                    print("[A]", name)
             elif isinstance(module, QuantLayerNorm):
                 if args_ln:
                     module.activationQuantizer.init_quantizer(args_ln)
-
+                    print("[A]", name)
         self.orgforward = orgViT.forward
 
     def _quant_switch(self):
@@ -393,7 +396,12 @@ class QuantViT(nn.Module):
                 module.weightQuantizer.do_quant = self.model_w_quant
                 module.activationQuantizer.do_quant = self.model_a_quant
             elif isinstance(module, QuantAttnMap):
-                module.activationQuantizer.do_quant = self.model_attn_quant
+                if module.type_of_step == "Q@K":
+                    module.activationQuantizer.do_quant = self.model_a_quant
+                elif module.type_of_step == "Softmax(Attn)":
+                    module.activationQuantizer.do_quant = self.model_attn_quant
+                elif module.type_of_step == "Attn@V":
+                    module.activationQuantizer.do_quant = self.model_a_quant
             elif isinstance(module, QuantLayerNorm):
                 module.activationQuantizer.do_quant = self.model_ln_quant
 

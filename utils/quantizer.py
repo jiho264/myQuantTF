@@ -36,11 +36,11 @@ class UniformAffineQuantizer(nn.Module):
         if self.one_side_dist != "no":
             self._repr_min = 0  # "UINT8" -> 0
             self._repr_max = 2 ** (self._n_bits) - 1  # "UINT8" -> 255
-            print(f"    1D search with UINT{self._n_bits}")
+            print(f"1D search with UINT{self._n_bits}", end=" - ")
         else:  # 2-d search
             self._repr_min = -(2 ** (self._n_bits - 1))  # "INT8" -> -128
             self._repr_max = 2 ** (self._n_bits - 1) - 1  # "INT8" -> 127
-            print(f"    2D search with INT{self._n_bits}")
+            print(f"2D search with INT{self._n_bits}", end=" - ")
 
     def round_ste(self, input: torch.Tensor):
         """
