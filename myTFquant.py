@@ -2,8 +2,76 @@ import torch, time, argparse
 import torch.nn as nn
 
 from utils.data_utils import save_inp_oup_data, _get_train_samples, GetDataset, evaluate
-from utils.quant_ViT import QuantViT
+from utils.quant_ViT import QuantViT, QuantLinearLayer
 import torchvision.models.vision_transformer as vision_transformer
+
+
+def _computeAdaRoundValues(model, layer, cali_data, batch_size, lr, n_iter):
+    model.eval()
+    # [1] get {Origin FP output(A_fp_lth), Quantized input and output(X_q_lth, A_q_lth)}
+    A_fp_lth = layer.weightQuantizer.Quantizer.fp_outputs
+    X_q_lth, _ = save_inp_oup_data(model, layer, cali_data)
+
+    # [2] Define the optimizer and loss function
+    optimizer_w = torch.optim.Adam([layer.weightQuantizer.Quantizer._v], lr=lr)
+
+    print(optimizer_w, n_iter, layer.weightQuantizer.Quantizer._v.shape)
+
+    model.train()
+
+    for i in range(1, n_iter + 1):
+
+        idx = torch.randperm(X_q_lth.size(0))[:batch_size]
+
+        optimizer_w.zero_grad()
+
+        """ Layer reconstruction loss"""
+        _tmp_A_q_lth = layer.forward(X_q_lth[idx])
+        _mse = (A_fp_lth[idx] - _tmp_A_q_lth).abs().pow(2).mean()
+        _beta = layer.weightQuantizer.Quantizer._decayed_beta(i, n_iter)
+        _reg_loss = layer.weightQuantizer.Quantizer.f_reg(beta=_beta)
+
+        loss = _mse + layer.weightQuantizer.Quantizer.lamda * _reg_loss
+
+        loss.backward()
+        optimizer_w.step()
+
+        if i % 1000 == 0 or i == 1:
+            print(
+                f"Iter {i:5d} | Total loss: {loss:.4f} (MSE:{_mse:.4f}, Reg:{_reg_loss:.4f}) beta={_beta:.2f}"
+            )
+        if _beta > 0 and _reg_loss < 0.00001:
+            print(
+                f"Iter {i:5d} | Total loss: {loss:.4f} (MSE:{_mse:.4f}, Reg:{_reg_loss:.4f}) beta={_beta:.2f} ... Early stopping\n"
+            )
+            break
+
+    del layer.weightQuantizer.Quantizer.fp_outputs
+    del X_q_lth, A_fp_lth
+    
+    layer.weightQuantizer.Quantizer.setRoundingValues()
+    return None
+
+
+def run_AdaRound(
+    model, train_loader, num_samples=1024, batch_size=32, lr=0.01, n_iter=25000
+):
+
+    model.eval()
+
+    cali_data = _get_train_samples(train_loader, num_samples)
+
+    for name, module in model.named_modules():
+        if isinstance(module, QuantLinearLayer):
+            model.model_w_quant = False
+            _, FP_OUTPUT = save_inp_oup_data(model, module, cali_data)
+            model.model_w_quant = True
+            module.weightQuantizer.Quantizer.fp_outputs = FP_OUTPUT
+            print(name)
+            print("   FP_OUTPUT shape", FP_OUTPUT.shape)
+            _computeAdaRoundValues(model, module, cali_data, batch_size, lr, n_iter)
+            torch.cuda.empty_cache()
+    return None
 
 
 def main(main_args={}, args_w={}, args_a={}, args_attn={}, args_ln={}):
@@ -23,6 +91,8 @@ def main(main_args={}, args_w={}, args_a={}, args_attn={}, args_ln={}):
     model.eval().to("cuda")
 
     args_w = {"scheme": "MinMaxQuantizer", "bit_width": 4, "per_channel": True}
+    args_w.update({"scheme": "AdaRoundQuantizer"})
+
     args_a = {
         "scheme": "MovingAvgMinMaxQuantizer",
         "bit_width": 8,
@@ -36,7 +106,7 @@ def main(main_args={}, args_w={}, args_a={}, args_attn={}, args_ln={}):
     # args_attn = {"scheme": "DynamicMinMaxQuantizer", "bit_width": 4, "per_channel": False}
     # args_attn = {"scheme": "DynamicMinMaxQuantizer", "bit_width": 4, "per_channel": False}
     # args_ln = {"scheme": "MinMaxQuantizer", "bit_width": 4, "per_channel": False}
-    
+
     model = QuantViT(model, args_w, args_a, args_attn, args_ln)
 
     if type(model) == QuantViT:
@@ -58,6 +128,9 @@ def main(main_args={}, args_w={}, args_a={}, args_attn={}, args_ln={}):
         """ calibration for activation """
         _, _ = evaluate(model, test_loader, 16, "cuda")
         print("Calibration done \n")
+
+    if args_w.get("scheme") == "AdaRoundQuantizer":
+        run_AdaRound(model, train_loader)
 
     """ evaluation """
     _top1, _ = evaluate(model, test_loader, len(test_loader), "cuda")

@@ -19,7 +19,7 @@ class QuantBase(nn.Module):
             raise Exception("Weight quantizer is already inited.")
 
         if org_tensor != None:
-            if args.get("scheme") in ["MinMaxQuantizer"]:
+            if args.get("scheme") in ["AdaRoundQuantizer", "MinMaxQuantizer"]:
                 self.Quantizer = quantizerDict[args.get("scheme")](
                     org_tensor=org_tensor, args=args
                 )
