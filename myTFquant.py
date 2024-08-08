@@ -1,8 +1,6 @@
 import torch, time, argparse
 import torch.nn as nn
 
-import gc
-
 from utils.data_utils import save_inp_oup_data, _get_train_samples, GetDataset, evaluate
 from utils.quant_ViT import QuantViT, QuantLinearLayer
 import torchvision.models.vision_transformer as vision_transformer
@@ -49,11 +47,8 @@ def _computeAdaRoundValues(model, layer, cali_data, batch_size, lr, n_iter):
             break
 
     del layer.weightQuantizer.Quantizer.fp_outputs
-    del X_q_lth
-
-    gc.collect()
-
-    torch.cuda.empty_cache()
+    del X_q_lth, A_fp_lth
+    
     layer.weightQuantizer.Quantizer.setRoundingValues()
     return None
 
@@ -75,7 +70,7 @@ def run_AdaRound(
             print(name)
             print("   FP_OUTPUT shape", FP_OUTPUT.shape)
             _computeAdaRoundValues(model, module, cali_data, batch_size, lr, n_iter)
-
+            torch.cuda.empty_cache()
     return None
 
 
