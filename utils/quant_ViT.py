@@ -50,6 +50,15 @@ class QuantBase(nn.Module):
         return self.Quantizer(input) if self.do_quant else input
 
 
+class QuantActOnly(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.activationQuantizer = QuantBase()
+
+    def forward(self, input: torch.Tensor):
+        return self.activationQuantizer(input)
+
+
 class QuantLinearLayer(nn.Module):
     def __init__(self, orgModule):
         super().__init__()
@@ -80,79 +89,6 @@ class QuantLinearLayer(nn.Module):
         x = self.fwd_func(input, _weight, self.bias, **self.fwd_kwargs)
 
         return self.activationQuantizer(x)
-
-
-class QuantAttnMap(nn.Module):
-    def __init__(self):
-        """
-        self.type_of_step = [Q@K, Softmax(Attn), Attn@V]
-
-        [1] Q @ K -> args_a
-        attn_map = q @ k.transpose(-2, -1) / math.sqrt(q.size(-1))
-        ## >> torch.Size([128, 12, 197, 197])
-
-        [2] Softmax(Attn) -> args_attn
-        attn_map = torch.softmax(attn_map, dim=-1)
-        ## >> torch.Size([128, 12, 197, 197])
-
-        [3] Attn @ V -> args_a
-        attn_output = attn_map @ v
-        ## >> torch.Size([128, 12, 197, 64])
-
-        """
-        super().__init__()
-        self.type_of_step = (
-            None  # [Q@K, Softmax(Attn), Attn@V] defined by QuantViT's init
-        )
-        self.activationQuantizer = QuantBase()
-
-    def forward(self, input: torch.Tensor):
-        return self.activationQuantizer(input)
-
-
-class QuantSoftmax(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.activationQuantizer = QuantBase()
-
-        self.onoff = False
-
-    def forward(self, input: torch.Tensor):
-        if self.onoff:
-            return self.activationQuantizer(F.softmax(input, dim=-1))
-        else:
-            return F.softmax(input, dim=-1)
-
-
-class QuantActOnly(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.activationQuantizer = QuantBase()
-
-    def forward(self, input: torch.Tensor):
-        return self.activationQuantizer(input)
-
-
-class QuantLayerNorm(nn.Module):
-    def __init__(self, orgLayerNorm):
-        super().__init__()
-
-        self.normalized_shape = orgLayerNorm.normalized_shape
-        self.weight = orgLayerNorm.weight.clone().detach()
-        self.bias = orgLayerNorm.bias.clone().detach()
-        self.eps = orgLayerNorm.eps
-
-        self.activationQuantizer = QuantBase()
-
-    def forward(self, input: torch.Tensor):
-        return self.activationQuantizer(
-            F.layer_norm(input, self.normalized_shape, self.weight, self.bias, self.eps)
-        )
-
-
-##############################################################################################################
-#################################    MODEL ARCH    ###########################################################
-##############################################################################################################
 
 
 class QuantMLPBlock(nn.Module):
@@ -226,6 +162,18 @@ class QuantMLPBlock(nn.Module):
         return x
 
 
+class QuantSoftmax(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.activationQuantizer = QuantBase()
+
+        self.using_int_softmax = False
+        self.int_softmax_bit_width = None
+
+    def forward(self, input: torch.Tensor):
+        return torch.softmax(input, dim=-1)
+
+
 class QuantMultiheadAttention(nn.MultiheadAttention):
     def __init__(self, orgMultiheadAttention):
         super().__init__(
@@ -256,11 +204,9 @@ class QuantMultiheadAttention(nn.MultiheadAttention):
         # self.attnMapActivationQuantizer = QuantAttnMap()
         # self.attnMapActivationQuantizer.type_of_step = "Q@K"
         # [2] Attn = Softmax()
-        self.attnMapSoftmaxActivationQuantizer = QuantAttnMap()
-        self.attnMapSoftmaxActivationQuantizer.type_of_step = "Softmax(Attn)"
+        self.attnMapSoftmaxActivationQuantizer = QuantSoftmax()
         # [3] Attn @ V
-        self.attnOutActivationQuantizer = QuantAttnMap()
-        self.attnOutActivationQuantizer.type_of_step = "Attn@V"
+        self.attnOutActivationQuantizer = QuantActOnly()
 
         self.out_proj = QuantLinearLayer(OUT_PROJ)
 
@@ -307,28 +253,15 @@ class QuantMultiheadAttention(nn.MultiheadAttention):
         v = proj[2].view(bsz, src_len, self.num_heads, self.head_dim).transpose(1, 2)
 
         """ INT GEMM -> return INT32 """
-        attn_map = q @ k.transpose(-2, -1) / math.sqrt(q.size(-1))
-        # torch.save(attn_map, "attn_map_qk.pt") # 여기 min, max가 -26, 27으로 관찰됨. 일단은
-        # attn_map = self.attnMapActivationQuantizer(attn_map)
-        """
-        [][][][][] 여기 INT32로 리턴할거면 act quant 안 해도됨
-        [][][][][] 근데 int8 값에 softmax 씡울거면 act quant 한 번 해야함
-        """
+        qk = q @ k.transpose(-2, -1) / math.sqrt(q.size(-1))
         ## >> torch.Size([128, 12, 197, 197])
 
         """ INT32 -> return log softmax INT8 """
-        # [ ] implement log softmax quantizer
-        attn_map = torch.softmax(attn_map, dim=-1)  # 1D
-        zeta = 1
-        gamma = -0.0001
-        # attn_map = torch.clip((zeta - gamma) * attn_map + gamma, 0, 1)
-        # torch.save(attn_map, "attn_map_softmax.pt")
-        attn_map = self.attnMapSoftmaxActivationQuantizer(attn_map)
+        attn_map = self.attnMapSoftmaxActivationQuantizer(qk)
         ## >> torch.Size([128, 12, 197, 197])
 
         """ INT GEMM -> return INT32 -> return INT8 """
-        attn_output = attn_map @ v  # 2D
-        attn_map = self.attnOutActivationQuantizer(attn_output)
+        attn_output = self.attnOutActivationQuantizer(attn_map @ v)
         ## >> torch.Size([128, 12, 197, 64])
 
         attn_output = (
@@ -350,6 +283,23 @@ class QuantMultiheadAttention(nn.MultiheadAttention):
         torch._native_multi_head_attention = self.ORG_MSA_FORWARD_FUNC
 
         return out
+
+
+class QuantLayerNorm(nn.Module):
+    def __init__(self, orgLayerNorm):
+        super().__init__()
+
+        self.normalized_shape = orgLayerNorm.normalized_shape
+        self.weight = orgLayerNorm.weight.clone().detach()
+        self.bias = orgLayerNorm.bias.clone().detach()
+        self.eps = orgLayerNorm.eps
+
+        self.activationQuantizer = QuantBase()
+
+    def forward(self, input: torch.Tensor):
+        return self.activationQuantizer(
+            F.layer_norm(input, self.normalized_shape, self.weight, self.bias, self.eps)
+        )
 
 
 class QuantEncoderBlock(nn.Module):
@@ -455,12 +405,9 @@ class QuantViT(nn.Module):
                     if name != "heads.head":
                         module.activationQuantizer.init_quantizer(args_a)
                         print("[A]", name)
-            elif isinstance(module, QuantAttnMap):
-                if args_a and module.type_of_step in ["Q@K", "Attn@V"]:
+            elif isinstance(module, QuantActOnly):
+                if args_a:
                     module.activationQuantizer.init_quantizer(args_a)
-                    print("[A]", name)
-                elif args_attn and module.type_of_step == "Softmax(Attn)":
-                    module.activationQuantizer.init_quantizer(args_attn)
                     print("[A]", name)
             elif isinstance(module, QuantLayerNorm):
                 if args_ln:
@@ -470,6 +417,10 @@ class QuantViT(nn.Module):
                 if args_gelu:
                     module.int_gelu_bit_width = args_gelu.get("bit_width")
                     print(f"[INT{module.int_gelu_bit_width} GELU]", name)
+            elif isinstance(module, QuantSoftmax):
+                if args_attn:
+                    module.int_softmax_bit_width = args_attn.get("bit_width")
+                    print(f"[INT{module.int_softmax_bit_width} Softmax]", name)
 
         self.orgforward = orgViT.forward
 
@@ -478,15 +429,14 @@ class QuantViT(nn.Module):
             if isinstance(module, QuantLinearLayer):
                 module.weightQuantizer.do_quant = self.vit_w_quant
                 module.activationQuantizer.do_quant = self.vit_a_quant
-            elif isinstance(module, QuantAttnMap):
-                if module.type_of_step in ["Q@K", "Attn@V"]:
-                    module.activationQuantizer.do_quant = self.vit_a_quant
-                elif module.type_of_step == "Softmax(Attn)":
-                    module.activationQuantizer.do_quant = self.vit_attn_quant
+            elif isinstance(module, QuantActOnly):
+                module.activationQuantizer.do_quant = self.vit_a_quant
             elif isinstance(module, QuantLayerNorm):
                 module.activationQuantizer.do_quant = self.vit_ln_quant
             elif isinstance(module, QuantMLPBlock):
                 module.using_int_gelu = self.vit_INT_GELU
+            elif isinstance(module, QuantSoftmax):
+                module.using_int_softmax = self.vit_attn_quant
 
     def forward(self, x: torch.Tensor):
         self._quant_switch()
