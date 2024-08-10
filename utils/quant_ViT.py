@@ -151,21 +151,6 @@ class QuantMLPBlock(nn.Module):
         self.dropout_2 = orgMLPBlock.get_submodule("4")
         # Dropout(p=0.0, inplace=False)
 
-    # def i_POLY(self, q, S, a, b, c):
-    #     """
-    #     Kim, Sehoon, et al. "I-bert: Integer-only bert quantization." International conference on machine learning. PMLR, 2021.
-    #     ref : https://github.com/kssteven418/I-BERT/blob/ibert/fairseq/quantization/utils/quant_modules.py
-
-    #     여기 논문에서 알고리즘 1에 _s는 floor하라고 적혀있는데 그렇게 하면 그냥 망해버림.
-    #     """
-    #     qb = torch.floor(b / S)  # PRE-COMPUTED >> INT
-    #     qc = torch.floor(c / (a * S**2))  # PRE-COMPUTED >> INT
-    #     # _S = torch.floor(a * S**2)
-    #     _S = a * S**2  # PRE-COMPUTED >> FP
-    #     _q = (q + qb) ** 2 + qc  # >> INT
-
-    #     return _q, _S  # INT, FP
-
     def i_ERF(self, q, S):
         with torch.no_grad():
             a, b, c = -0.2888, -1.769, 1
