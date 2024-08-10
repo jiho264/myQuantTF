@@ -48,7 +48,7 @@ def _computeAdaRoundValues(model, layer, cali_data, batch_size, lr, n_iter):
 
     del layer.weightQuantizer.Quantizer.fp_outputs
     del X_q_lth, A_fp_lth
-    
+
     layer.weightQuantizer.Quantizer.setRoundingValues()
     return None
 
@@ -63,9 +63,9 @@ def run_AdaRound(
 
     for name, module in model.named_modules():
         if isinstance(module, QuantLinearLayer):
-            model.model_w_quant = False
+            model.vit_w_quant = False
             _, FP_OUTPUT = save_inp_oup_data(model, module, cali_data)
-            model.model_w_quant = True
+            model.vit_w_quant = True
             module.weightQuantizer.Quantizer.fp_outputs = FP_OUTPUT
             print(name)
             print("   FP_OUTPUT shape", FP_OUTPUT.shape)
@@ -90,7 +90,7 @@ def main(main_args={}, args_w={}, args_a={}, args_attn={}, args_ln={}, args_gelu
         raise NotImplementedError
     model.eval().to("cuda")
 
-    args_w = {"scheme": "MinMaxQuantizer", "bit_width": 8, "per_channel": True}
+    args_w = {"scheme": "MinMaxQuantizer", "bit_width": 4, "per_channel": True}
     args_w.update({"scheme": "AdaRoundQuantizer"})
     args_a = {
         "scheme": "MovingAvgMinMaxQuantizer",

@@ -1,119 +1,2010 @@
 {'arch': 'ViT_B_16', 'batch_size': 128, 'num_samples': 1024}
-Weight quantization parameter : {'scheme': 'AdaRoundQuantizer', 'bit_width': 8, 'per_channel': True}
+Weight quantization parameter : {'scheme': 'AdaRoundQuantizer', 'bit_width': 4, 'per_channel': True}
 Activation quantization parameter : {'scheme': 'MovingAvgMinMaxQuantizer', 'bit_width': 8}
 Attention quantization parameter : {}
 LayerNorm quantization parameter : {}
 GELU quantization parameter : {}
-2D search with INT8 - [W]+AdaRound[W] conv_proj
+2D search with INT4 - [W]+AdaRound[W] conv_proj
 2D search with INT8 - [A] conv_proj
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_0.self_attention.in_proj
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_0.self_attention.in_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_0.self_attention.in_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_0.self_attention.attnOutActivationQuantizer
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_0.self_attention.out_proj
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_0.self_attention.out_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_0.self_attention.out_proj
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_0.mlp.linear_1
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_0.mlp.linear_1
 2D search with INT8 - [A] encoder.layers.encoder_layer_0.mlp.linear_1
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_0.mlp.linear_2
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_0.mlp.linear_2
 2D search with INT8 - [A] encoder.layers.encoder_layer_0.mlp.linear_2
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_1.self_attention.in_proj
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_1.self_attention.in_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_1.self_attention.in_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_1.self_attention.attnOutActivationQuantizer
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_1.self_attention.out_proj
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_1.self_attention.out_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_1.self_attention.out_proj
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_1.mlp.linear_1
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_1.mlp.linear_1
 2D search with INT8 - [A] encoder.layers.encoder_layer_1.mlp.linear_1
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_1.mlp.linear_2
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_1.mlp.linear_2
 2D search with INT8 - [A] encoder.layers.encoder_layer_1.mlp.linear_2
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_2.self_attention.in_proj
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_2.self_attention.in_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_2.self_attention.in_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_2.self_attention.attnOutActivationQuantizer
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_2.self_attention.out_proj
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_2.self_attention.out_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_2.self_attention.out_proj
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_2.mlp.linear_1
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_2.mlp.linear_1
 2D search with INT8 - [A] encoder.layers.encoder_layer_2.mlp.linear_1
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_2.mlp.linear_2
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_2.mlp.linear_2
 2D search with INT8 - [A] encoder.layers.encoder_layer_2.mlp.linear_2
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_3.self_attention.in_proj
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_3.self_attention.in_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_3.self_attention.in_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_3.self_attention.attnOutActivationQuantizer
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_3.self_attention.out_proj
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_3.self_attention.out_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_3.self_attention.out_proj
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_3.mlp.linear_1
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_3.mlp.linear_1
 2D search with INT8 - [A] encoder.layers.encoder_layer_3.mlp.linear_1
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_3.mlp.linear_2
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_3.mlp.linear_2
 2D search with INT8 - [A] encoder.layers.encoder_layer_3.mlp.linear_2
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_4.self_attention.in_proj
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_4.self_attention.in_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_4.self_attention.in_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_4.self_attention.attnOutActivationQuantizer
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_4.self_attention.out_proj
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_4.self_attention.out_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_4.self_attention.out_proj
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_4.mlp.linear_1
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_4.mlp.linear_1
 2D search with INT8 - [A] encoder.layers.encoder_layer_4.mlp.linear_1
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_4.mlp.linear_2
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_4.mlp.linear_2
 2D search with INT8 - [A] encoder.layers.encoder_layer_4.mlp.linear_2
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_5.self_attention.in_proj
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_5.self_attention.in_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_5.self_attention.in_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_5.self_attention.attnOutActivationQuantizer
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_5.self_attention.out_proj
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_5.self_attention.out_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_5.self_attention.out_proj
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_5.mlp.linear_1
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_5.mlp.linear_1
 2D search with INT8 - [A] encoder.layers.encoder_layer_5.mlp.linear_1
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_5.mlp.linear_2
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_5.mlp.linear_2
 2D search with INT8 - [A] encoder.layers.encoder_layer_5.mlp.linear_2
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_6.self_attention.in_proj
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_6.self_attention.in_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_6.self_attention.in_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_6.self_attention.attnOutActivationQuantizer
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_6.self_attention.out_proj
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_6.self_attention.out_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_6.self_attention.out_proj
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_6.mlp.linear_1
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_6.mlp.linear_1
 2D search with INT8 - [A] encoder.layers.encoder_layer_6.mlp.linear_1
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_6.mlp.linear_2
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_6.mlp.linear_2
 2D search with INT8 - [A] encoder.layers.encoder_layer_6.mlp.linear_2
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_7.self_attention.in_proj
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_7.self_attention.in_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_7.self_attention.in_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_7.self_attention.attnOutActivationQuantizer
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_7.self_attention.out_proj
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_7.self_attention.out_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_7.self_attention.out_proj
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_7.mlp.linear_1
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_7.mlp.linear_1
 2D search with INT8 - [A] encoder.layers.encoder_layer_7.mlp.linear_1
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_7.mlp.linear_2
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_7.mlp.linear_2
 2D search with INT8 - [A] encoder.layers.encoder_layer_7.mlp.linear_2
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_8.self_attention.in_proj
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_8.self_attention.in_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_8.self_attention.in_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_8.self_attention.attnOutActivationQuantizer
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_8.self_attention.out_proj
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_8.self_attention.out_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_8.self_attention.out_proj
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_8.mlp.linear_1
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_8.mlp.linear_1
 2D search with INT8 - [A] encoder.layers.encoder_layer_8.mlp.linear_1
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_8.mlp.linear_2
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_8.mlp.linear_2
 2D search with INT8 - [A] encoder.layers.encoder_layer_8.mlp.linear_2
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_9.self_attention.in_proj
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_9.self_attention.in_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_9.self_attention.in_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_9.self_attention.attnOutActivationQuantizer
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_9.self_attention.out_proj
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_9.self_attention.out_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_9.self_attention.out_proj
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_9.mlp.linear_1
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_9.mlp.linear_1
 2D search with INT8 - [A] encoder.layers.encoder_layer_9.mlp.linear_1
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_9.mlp.linear_2
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_9.mlp.linear_2
 2D search with INT8 - [A] encoder.layers.encoder_layer_9.mlp.linear_2
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_10.self_attention.in_proj
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_10.self_attention.in_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_10.self_attention.in_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_10.self_attention.attnOutActivationQuantizer
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_10.self_attention.out_proj
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_10.self_attention.out_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_10.self_attention.out_proj
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_10.mlp.linear_1
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_10.mlp.linear_1
 2D search with INT8 - [A] encoder.layers.encoder_layer_10.mlp.linear_1
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_10.mlp.linear_2
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_10.mlp.linear_2
 2D search with INT8 - [A] encoder.layers.encoder_layer_10.mlp.linear_2
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_11.self_attention.in_proj
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_11.self_attention.in_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_11.self_attention.in_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_11.self_attention.attnOutActivationQuantizer
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_11.self_attention.out_proj
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_11.self_attention.out_proj
 2D search with INT8 - [A] encoder.layers.encoder_layer_11.self_attention.out_proj
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_11.mlp.linear_1
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_11.mlp.linear_1
 2D search with INT8 - [A] encoder.layers.encoder_layer_11.mlp.linear_1
-2D search with INT8 - [W]+AdaRound[W] encoder.layers.encoder_layer_11.mlp.linear_2
+2D search with INT4 - [W]+AdaRound[W] encoder.layers.encoder_layer_11.mlp.linear_2
 2D search with INT8 - [A] encoder.layers.encoder_layer_11.mlp.linear_2
-2D search with INT8 - [W]+AdaRound[W] heads.head
+2D search with INT4 - [W]+AdaRound[W] heads.head
 Calibration done 
 
+conv_proj
+   FP_OUTPUT shape torch.Size([1024, 768, 14, 14])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([768, 3, 16, 16])
+Iter     1 | Total loss: 0.0020 (MSE:0.0020, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0003 (MSE:0.0003, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0004 (MSE:0.0004, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0004 (MSE:0.0004, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0003 (MSE:0.0003, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 89002.7031 (MSE:0.0003, Reg:89002.7031) beta=20.00
+Iter  6000 | Total loss: 138.0007 (MSE:0.0006, Reg:138.0000) beta=19.10
+Iter  7000 | Total loss: 86.9363 (MSE:0.0006, Reg:86.9357) beta=18.20
+Iter  8000 | Total loss: 42.0006 (MSE:0.0006, Reg:42.0000) beta=17.30
+Iter  9000 | Total loss: 36.0006 (MSE:0.0006, Reg:36.0000) beta=16.40
+Iter 10000 | Total loss: 34.0006 (MSE:0.0006, Reg:34.0000) beta=15.50
+Iter 11000 | Total loss: 28.0006 (MSE:0.0006, Reg:28.0000) beta=14.60
+Iter 12000 | Total loss: 14.0006 (MSE:0.0006, Reg:14.0000) beta=13.70
+Iter 13000 | Total loss: 9.0006 (MSE:0.0006, Reg:9.0000) beta=12.80
+Iter 14000 | Total loss: 8.0006 (MSE:0.0006, Reg:8.0000) beta=11.90
+Iter 15000 | Total loss: 8.0006 (MSE:0.0006, Reg:8.0000) beta=11.00
+Iter 16000 | Total loss: 4.0006 (MSE:0.0006, Reg:4.0000) beta=10.10
+Iter 17000 | Total loss: 4.0006 (MSE:0.0006, Reg:4.0000) beta=9.20
+Iter 18000 | Total loss: 1.0006 (MSE:0.0006, Reg:1.0000) beta=8.30
+Iter 19000 | Total loss: 1.0006 (MSE:0.0006, Reg:1.0000) beta=7.40
+Iter 19105 | Total loss: 0.0006 (MSE:0.0006, Reg:0.0000) beta=7.31 ... Early stopping
+
+encoder.layers.encoder_layer_0.self_attention.in_proj
+   FP_OUTPUT shape torch.Size([1024, 197, 2304])
+,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([2304, 768])
+Iter     1 | Total loss: 0.0011 (MSE:0.0011, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0003 (MSE:0.0003, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0003 (MSE:0.0003, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0003 (MSE:0.0003, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0003 (MSE:0.0003, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 319540.7500 (MSE:0.0003, Reg:319540.7500) beta=20.00
+Iter  6000 | Total loss: 27140.1934 (MSE:0.0005, Reg:27140.1934) beta=19.10
+Iter  7000 | Total loss: 20601.7012 (MSE:0.0005, Reg:20601.7012) beta=18.20
+Iter  8000 | Total loss: 17159.1738 (MSE:0.0005, Reg:17159.1738) beta=17.30
+Iter  9000 | Total loss: 14687.0967 (MSE:0.0005, Reg:14687.0957) beta=16.40
+Iter 10000 | Total loss: 12730.4775 (MSE:0.0005, Reg:12730.4766) beta=15.50
+Iter 11000 | Total loss: 10941.8369 (MSE:0.0005, Reg:10941.8359) beta=14.60
+Iter 12000 | Total loss: 9195.9707 (MSE:0.0005, Reg:9195.9697) beta=13.70
+Iter 13000 | Total loss: 7482.4590 (MSE:0.0006, Reg:7482.4585) beta=12.80
+Iter 14000 | Total loss: 5923.7490 (MSE:0.0006, Reg:5923.7485) beta=11.90
+Iter 15000 | Total loss: 4499.3042 (MSE:0.0006, Reg:4499.3037) beta=11.00
+Iter 16000 | Total loss: 3204.2871 (MSE:0.0006, Reg:3204.2866) beta=10.10
+Iter 17000 | Total loss: 2108.4006 (MSE:0.0006, Reg:2108.4001) beta=9.20
+Iter 18000 | Total loss: 1241.2394 (MSE:0.0007, Reg:1241.2388) beta=8.30
+Iter 19000 | Total loss: 618.7968 (MSE:0.0006, Reg:618.7961) beta=7.40
+Iter 20000 | Total loss: 203.5294 (MSE:0.0006, Reg:203.5288) beta=6.50
+Iter 21000 | Total loss: 36.7626 (MSE:0.0007, Reg:36.7620) beta=5.60
+Iter 22000 | Total loss: 2.0006 (MSE:0.0006, Reg:2.0000) beta=4.70
+Iter 22263 | Total loss: 0.0006 (MSE:0.0006, Reg:0.0000) beta=4.46 ... Early stopping
+
+encoder.layers.encoder_layer_0.self_attention.out_proj
+   FP_OUTPUT shape torch.Size([1024, 197, 768])
+,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([768, 768])
+Iter     1 | Total loss: 0.0001 (MSE:0.0001, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0000 (MSE:0.0000, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0000 (MSE:0.0000, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0000 (MSE:0.0000, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0000 (MSE:0.0000, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 57193.4062 (MSE:0.0000, Reg:57193.4062) beta=20.00
+Iter  6000 | Total loss: 1129.8093 (MSE:0.0000, Reg:1129.8093) beta=19.10
+Iter  7000 | Total loss: 779.5457 (MSE:0.0000, Reg:779.5456) beta=18.20
+Iter  8000 | Total loss: 624.9605 (MSE:0.0000, Reg:624.9604) beta=17.30
+Iter  9000 | Total loss: 504.9761 (MSE:0.0000, Reg:504.9761) beta=16.40
+Iter 10000 | Total loss: 419.1081 (MSE:0.0000, Reg:419.1080) beta=15.50
+Iter 11000 | Total loss: 346.5416 (MSE:0.0000, Reg:346.5416) beta=14.60
+Iter 12000 | Total loss: 280.5027 (MSE:0.0000, Reg:280.5026) beta=13.70
+Iter 13000 | Total loss: 209.9999 (MSE:0.0000, Reg:209.9998) beta=12.80
+Iter 14000 | Total loss: 164.0000 (MSE:0.0000, Reg:164.0000) beta=11.90
+Iter 15000 | Total loss: 126.8758 (MSE:0.0000, Reg:126.8757) beta=11.00
+Iter 16000 | Total loss: 76.5880 (MSE:0.0000, Reg:76.5879) beta=10.10
+Iter 17000 | Total loss: 39.0000 (MSE:0.0000, Reg:39.0000) beta=9.20
+Iter 18000 | Total loss: 21.0000 (MSE:0.0000, Reg:21.0000) beta=8.30
+Iter 19000 | Total loss: 10.0000 (MSE:0.0000, Reg:10.0000) beta=7.40
+Iter 20000 | Total loss: 1.0000 (MSE:0.0000, Reg:1.0000) beta=6.50
+Iter 20264 | Total loss: 0.0000 (MSE:0.0000, Reg:0.0000) beta=6.26 ... Early stopping
+
+encoder.layers.encoder_layer_0.mlp.linear_1
+   FP_OUTPUT shape torch.Size([1024, 197, 3072])
+,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([3072, 768])
+Iter     1 | Total loss: 0.0036 (MSE:0.0036, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0013 (MSE:0.0013, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0012 (MSE:0.0012, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0012 (MSE:0.0012, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0013 (MSE:0.0013, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 623232.7500 (MSE:0.0011, Reg:623232.7500) beta=20.00
+Iter  6000 | Total loss: 35789.7031 (MSE:0.0018, Reg:35789.7031) beta=19.10
+Iter  7000 | Total loss: 26651.5410 (MSE:0.0019, Reg:26651.5391) beta=18.20
+Iter  8000 | Total loss: 22608.2285 (MSE:0.0018, Reg:22608.2266) beta=17.30
+Iter  9000 | Total loss: 19844.6133 (MSE:0.0019, Reg:19844.6113) beta=16.40
+Iter 10000 | Total loss: 17362.9668 (MSE:0.0018, Reg:17362.9648) beta=15.50
+Iter 11000 | Total loss: 14916.6426 (MSE:0.0019, Reg:14916.6406) beta=14.60
+Iter 12000 | Total loss: 12548.3115 (MSE:0.0020, Reg:12548.3096) beta=13.70
+Iter 13000 | Total loss: 10334.3408 (MSE:0.0020, Reg:10334.3389) beta=12.80
+Iter 14000 | Total loss: 8158.6440 (MSE:0.0019, Reg:8158.6421) beta=11.90
+Iter 15000 | Total loss: 6182.9189 (MSE:0.0020, Reg:6182.9170) beta=11.00
+Iter 16000 | Total loss: 4279.4688 (MSE:0.0020, Reg:4279.4668) beta=10.10
+Iter 17000 | Total loss: 2684.7112 (MSE:0.0019, Reg:2684.7092) beta=9.20
+Iter 18000 | Total loss: 1518.7716 (MSE:0.0021, Reg:1518.7695) beta=8.30
+Iter 19000 | Total loss: 685.6757 (MSE:0.0020, Reg:685.6737) beta=7.40
+Iter 20000 | Total loss: 133.0593 (MSE:0.0022, Reg:133.0571) beta=6.50
+Iter 21000 | Total loss: 3.4232 (MSE:0.0020, Reg:3.4212) beta=5.60
+Iter 21415 | Total loss: 0.0021 (MSE:0.0021, Reg:0.0000) beta=5.23 ... Early stopping
+
+encoder.layers.encoder_layer_0.mlp.linear_2
+   FP_OUTPUT shape torch.Size([1024, 197, 768])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([768, 3072])
+Iter     1 | Total loss: 0.0015 (MSE:0.0015, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0006 (MSE:0.0006, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0006 (MSE:0.0006, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0006 (MSE:0.0006, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0005 (MSE:0.0005, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 407903.7500 (MSE:0.0006, Reg:407903.7500) beta=20.00
+Iter  6000 | Total loss: 12920.5039 (MSE:0.0008, Reg:12920.5029) beta=19.10
+Iter  7000 | Total loss: 8270.9600 (MSE:0.0008, Reg:8270.9590) beta=18.20
+Iter  8000 | Total loss: 6322.0259 (MSE:0.0008, Reg:6322.0249) beta=17.30
+Iter  9000 | Total loss: 5180.3291 (MSE:0.0007, Reg:5180.3281) beta=16.40
+Iter 10000 | Total loss: 4303.7344 (MSE:0.0008, Reg:4303.7334) beta=15.50
+Iter 11000 | Total loss: 3559.9734 (MSE:0.0008, Reg:3559.9727) beta=14.60
+Iter 12000 | Total loss: 2903.9973 (MSE:0.0008, Reg:2903.9966) beta=13.70
+Iter 13000 | Total loss: 2291.5598 (MSE:0.0008, Reg:2291.5591) beta=12.80
+Iter 14000 | Total loss: 1755.5890 (MSE:0.0008, Reg:1755.5883) beta=11.90
+Iter 15000 | Total loss: 1252.5385 (MSE:0.0008, Reg:1252.5376) beta=11.00
+Iter 16000 | Total loss: 844.2383 (MSE:0.0009, Reg:844.2374) beta=10.10
+Iter 17000 | Total loss: 526.4943 (MSE:0.0008, Reg:526.4935) beta=9.20
+Iter 18000 | Total loss: 264.8542 (MSE:0.0008, Reg:264.8535) beta=8.30
+Iter 19000 | Total loss: 117.8814 (MSE:0.0008, Reg:117.8805) beta=7.40
+Iter 20000 | Total loss: 31.9692 (MSE:0.0008, Reg:31.9684) beta=6.50
+Iter 21000 | Total loss: 4.0008 (MSE:0.0008, Reg:4.0000) beta=5.60
+Iter 21593 | Total loss: 0.0008 (MSE:0.0008, Reg:0.0000) beta=5.07 ... Early stopping
+
+encoder.layers.encoder_layer_1.self_attention.in_proj
+   FP_OUTPUT shape torch.Size([1024, 197, 2304])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([2304, 768])
+Iter     1 | Total loss: 0.0023 (MSE:0.0023, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0011 (MSE:0.0011, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0011 (MSE:0.0011, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0011 (MSE:0.0011, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0010 (MSE:0.0010, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 367039.4375 (MSE:0.0010, Reg:367039.4375) beta=20.00
+Iter  6000 | Total loss: 28148.5176 (MSE:0.0012, Reg:28148.5156) beta=19.10
+Iter  7000 | Total loss: 18487.6836 (MSE:0.0012, Reg:18487.6816) beta=18.20
+Iter  8000 | Total loss: 14463.4580 (MSE:0.0013, Reg:14463.4570) beta=17.30
+Iter  9000 | Total loss: 12001.7354 (MSE:0.0013, Reg:12001.7344) beta=16.40
+Iter 10000 | Total loss: 10202.3936 (MSE:0.0013, Reg:10202.3926) beta=15.50
+Iter 11000 | Total loss: 8653.8496 (MSE:0.0013, Reg:8653.8486) beta=14.60
+Iter 12000 | Total loss: 7077.7783 (MSE:0.0013, Reg:7077.7769) beta=13.70
+Iter 13000 | Total loss: 5593.6274 (MSE:0.0013, Reg:5593.6260) beta=12.80
+Iter 14000 | Total loss: 4327.4741 (MSE:0.0014, Reg:4327.4727) beta=11.90
+Iter 15000 | Total loss: 3247.2395 (MSE:0.0013, Reg:3247.2383) beta=11.00
+Iter 16000 | Total loss: 2255.5498 (MSE:0.0013, Reg:2255.5486) beta=10.10
+Iter 17000 | Total loss: 1438.1669 (MSE:0.0013, Reg:1438.1655) beta=9.20
+Iter 18000 | Total loss: 802.1542 (MSE:0.0014, Reg:802.1528) beta=8.30
+Iter 19000 | Total loss: 339.2042 (MSE:0.0015, Reg:339.2027) beta=7.40
+Iter 20000 | Total loss: 101.1028 (MSE:0.0014, Reg:101.1013) beta=6.50
+Iter 21000 | Total loss: 4.0014 (MSE:0.0014, Reg:4.0000) beta=5.60
+Iter 21657 | Total loss: 0.0014 (MSE:0.0014, Reg:0.0000) beta=5.01 ... Early stopping
+
+encoder.layers.encoder_layer_1.self_attention.out_proj
+   FP_OUTPUT shape torch.Size([1024, 197, 768])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([768, 768])
+Iter     1 | Total loss: 0.0001 (MSE:0.0001, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0001 (MSE:0.0001, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0000 (MSE:0.0000, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0000 (MSE:0.0000, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0000 (MSE:0.0000, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 103066.0234 (MSE:0.0000, Reg:103066.0234) beta=20.00
+Iter  6000 | Total loss: 2052.0830 (MSE:0.0001, Reg:2052.0830) beta=19.10
+Iter  7000 | Total loss: 992.2157 (MSE:0.0000, Reg:992.2156) beta=18.20
+Iter  8000 | Total loss: 623.9814 (MSE:0.0000, Reg:623.9813) beta=17.30
+Iter  9000 | Total loss: 461.3776 (MSE:0.0001, Reg:461.3776) beta=16.40
+Iter 10000 | Total loss: 339.9982 (MSE:0.0000, Reg:339.9981) beta=15.50
+Iter 11000 | Total loss: 259.9891 (MSE:0.0000, Reg:259.9890) beta=14.60
+Iter 12000 | Total loss: 212.0133 (MSE:0.0000, Reg:212.0132) beta=13.70
+Iter 13000 | Total loss: 173.2339 (MSE:0.0001, Reg:173.2339) beta=12.80
+Iter 14000 | Total loss: 145.0192 (MSE:0.0000, Reg:145.0192) beta=11.90
+Iter 15000 | Total loss: 103.8781 (MSE:0.0001, Reg:103.8780) beta=11.00
+Iter 16000 | Total loss: 66.9492 (MSE:0.0000, Reg:66.9491) beta=10.10
+Iter 17000 | Total loss: 46.8968 (MSE:0.0001, Reg:46.8968) beta=9.20
+Iter 18000 | Total loss: 26.9064 (MSE:0.0001, Reg:26.9063) beta=8.30
+Iter 19000 | Total loss: 12.9998 (MSE:0.0000, Reg:12.9998) beta=7.40
+Iter 20000 | Total loss: 2.0001 (MSE:0.0001, Reg:2.0000) beta=6.50
+Iter 20516 | Total loss: 0.0001 (MSE:0.0001, Reg:0.0000) beta=6.04 ... Early stopping
+
+encoder.layers.encoder_layer_1.mlp.linear_1
+   FP_OUTPUT shape torch.Size([1024, 197, 3072])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([3072, 768])
+Iter     1 | Total loss: 0.0161 (MSE:0.0161, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0049 (MSE:0.0049, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0049 (MSE:0.0049, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0046 (MSE:0.0046, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0047 (MSE:0.0047, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 471015.6875 (MSE:0.0042, Reg:471015.6875) beta=20.00
+Iter  6000 | Total loss: 40122.5508 (MSE:0.0058, Reg:40122.5469) beta=19.10
+Iter  7000 | Total loss: 28308.3242 (MSE:0.0051, Reg:28308.3184) beta=18.20
+Iter  8000 | Total loss: 23478.6152 (MSE:0.0052, Reg:23478.6094) beta=17.30
+Iter  9000 | Total loss: 19996.8848 (MSE:0.0055, Reg:19996.8789) beta=16.40
+Iter 10000 | Total loss: 16938.4004 (MSE:0.0051, Reg:16938.3945) beta=15.50
+Iter 11000 | Total loss: 14201.9951 (MSE:0.0054, Reg:14201.9893) beta=14.60
+Iter 12000 | Total loss: 11579.8223 (MSE:0.0051, Reg:11579.8174) beta=13.70
+Iter 13000 | Total loss: 9047.4375 (MSE:0.0056, Reg:9047.4316) beta=12.80
+Iter 14000 | Total loss: 6899.4673 (MSE:0.0054, Reg:6899.4619) beta=11.90
+Iter 15000 | Total loss: 5026.8638 (MSE:0.0057, Reg:5026.8579) beta=11.00
+Iter 16000 | Total loss: 3363.1628 (MSE:0.0052, Reg:3363.1577) beta=10.10
+Iter 17000 | Total loss: 1994.4760 (MSE:0.0056, Reg:1994.4703) beta=9.20
+Iter 18000 | Total loss: 1034.5806 (MSE:0.0053, Reg:1034.5752) beta=8.30
+Iter 19000 | Total loss: 394.2503 (MSE:0.0059, Reg:394.2444) beta=7.40
+Iter 20000 | Total loss: 49.0689 (MSE:0.0054, Reg:49.0635) beta=6.50
+Iter 20668 | Total loss: 0.0054 (MSE:0.0054, Reg:0.0000) beta=5.90 ... Early stopping
+
+encoder.layers.encoder_layer_1.mlp.linear_2
+   FP_OUTPUT shape torch.Size([1024, 197, 768])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([768, 3072])
+Iter     1 | Total loss: 0.0011 (MSE:0.0011, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0007 (MSE:0.0007, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0007 (MSE:0.0007, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0007 (MSE:0.0007, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0008 (MSE:0.0008, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 224187.6875 (MSE:0.0007, Reg:224187.6875) beta=20.00
+Iter  6000 | Total loss: 2645.0093 (MSE:0.0008, Reg:2645.0085) beta=19.10
+Iter  7000 | Total loss: 1563.1926 (MSE:0.0008, Reg:1563.1919) beta=18.20
+Iter  8000 | Total loss: 1168.8040 (MSE:0.0008, Reg:1168.8032) beta=17.30
+Iter  9000 | Total loss: 919.8609 (MSE:0.0008, Reg:919.8601) beta=16.40
+Iter 10000 | Total loss: 760.0008 (MSE:0.0008, Reg:760.0000) beta=15.50
+Iter 11000 | Total loss: 656.2415 (MSE:0.0008, Reg:656.2407) beta=14.60
+Iter 12000 | Total loss: 520.9243 (MSE:0.0008, Reg:520.9235) beta=13.70
+Iter 13000 | Total loss: 395.0003 (MSE:0.0008, Reg:394.9995) beta=12.80
+Iter 14000 | Total loss: 279.3215 (MSE:0.0008, Reg:279.3207) beta=11.90
+Iter 15000 | Total loss: 195.4885 (MSE:0.0008, Reg:195.4877) beta=11.00
+Iter 16000 | Total loss: 112.4747 (MSE:0.0008, Reg:112.4740) beta=10.10
+Iter 17000 | Total loss: 71.0008 (MSE:0.0009, Reg:71.0000) beta=9.20
+Iter 18000 | Total loss: 34.0008 (MSE:0.0008, Reg:34.0000) beta=8.30
+Iter 19000 | Total loss: 14.0008 (MSE:0.0008, Reg:14.0000) beta=7.40
+Iter 20000 | Total loss: 4.0008 (MSE:0.0008, Reg:4.0000) beta=6.50
+Iter 20480 | Total loss: 0.0008 (MSE:0.0008, Reg:0.0000) beta=6.07 ... Early stopping
+
+encoder.layers.encoder_layer_2.self_attention.in_proj
+   FP_OUTPUT shape torch.Size([1024, 197, 2304])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([2304, 768])
+Iter     1 | Total loss: 0.0054 (MSE:0.0054, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0036 (MSE:0.0036, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0035 (MSE:0.0035, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0038 (MSE:0.0038, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0037 (MSE:0.0037, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 410336.4375 (MSE:0.0035, Reg:410336.4375) beta=20.00
+Iter  6000 | Total loss: 34909.0703 (MSE:0.0038, Reg:34909.0664) beta=19.10
+Iter  7000 | Total loss: 23172.1250 (MSE:0.0039, Reg:23172.1211) beta=18.20
+Iter  8000 | Total loss: 18277.4102 (MSE:0.0040, Reg:18277.4062) beta=17.30
+Iter  9000 | Total loss: 15291.9443 (MSE:0.0037, Reg:15291.9404) beta=16.40
+Iter 10000 | Total loss: 12916.3086 (MSE:0.0039, Reg:12916.3047) beta=15.50
+Iter 11000 | Total loss: 10790.6035 (MSE:0.0038, Reg:10790.5996) beta=14.60
+Iter 12000 | Total loss: 8708.2549 (MSE:0.0038, Reg:8708.2510) beta=13.70
+Iter 13000 | Total loss: 6924.5283 (MSE:0.0039, Reg:6924.5244) beta=12.80
+Iter 14000 | Total loss: 5237.2314 (MSE:0.0044, Reg:5237.2271) beta=11.90
+Iter 15000 | Total loss: 3843.7026 (MSE:0.0039, Reg:3843.6987) beta=11.00
+Iter 16000 | Total loss: 2605.2322 (MSE:0.0040, Reg:2605.2283) beta=10.10
+Iter 17000 | Total loss: 1618.4935 (MSE:0.0042, Reg:1618.4894) beta=9.20
+Iter 18000 | Total loss: 840.4092 (MSE:0.0040, Reg:840.4052) beta=8.30
+Iter 19000 | Total loss: 353.5441 (MSE:0.0042, Reg:353.5399) beta=7.40
+Iter 20000 | Total loss: 70.7246 (MSE:0.0042, Reg:70.7204) beta=6.50
+Iter 21000 | Total loss: 2.0041 (MSE:0.0041, Reg:2.0000) beta=5.60
+Iter 21205 | Total loss: 0.0043 (MSE:0.0043, Reg:0.0000) beta=5.42 ... Early stopping
+
+encoder.layers.encoder_layer_2.self_attention.out_proj
+   FP_OUTPUT shape torch.Size([1024, 197, 768])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([768, 768])
+Iter     1 | Total loss: 0.0003 (MSE:0.0003, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0003 (MSE:0.0003, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0002 (MSE:0.0002, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0003 (MSE:0.0003, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0002 (MSE:0.0002, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 133117.1250 (MSE:0.0002, Reg:133117.1250) beta=20.00
+Iter  6000 | Total loss: 5474.7349 (MSE:0.0003, Reg:5474.7344) beta=19.10
+Iter  7000 | Total loss: 3319.6135 (MSE:0.0003, Reg:3319.6133) beta=18.20
+Iter  8000 | Total loss: 2457.8572 (MSE:0.0003, Reg:2457.8569) beta=17.30
+Iter  9000 | Total loss: 2020.1519 (MSE:0.0003, Reg:2020.1516) beta=16.40
+Iter 10000 | Total loss: 1672.2207 (MSE:0.0003, Reg:1672.2205) beta=15.50
+Iter 11000 | Total loss: 1408.9557 (MSE:0.0003, Reg:1408.9554) beta=14.60
+Iter 12000 | Total loss: 1149.6102 (MSE:0.0003, Reg:1149.6100) beta=13.70
+Iter 13000 | Total loss: 902.7458 (MSE:0.0003, Reg:902.7456) beta=12.80
+Iter 14000 | Total loss: 667.5071 (MSE:0.0003, Reg:667.5068) beta=11.90
+Iter 15000 | Total loss: 493.6536 (MSE:0.0003, Reg:493.6534) beta=11.00
+Iter 16000 | Total loss: 347.6800 (MSE:0.0003, Reg:347.6797) beta=10.10
+Iter 17000 | Total loss: 215.4385 (MSE:0.0003, Reg:215.4382) beta=9.20
+Iter 18000 | Total loss: 115.0003 (MSE:0.0003, Reg:115.0000) beta=8.30
+Iter 19000 | Total loss: 45.8188 (MSE:0.0003, Reg:45.8185) beta=7.40
+Iter 20000 | Total loss: 16.9966 (MSE:0.0003, Reg:16.9963) beta=6.50
+Iter 21000 | Total loss: 3.0003 (MSE:0.0003, Reg:3.0000) beta=5.60
+Iter 21290 | Total loss: 0.0003 (MSE:0.0003, Reg:0.0000) beta=5.34 ... Early stopping
+
+encoder.layers.encoder_layer_2.mlp.linear_1
+   FP_OUTPUT shape torch.Size([1024, 197, 3072])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([3072, 768])
+Iter     1 | Total loss: 0.0180 (MSE:0.0180, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0084 (MSE:0.0084, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0089 (MSE:0.0089, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0094 (MSE:0.0094, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0084 (MSE:0.0084, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 666739.5000 (MSE:0.0081, Reg:666739.5000) beta=20.00
+Iter  6000 | Total loss: 50933.2031 (MSE:0.0098, Reg:50933.1953) beta=19.10
+Iter  7000 | Total loss: 37212.1367 (MSE:0.0100, Reg:37212.1250) beta=18.20
+Iter  8000 | Total loss: 31263.9941 (MSE:0.0090, Reg:31263.9844) beta=17.30
+Iter  9000 | Total loss: 26963.3945 (MSE:0.0085, Reg:26963.3867) beta=16.40
+Iter 10000 | Total loss: 23146.0176 (MSE:0.0099, Reg:23146.0078) beta=15.50
+Iter 11000 | Total loss: 19535.9199 (MSE:0.0101, Reg:19535.9102) beta=14.60
+Iter 12000 | Total loss: 16089.7061 (MSE:0.0098, Reg:16089.6963) beta=13.70
+Iter 13000 | Total loss: 12711.0010 (MSE:0.0091, Reg:12710.9922) beta=12.80
+Iter 14000 | Total loss: 9555.4453 (MSE:0.0089, Reg:9555.4365) beta=11.90
+Iter 15000 | Total loss: 6875.6797 (MSE:0.0100, Reg:6875.6699) beta=11.00
+Iter 16000 | Total loss: 4455.9678 (MSE:0.0094, Reg:4455.9585) beta=10.10
+Iter 17000 | Total loss: 2555.9192 (MSE:0.0100, Reg:2555.9092) beta=9.20
+Iter 18000 | Total loss: 1203.7372 (MSE:0.0097, Reg:1203.7275) beta=8.30
+Iter 19000 | Total loss: 404.4885 (MSE:0.0100, Reg:404.4785) beta=7.40
+Iter 20000 | Total loss: 23.3230 (MSE:0.0099, Reg:23.3132) beta=6.50
+Iter 20620 | Total loss: 0.0105 (MSE:0.0105, Reg:0.0000) beta=5.94 ... Early stopping
+
+encoder.layers.encoder_layer_2.mlp.linear_2
+   FP_OUTPUT shape torch.Size([1024, 197, 768])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([768, 3072])
+Iter     1 | Total loss: 0.0021 (MSE:0.0021, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0017 (MSE:0.0017, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0016 (MSE:0.0016, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0016 (MSE:0.0016, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0016 (MSE:0.0016, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 293515.0625 (MSE:0.0017, Reg:293515.0625) beta=20.00
+Iter  6000 | Total loss: 5335.5630 (MSE:0.0017, Reg:5335.5615) beta=19.10
+Iter  7000 | Total loss: 3239.6770 (MSE:0.0018, Reg:3239.6753) beta=18.20
+Iter  8000 | Total loss: 2337.3074 (MSE:0.0017, Reg:2337.3057) beta=17.30
+Iter  9000 | Total loss: 1861.6158 (MSE:0.0016, Reg:1861.6143) beta=16.40
+Iter 10000 | Total loss: 1529.2958 (MSE:0.0018, Reg:1529.2939) beta=15.50
+Iter 11000 | Total loss: 1273.7228 (MSE:0.0019, Reg:1273.7209) beta=14.60
+Iter 12000 | Total loss: 1051.7170 (MSE:0.0018, Reg:1051.7153) beta=13.70
+Iter 13000 | Total loss: 871.0018 (MSE:0.0018, Reg:871.0000) beta=12.80
+Iter 14000 | Total loss: 658.1281 (MSE:0.0018, Reg:658.1262) beta=11.90
+Iter 15000 | Total loss: 471.7238 (MSE:0.0019, Reg:471.7219) beta=11.00
+Iter 16000 | Total loss: 300.5887 (MSE:0.0019, Reg:300.5868) beta=10.10
+Iter 17000 | Total loss: 166.2836 (MSE:0.0015, Reg:166.2821) beta=9.20
+Iter 18000 | Total loss: 70.0015 (MSE:0.0015, Reg:70.0000) beta=8.30
+Iter 19000 | Total loss: 30.3035 (MSE:0.0019, Reg:30.3017) beta=7.40
+Iter 20000 | Total loss: 4.0017 (MSE:0.0017, Reg:4.0000) beta=6.50
+Iter 20292 | Total loss: 0.0017 (MSE:0.0017, Reg:0.0000) beta=6.24 ... Early stopping
+
+encoder.layers.encoder_layer_3.self_attention.in_proj
+   FP_OUTPUT shape torch.Size([1024, 197, 2304])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([2304, 768])
+Iter     1 | Total loss: 0.0096 (MSE:0.0096, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0070 (MSE:0.0070, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0063 (MSE:0.0063, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0067 (MSE:0.0067, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0074 (MSE:0.0074, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 427338.7500 (MSE:0.0065, Reg:427338.7500) beta=20.00
+Iter  6000 | Total loss: 37695.3828 (MSE:0.0075, Reg:37695.3750) beta=19.10
+Iter  7000 | Total loss: 24060.3691 (MSE:0.0071, Reg:24060.3613) beta=18.20
+Iter  8000 | Total loss: 18274.1836 (MSE:0.0069, Reg:18274.1758) beta=17.30
+Iter  9000 | Total loss: 14944.9561 (MSE:0.0069, Reg:14944.9492) beta=16.40
+Iter 10000 | Total loss: 12327.9893 (MSE:0.0069, Reg:12327.9824) beta=15.50
+Iter 11000 | Total loss: 10110.5869 (MSE:0.0071, Reg:10110.5801) beta=14.60
+Iter 12000 | Total loss: 8143.0029 (MSE:0.0068, Reg:8142.9961) beta=13.70
+Iter 13000 | Total loss: 6399.1450 (MSE:0.0076, Reg:6399.1372) beta=12.80
+Iter 14000 | Total loss: 4779.1372 (MSE:0.0070, Reg:4779.1304) beta=11.90
+Iter 15000 | Total loss: 3429.4919 (MSE:0.0075, Reg:3429.4844) beta=11.00
+Iter 16000 | Total loss: 2253.7444 (MSE:0.0067, Reg:2253.7378) beta=10.10
+Iter 17000 | Total loss: 1326.3450 (MSE:0.0073, Reg:1326.3376) beta=9.20
+Iter 18000 | Total loss: 672.0137 (MSE:0.0074, Reg:672.0063) beta=8.30
+Iter 19000 | Total loss: 234.5609 (MSE:0.0072, Reg:234.5538) beta=7.40
+Iter 20000 | Total loss: 33.9967 (MSE:0.0075, Reg:33.9893) beta=6.50
+Iter 21000 | Total loss: 0.9980 (MSE:0.0073, Reg:0.9907) beta=5.60
+Iter 21025 | Total loss: 0.0071 (MSE:0.0071, Reg:0.0000) beta=5.58 ... Early stopping
+
+encoder.layers.encoder_layer_3.self_attention.out_proj
+   FP_OUTPUT shape torch.Size([1024, 197, 768])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([768, 768])
+Iter     1 | Total loss: 0.0006 (MSE:0.0006, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0004 (MSE:0.0004, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0004 (MSE:0.0004, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0004 (MSE:0.0004, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0004 (MSE:0.0004, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 162585.8750 (MSE:0.0004, Reg:162585.8750) beta=20.00
+Iter  6000 | Total loss: 7388.2778 (MSE:0.0005, Reg:7388.2773) beta=19.10
+Iter  7000 | Total loss: 4451.8496 (MSE:0.0005, Reg:4451.8491) beta=18.20
+Iter  8000 | Total loss: 3312.7822 (MSE:0.0005, Reg:3312.7817) beta=17.30
+Iter  9000 | Total loss: 2608.7883 (MSE:0.0005, Reg:2608.7878) beta=16.40
+Iter 10000 | Total loss: 2134.8984 (MSE:0.0005, Reg:2134.8979) beta=15.50
+Iter 11000 | Total loss: 1769.0571 (MSE:0.0005, Reg:1769.0566) beta=14.60
+Iter 12000 | Total loss: 1479.3147 (MSE:0.0005, Reg:1479.3142) beta=13.70
+Iter 13000 | Total loss: 1173.7222 (MSE:0.0005, Reg:1173.7217) beta=12.80
+Iter 14000 | Total loss: 909.8696 (MSE:0.0005, Reg:909.8691) beta=11.90
+Iter 15000 | Total loss: 682.9172 (MSE:0.0005, Reg:682.9167) beta=11.00
+Iter 16000 | Total loss: 484.3241 (MSE:0.0004, Reg:484.3236) beta=10.10
+Iter 17000 | Total loss: 312.6464 (MSE:0.0005, Reg:312.6459) beta=9.20
+Iter 18000 | Total loss: 175.5448 (MSE:0.0005, Reg:175.5443) beta=8.30
+Iter 19000 | Total loss: 77.9059 (MSE:0.0005, Reg:77.9054) beta=7.40
+Iter 20000 | Total loss: 17.6122 (MSE:0.0005, Reg:17.6117) beta=6.50
+Iter 21000 | Total loss: 1.0005 (MSE:0.0005, Reg:1.0000) beta=5.60
+Iter 21323 | Total loss: 0.0004 (MSE:0.0004, Reg:0.0000) beta=5.31 ... Early stopping
+
+encoder.layers.encoder_layer_3.mlp.linear_1
+   FP_OUTPUT shape torch.Size([1024, 197, 3072])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([3072, 768])
+Iter     1 | Total loss: 0.0218 (MSE:0.0218, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0136 (MSE:0.0136, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0137 (MSE:0.0137, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0134 (MSE:0.0134, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0127 (MSE:0.0127, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 472857.0938 (MSE:0.0164, Reg:472857.0625) beta=20.00
+Iter  6000 | Total loss: 62181.6250 (MSE:0.0140, Reg:62181.6094) beta=19.10
+Iter  7000 | Total loss: 43364.2344 (MSE:0.0160, Reg:43364.2188) beta=18.20
+Iter  8000 | Total loss: 34713.6953 (MSE:0.0165, Reg:34713.6797) beta=17.30
+Iter  9000 | Total loss: 28717.9023 (MSE:0.0151, Reg:28717.8867) beta=16.40
+Iter 10000 | Total loss: 23838.5977 (MSE:0.0151, Reg:23838.5820) beta=15.50
+Iter 11000 | Total loss: 19351.1836 (MSE:0.0150, Reg:19351.1680) beta=14.60
+Iter 12000 | Total loss: 15496.7773 (MSE:0.0147, Reg:15496.7627) beta=13.70
+Iter 13000 | Total loss: 11904.8018 (MSE:0.0162, Reg:11904.7852) beta=12.80
+Iter 14000 | Total loss: 8577.4902 (MSE:0.0159, Reg:8577.4746) beta=11.90
+Iter 15000 | Total loss: 5854.4355 (MSE:0.0156, Reg:5854.4199) beta=11.00
+Iter 16000 | Total loss: 3661.2634 (MSE:0.0157, Reg:3661.2478) beta=10.10
+Iter 17000 | Total loss: 1992.0380 (MSE:0.0163, Reg:1992.0217) beta=9.20
+Iter 18000 | Total loss: 801.9312 (MSE:0.0172, Reg:801.9139) beta=8.30
+Iter 19000 | Total loss: 163.9093 (MSE:0.0153, Reg:163.8940) beta=7.40
+Iter 20000 | Total loss: 4.0109 (MSE:0.0152, Reg:3.9957) beta=6.50
+Iter 20104 | Total loss: 0.0151 (MSE:0.0151, Reg:0.0000) beta=6.41 ... Early stopping
+
+encoder.layers.encoder_layer_3.mlp.linear_2
+   FP_OUTPUT shape torch.Size([1024, 197, 768])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([768, 3072])
+Iter     1 | Total loss: 0.0019 (MSE:0.0019, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0014 (MSE:0.0014, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0017 (MSE:0.0017, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0015 (MSE:0.0015, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0014 (MSE:0.0014, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 267213.9375 (MSE:0.0014, Reg:267213.9375) beta=20.00
+Iter  6000 | Total loss: 4875.1221 (MSE:0.0016, Reg:4875.1206) beta=19.10
+Iter  7000 | Total loss: 2963.7080 (MSE:0.0015, Reg:2963.7065) beta=18.20
+Iter  8000 | Total loss: 2192.0120 (MSE:0.0014, Reg:2192.0105) beta=17.30
+Iter  9000 | Total loss: 1761.3988 (MSE:0.0015, Reg:1761.3973) beta=16.40
+Iter 10000 | Total loss: 1453.9155 (MSE:0.0016, Reg:1453.9139) beta=15.50
+Iter 11000 | Total loss: 1224.0736 (MSE:0.0014, Reg:1224.0721) beta=14.60
+Iter 12000 | Total loss: 992.7337 (MSE:0.0017, Reg:992.7321) beta=13.70
+Iter 13000 | Total loss: 796.7529 (MSE:0.0016, Reg:796.7513) beta=12.80
+Iter 14000 | Total loss: 632.1976 (MSE:0.0015, Reg:632.1962) beta=11.90
+Iter 15000 | Total loss: 455.3491 (MSE:0.0015, Reg:455.3476) beta=11.00
+Iter 16000 | Total loss: 304.4987 (MSE:0.0018, Reg:304.4969) beta=10.10
+Iter 17000 | Total loss: 187.6200 (MSE:0.0017, Reg:187.6182) beta=9.20
+Iter 18000 | Total loss: 78.8827 (MSE:0.0015, Reg:78.8813) beta=8.30
+Iter 19000 | Total loss: 27.9565 (MSE:0.0015, Reg:27.9551) beta=7.40
+Iter 20000 | Total loss: 6.0016 (MSE:0.0016, Reg:6.0000) beta=6.50
+Iter 21000 | Total loss: 2.0015 (MSE:0.0015, Reg:2.0000) beta=5.60
+Iter 21338 | Total loss: 0.0015 (MSE:0.0015, Reg:0.0000) beta=5.30 ... Early stopping
+
+encoder.layers.encoder_layer_4.self_attention.in_proj
+   FP_OUTPUT shape torch.Size([1024, 197, 2304])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([2304, 768])
+Iter     1 | Total loss: 0.0179 (MSE:0.0179, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0151 (MSE:0.0151, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0123 (MSE:0.0123, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0125 (MSE:0.0125, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0128 (MSE:0.0128, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 456408.0625 (MSE:0.0124, Reg:456408.0625) beta=20.00
+Iter  6000 | Total loss: 53645.5234 (MSE:0.0134, Reg:53645.5117) beta=19.10
+Iter  7000 | Total loss: 35787.9922 (MSE:0.0115, Reg:35787.9805) beta=18.20
+Iter  8000 | Total loss: 27906.8008 (MSE:0.0164, Reg:27906.7852) beta=17.30
+Iter  9000 | Total loss: 22697.9492 (MSE:0.0138, Reg:22697.9355) beta=16.40
+Iter 10000 | Total loss: 18664.9980 (MSE:0.0144, Reg:18664.9844) beta=15.50
+Iter 11000 | Total loss: 15119.2148 (MSE:0.0138, Reg:15119.2012) beta=14.60
+Iter 12000 | Total loss: 11903.0859 (MSE:0.0139, Reg:11903.0723) beta=13.70
+Iter 13000 | Total loss: 9127.0186 (MSE:0.0124, Reg:9127.0059) beta=12.80
+Iter 14000 | Total loss: 6515.4199 (MSE:0.0129, Reg:6515.4072) beta=11.90
+Iter 15000 | Total loss: 4363.8701 (MSE:0.0125, Reg:4363.8574) beta=11.00
+Iter 16000 | Total loss: 2638.1333 (MSE:0.0161, Reg:2638.1172) beta=10.10
+Iter 17000 | Total loss: 1417.4552 (MSE:0.0141, Reg:1417.4412) beta=9.20
+Iter 18000 | Total loss: 607.6368 (MSE:0.0129, Reg:607.6239) beta=8.30
+Iter 19000 | Total loss: 171.0449 (MSE:0.0135, Reg:171.0315) beta=7.40
+Iter 20000 | Total loss: 13.9861 (MSE:0.0133, Reg:13.9728) beta=6.50
+Iter 20653 | Total loss: 0.0124 (MSE:0.0124, Reg:0.0000) beta=5.91 ... Early stopping
+
+encoder.layers.encoder_layer_4.self_attention.out_proj
+   FP_OUTPUT shape torch.Size([1024, 197, 768])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([768, 768])
+Iter     1 | Total loss: 0.0008 (MSE:0.0008, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0007 (MSE:0.0007, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0007 (MSE:0.0007, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0007 (MSE:0.0007, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0007 (MSE:0.0007, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 179011.8906 (MSE:0.0006, Reg:179011.8906) beta=20.00
+Iter  6000 | Total loss: 10063.6260 (MSE:0.0007, Reg:10063.6250) beta=19.10
+Iter  7000 | Total loss: 5878.9922 (MSE:0.0007, Reg:5878.9917) beta=18.20
+Iter  8000 | Total loss: 4155.5347 (MSE:0.0007, Reg:4155.5342) beta=17.30
+Iter  9000 | Total loss: 3176.7124 (MSE:0.0007, Reg:3176.7117) beta=16.40
+Iter 10000 | Total loss: 2485.9153 (MSE:0.0007, Reg:2485.9146) beta=15.50
+Iter 11000 | Total loss: 1946.1920 (MSE:0.0007, Reg:1946.1913) beta=14.60
+Iter 12000 | Total loss: 1516.8376 (MSE:0.0007, Reg:1516.8369) beta=13.70
+Iter 13000 | Total loss: 1170.7390 (MSE:0.0007, Reg:1170.7383) beta=12.80
+Iter 14000 | Total loss: 862.4637 (MSE:0.0006, Reg:862.4631) beta=11.90
+Iter 15000 | Total loss: 582.3351 (MSE:0.0007, Reg:582.3344) beta=11.00
+Iter 16000 | Total loss: 355.5480 (MSE:0.0006, Reg:355.5474) beta=10.10
+Iter 17000 | Total loss: 191.1253 (MSE:0.0007, Reg:191.1246) beta=9.20
+Iter 18000 | Total loss: 82.0006 (MSE:0.0007, Reg:82.0000) beta=8.30
+Iter 19000 | Total loss: 22.0007 (MSE:0.0007, Reg:22.0000) beta=7.40
+Iter 20000 | Total loss: 1.0007 (MSE:0.0007, Reg:1.0000) beta=6.50
+Iter 20172 | Total loss: 0.0006 (MSE:0.0006, Reg:0.0000) beta=6.35 ... Early stopping
+
+encoder.layers.encoder_layer_4.mlp.linear_1
+   FP_OUTPUT shape torch.Size([1024, 197, 3072])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([3072, 768])
+Iter     1 | Total loss: 0.0244 (MSE:0.0244, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0183 (MSE:0.0183, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0199 (MSE:0.0199, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0174 (MSE:0.0174, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0188 (MSE:0.0188, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 513916.0938 (MSE:0.0168, Reg:513916.0625) beta=20.00
+Iter  6000 | Total loss: 73901.2109 (MSE:0.0198, Reg:73901.1875) beta=19.10
+Iter  7000 | Total loss: 53503.3945 (MSE:0.0169, Reg:53503.3789) beta=18.20
+Iter  8000 | Total loss: 43236.5000 (MSE:0.0203, Reg:43236.4805) beta=17.30
+Iter  9000 | Total loss: 36089.0508 (MSE:0.0185, Reg:36089.0312) beta=16.40
+Iter 10000 | Total loss: 30038.6270 (MSE:0.0179, Reg:30038.6094) beta=15.50
+Iter 11000 | Total loss: 24513.4902 (MSE:0.0183, Reg:24513.4727) beta=14.60
+Iter 12000 | Total loss: 19118.1270 (MSE:0.0172, Reg:19118.1094) beta=13.70
+Iter 13000 | Total loss: 14253.7539 (MSE:0.0199, Reg:14253.7344) beta=12.80
+Iter 14000 | Total loss: 10110.8193 (MSE:0.0188, Reg:10110.8008) beta=11.90
+Iter 15000 | Total loss: 6603.4849 (MSE:0.0192, Reg:6603.4658) beta=11.00
+Iter 16000 | Total loss: 3930.4290 (MSE:0.0192, Reg:3930.4097) beta=10.10
+Iter 17000 | Total loss: 1912.5394 (MSE:0.0206, Reg:1912.5188) beta=9.20
+Iter 18000 | Total loss: 654.3941 (MSE:0.0200, Reg:654.3741) beta=8.30
+Iter 19000 | Total loss: 80.7206 (MSE:0.0178, Reg:80.7027) beta=7.40
+Iter 19934 | Total loss: 0.0198 (MSE:0.0198, Reg:0.0000) beta=6.56 ... Early stopping
+
+encoder.layers.encoder_layer_4.mlp.linear_2
+   FP_OUTPUT shape torch.Size([1024, 197, 768])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([768, 3072])
+Iter     1 | Total loss: 0.0030 (MSE:0.0030, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0027 (MSE:0.0027, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0024 (MSE:0.0024, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0026 (MSE:0.0026, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0028 (MSE:0.0028, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 241500.3281 (MSE:0.0032, Reg:241500.3281) beta=20.00
+Iter  6000 | Total loss: 3975.9412 (MSE:0.0025, Reg:3975.9387) beta=19.10
+Iter  7000 | Total loss: 2489.3613 (MSE:0.0026, Reg:2489.3586) beta=18.20
+Iter  8000 | Total loss: 1897.2888 (MSE:0.0031, Reg:1897.2858) beta=17.30
+Iter  9000 | Total loss: 1544.2373 (MSE:0.0028, Reg:1544.2345) beta=16.40
+Iter 10000 | Total loss: 1249.7311 (MSE:0.0028, Reg:1249.7283) beta=15.50
+Iter 11000 | Total loss: 1051.7380 (MSE:0.0027, Reg:1051.7354) beta=14.60
+Iter 12000 | Total loss: 888.4669 (MSE:0.0030, Reg:888.4639) beta=13.70
+Iter 13000 | Total loss: 709.0491 (MSE:0.0028, Reg:709.0463) beta=12.80
+Iter 14000 | Total loss: 551.0018 (MSE:0.0026, Reg:550.9992) beta=11.90
+Iter 15000 | Total loss: 403.0031 (MSE:0.0031, Reg:403.0000) beta=11.00
+Iter 16000 | Total loss: 267.8251 (MSE:0.0028, Reg:267.8223) beta=10.10
+Iter 17000 | Total loss: 149.8606 (MSE:0.0029, Reg:149.8577) beta=9.20
+Iter 18000 | Total loss: 70.3709 (MSE:0.0026, Reg:70.3683) beta=8.30
+Iter 19000 | Total loss: 23.9866 (MSE:0.0026, Reg:23.9841) beta=7.40
+Iter 20000 | Total loss: 3.9548 (MSE:0.0030, Reg:3.9518) beta=6.50
+Iter 20557 | Total loss: 0.0037 (MSE:0.0037, Reg:0.0000) beta=6.00 ... Early stopping
+
+encoder.layers.encoder_layer_5.self_attention.in_proj
+   FP_OUTPUT shape torch.Size([1024, 197, 2304])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([2304, 768])
+Iter     1 | Total loss: 0.0182 (MSE:0.0182, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0155 (MSE:0.0155, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0138 (MSE:0.0138, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0136 (MSE:0.0136, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0159 (MSE:0.0159, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 481100.7188 (MSE:0.0134, Reg:481100.7188) beta=20.00
+Iter  6000 | Total loss: 65198.0703 (MSE:0.0140, Reg:65198.0547) beta=19.10
+Iter  7000 | Total loss: 44977.4727 (MSE:0.0155, Reg:44977.4570) beta=18.20
+Iter  8000 | Total loss: 35249.1641 (MSE:0.0145, Reg:35249.1484) beta=17.30
+Iter  9000 | Total loss: 28655.1484 (MSE:0.0140, Reg:28655.1348) beta=16.40
+Iter 10000 | Total loss: 23487.0723 (MSE:0.0141, Reg:23487.0586) beta=15.50
+Iter 11000 | Total loss: 18833.5117 (MSE:0.0143, Reg:18833.4980) beta=14.60
+Iter 12000 | Total loss: 14764.6924 (MSE:0.0144, Reg:14764.6777) beta=13.70
+Iter 13000 | Total loss: 11070.6738 (MSE:0.0148, Reg:11070.6592) beta=12.80
+Iter 14000 | Total loss: 7793.1885 (MSE:0.0150, Reg:7793.1733) beta=11.90
+Iter 15000 | Total loss: 5029.4858 (MSE:0.0133, Reg:5029.4727) beta=11.00
+Iter 16000 | Total loss: 2951.9109 (MSE:0.0169, Reg:2951.8940) beta=10.10
+Iter 17000 | Total loss: 1504.8895 (MSE:0.0137, Reg:1504.8759) beta=9.20
+Iter 18000 | Total loss: 568.6326 (MSE:0.0161, Reg:568.6165) beta=8.30
+Iter 19000 | Total loss: 121.3712 (MSE:0.0158, Reg:121.3553) beta=7.40
+Iter 20000 | Total loss: 9.0139 (MSE:0.0139, Reg:9.0000) beta=6.50
+Iter 20755 | Total loss: 0.0161 (MSE:0.0161, Reg:0.0000) beta=5.82 ... Early stopping
+
+encoder.layers.encoder_layer_5.self_attention.out_proj
+   FP_OUTPUT shape torch.Size([1024, 197, 768])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([768, 768])
+Iter     1 | Total loss: 0.0011 (MSE:0.0011, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0009 (MSE:0.0009, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0010 (MSE:0.0010, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0008 (MSE:0.0008, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0011 (MSE:0.0011, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 168817.1562 (MSE:0.0009, Reg:168817.1562) beta=20.00
+Iter  6000 | Total loss: 10914.7168 (MSE:0.0010, Reg:10914.7158) beta=19.10
+Iter  7000 | Total loss: 6374.8320 (MSE:0.0008, Reg:6374.8311) beta=18.20
+Iter  8000 | Total loss: 4475.3096 (MSE:0.0009, Reg:4475.3086) beta=17.30
+Iter  9000 | Total loss: 3352.0798 (MSE:0.0008, Reg:3352.0791) beta=16.40
+Iter 10000 | Total loss: 2579.3718 (MSE:0.0008, Reg:2579.3711) beta=15.50
+Iter 11000 | Total loss: 1995.7650 (MSE:0.0009, Reg:1995.7642) beta=14.60
+Iter 12000 | Total loss: 1532.1427 (MSE:0.0008, Reg:1532.1418) beta=13.70
+Iter 13000 | Total loss: 1163.1625 (MSE:0.0010, Reg:1163.1615) beta=12.80
+Iter 14000 | Total loss: 827.8936 (MSE:0.0010, Reg:827.8926) beta=11.90
+Iter 15000 | Total loss: 553.6469 (MSE:0.0009, Reg:553.6460) beta=11.00
+Iter 16000 | Total loss: 360.3934 (MSE:0.0010, Reg:360.3923) beta=10.10
+Iter 17000 | Total loss: 209.7744 (MSE:0.0011, Reg:209.7733) beta=9.20
+Iter 18000 | Total loss: 86.0267 (MSE:0.0008, Reg:86.0258) beta=8.30
+Iter 19000 | Total loss: 23.0009 (MSE:0.0009, Reg:23.0000) beta=7.40
+Iter 20000 | Total loss: 1.0009 (MSE:0.0009, Reg:1.0000) beta=6.50
+Iter 20462 | Total loss: 0.0008 (MSE:0.0008, Reg:0.0000) beta=6.08 ... Early stopping
+
+encoder.layers.encoder_layer_5.mlp.linear_1
+   FP_OUTPUT shape torch.Size([1024, 197, 3072])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([3072, 768])
+Iter     1 | Total loss: 0.0281 (MSE:0.0281, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0260 (MSE:0.0260, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0242 (MSE:0.0242, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0266 (MSE:0.0266, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0218 (MSE:0.0218, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 532093.5625 (MSE:0.0242, Reg:532093.5625) beta=20.00
+Iter  6000 | Total loss: 79468.2266 (MSE:0.0256, Reg:79468.2031) beta=19.10
+Iter  7000 | Total loss: 58920.7148 (MSE:0.0261, Reg:58920.6875) beta=18.20
+Iter  8000 | Total loss: 47793.9453 (MSE:0.0239, Reg:47793.9219) beta=17.30
+Iter  9000 | Total loss: 39859.6250 (MSE:0.0250, Reg:39859.6016) beta=16.40
+Iter 10000 | Total loss: 32959.8359 (MSE:0.0251, Reg:32959.8125) beta=15.50
+Iter 11000 | Total loss: 26780.2930 (MSE:0.0239, Reg:26780.2695) beta=14.60
+Iter 12000 | Total loss: 20866.5293 (MSE:0.0246, Reg:20866.5039) beta=13.70
+Iter 13000 | Total loss: 15575.1006 (MSE:0.0254, Reg:15575.0752) beta=12.80
+Iter 14000 | Total loss: 10781.0742 (MSE:0.0257, Reg:10781.0488) beta=11.90
+Iter 15000 | Total loss: 6811.6440 (MSE:0.0268, Reg:6811.6172) beta=11.00
+Iter 16000 | Total loss: 3657.2844 (MSE:0.0255, Reg:3657.2588) beta=10.10
+Iter 17000 | Total loss: 1548.5417 (MSE:0.0244, Reg:1548.5173) beta=9.20
+Iter 18000 | Total loss: 444.1255 (MSE:0.0264, Reg:444.0992) beta=8.30
+Iter 19000 | Total loss: 29.4323 (MSE:0.0253, Reg:29.4069) beta=7.40
+Iter 19773 | Total loss: 0.0243 (MSE:0.0243, Reg:0.0000) beta=6.70 ... Early stopping
+
+encoder.layers.encoder_layer_5.mlp.linear_2
+   FP_OUTPUT shape torch.Size([1024, 197, 768])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([768, 3072])
+Iter     1 | Total loss: 0.0249 (MSE:0.0249, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0240 (MSE:0.0240, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0180 (MSE:0.0180, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0202 (MSE:0.0202, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0162 (MSE:0.0162, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 232680.5000 (MSE:0.0248, Reg:232680.4688) beta=20.00
+Iter  6000 | Total loss: 6066.4146 (MSE:0.0308, Reg:6066.3838) beta=19.10
+Iter  7000 | Total loss: 3773.6560 (MSE:0.0226, Reg:3773.6333) beta=18.20
+Iter  8000 | Total loss: 2746.6355 (MSE:0.0227, Reg:2746.6128) beta=17.30
+Iter  9000 | Total loss: 2183.0764 (MSE:0.0212, Reg:2183.0552) beta=16.40
+Iter 10000 | Total loss: 1731.5383 (MSE:0.0208, Reg:1731.5176) beta=15.50
+Iter 11000 | Total loss: 1381.5099 (MSE:0.0228, Reg:1381.4871) beta=14.60
+Iter 12000 | Total loss: 1125.9133 (MSE:0.0270, Reg:1125.8864) beta=13.70
+Iter 13000 | Total loss: 862.2215 (MSE:0.0220, Reg:862.1995) beta=12.80
+Iter 14000 | Total loss: 629.3809 (MSE:0.0240, Reg:629.3569) beta=11.90
+Iter 15000 | Total loss: 421.0182 (MSE:0.0234, Reg:420.9948) beta=11.00
+Iter 16000 | Total loss: 230.2589 (MSE:0.0262, Reg:230.2326) beta=10.10
+Iter 17000 | Total loss: 117.0169 (MSE:0.0244, Reg:116.9925) beta=9.20
+Iter 18000 | Total loss: 45.1252 (MSE:0.0192, Reg:45.1060) beta=8.30
+Iter 19000 | Total loss: 15.0035 (MSE:0.0269, Reg:14.9766) beta=7.40
+Iter 20000 | Total loss: 1.0179 (MSE:0.0179, Reg:1.0000) beta=6.50
+Iter 20633 | Total loss: 0.0227 (MSE:0.0227, Reg:0.0000) beta=5.93 ... Early stopping
+
+encoder.layers.encoder_layer_6.self_attention.in_proj
+   FP_OUTPUT shape torch.Size([1024, 197, 2304])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([2304, 768])
+Iter     1 | Total loss: 0.0297 (MSE:0.0297, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0225 (MSE:0.0225, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0233 (MSE:0.0233, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0219 (MSE:0.0219, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0237 (MSE:0.0237, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 518174.2188 (MSE:0.0271, Reg:518174.1875) beta=20.00
+Iter  6000 | Total loss: 83177.0547 (MSE:0.0232, Reg:83177.0312) beta=19.10
+Iter  7000 | Total loss: 59436.3672 (MSE:0.0219, Reg:59436.3438) beta=18.20
+Iter  8000 | Total loss: 47236.1719 (MSE:0.0231, Reg:47236.1484) beta=17.30
+Iter  9000 | Total loss: 38319.1172 (MSE:0.0217, Reg:38319.0938) beta=16.40
+Iter 10000 | Total loss: 31209.5527 (MSE:0.0229, Reg:31209.5293) beta=15.50
+Iter 11000 | Total loss: 25120.4473 (MSE:0.0229, Reg:25120.4238) beta=14.60
+Iter 12000 | Total loss: 19516.5840 (MSE:0.0282, Reg:19516.5566) beta=13.70
+Iter 13000 | Total loss: 14568.5566 (MSE:0.0209, Reg:14568.5361) beta=12.80
+Iter 14000 | Total loss: 10314.4619 (MSE:0.0226, Reg:10314.4395) beta=11.90
+Iter 15000 | Total loss: 6661.1084 (MSE:0.0256, Reg:6661.0830) beta=11.00
+Iter 16000 | Total loss: 3840.7075 (MSE:0.0239, Reg:3840.6836) beta=10.10
+Iter 17000 | Total loss: 1729.9054 (MSE:0.0222, Reg:1729.8832) beta=9.20
+Iter 18000 | Total loss: 572.0712 (MSE:0.0252, Reg:572.0460) beta=8.30
+Iter 19000 | Total loss: 96.0497 (MSE:0.0220, Reg:96.0277) beta=7.40
+Iter 20000 | Total loss: 3.0231 (MSE:0.0231, Reg:3.0000) beta=6.50
+Iter 20282 | Total loss: 0.0257 (MSE:0.0257, Reg:0.0000) beta=6.25 ... Early stopping
+
+encoder.layers.encoder_layer_6.self_attention.out_proj
+   FP_OUTPUT shape torch.Size([1024, 197, 768])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([768, 768])
+Iter     1 | Total loss: 0.0019 (MSE:0.0019, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0016 (MSE:0.0016, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0015 (MSE:0.0015, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0017 (MSE:0.0017, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0016 (MSE:0.0016, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 164497.4531 (MSE:0.0015, Reg:164497.4531) beta=20.00
+Iter  6000 | Total loss: 18148.1895 (MSE:0.0015, Reg:18148.1875) beta=19.10
+Iter  7000 | Total loss: 11386.2314 (MSE:0.0016, Reg:11386.2295) beta=18.20
+Iter  8000 | Total loss: 8138.3257 (MSE:0.0016, Reg:8138.3242) beta=17.30
+Iter  9000 | Total loss: 6142.5122 (MSE:0.0016, Reg:6142.5107) beta=16.40
+Iter 10000 | Total loss: 4755.3979 (MSE:0.0016, Reg:4755.3965) beta=15.50
+Iter 11000 | Total loss: 3683.6748 (MSE:0.0016, Reg:3683.6733) beta=14.60
+Iter 12000 | Total loss: 2836.6030 (MSE:0.0015, Reg:2836.6016) beta=13.70
+Iter 13000 | Total loss: 2104.3274 (MSE:0.0016, Reg:2104.3257) beta=12.80
+Iter 14000 | Total loss: 1475.9602 (MSE:0.0015, Reg:1475.9587) beta=11.90
+Iter 15000 | Total loss: 958.8114 (MSE:0.0017, Reg:958.8097) beta=11.00
+Iter 16000 | Total loss: 544.4732 (MSE:0.0014, Reg:544.4718) beta=10.10
+Iter 17000 | Total loss: 251.1677 (MSE:0.0015, Reg:251.1662) beta=9.20
+Iter 18000 | Total loss: 79.7448 (MSE:0.0018, Reg:79.7430) beta=8.30
+Iter 19000 | Total loss: 23.0013 (MSE:0.0017, Reg:22.9996) beta=7.40
+Iter 20000 | Total loss: 4.0017 (MSE:0.0017, Reg:4.0000) beta=6.50
+Iter 20530 | Total loss: 0.0015 (MSE:0.0015, Reg:0.0000) beta=6.02 ... Early stopping
+
+encoder.layers.encoder_layer_6.mlp.linear_1
+   FP_OUTPUT shape torch.Size([1024, 197, 3072])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([3072, 768])
+Iter     1 | Total loss: 0.0353 (MSE:0.0353, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0343 (MSE:0.0343, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0334 (MSE:0.0334, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0316 (MSE:0.0316, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0271 (MSE:0.0271, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 547096.5000 (MSE:0.0288, Reg:547096.5000) beta=20.00
+Iter  6000 | Total loss: 83371.5781 (MSE:0.0346, Reg:83371.5469) beta=19.10
+Iter  7000 | Total loss: 62157.3438 (MSE:0.0301, Reg:62157.3125) beta=18.20
+Iter  8000 | Total loss: 50926.5234 (MSE:0.0303, Reg:50926.4922) beta=17.30
+Iter  9000 | Total loss: 42432.1562 (MSE:0.0306, Reg:42432.1250) beta=16.40
+Iter 10000 | Total loss: 35357.9766 (MSE:0.0323, Reg:35357.9453) beta=15.50
+Iter 11000 | Total loss: 28634.7070 (MSE:0.0354, Reg:28634.6719) beta=14.60
+Iter 12000 | Total loss: 22246.4512 (MSE:0.0328, Reg:22246.4180) beta=13.70
+Iter 13000 | Total loss: 16344.6113 (MSE:0.0310, Reg:16344.5801) beta=12.80
+Iter 14000 | Total loss: 11120.9336 (MSE:0.0352, Reg:11120.8984) beta=11.90
+Iter 15000 | Total loss: 6790.8857 (MSE:0.0304, Reg:6790.8555) beta=11.00
+Iter 16000 | Total loss: 3507.4214 (MSE:0.0316, Reg:3507.3899) beta=10.10
+Iter 17000 | Total loss: 1355.6213 (MSE:0.0330, Reg:1355.5883) beta=9.20
+Iter 18000 | Total loss: 276.9560 (MSE:0.0309, Reg:276.9250) beta=8.30
+Iter 19000 | Total loss: 10.9657 (MSE:0.0347, Reg:10.9310) beta=7.40
+Iter 19358 | Total loss: 0.0351 (MSE:0.0351, Reg:0.0000) beta=7.08 ... Early stopping
+
+encoder.layers.encoder_layer_6.mlp.linear_2
+   FP_OUTPUT shape torch.Size([1024, 197, 768])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([768, 3072])
+Iter     1 | Total loss: 0.0040 (MSE:0.0040, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0037 (MSE:0.0037, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0038 (MSE:0.0038, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0034 (MSE:0.0034, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0036 (MSE:0.0036, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 195857.5000 (MSE:0.0036, Reg:195857.5000) beta=20.00
+Iter  6000 | Total loss: 5229.5044 (MSE:0.0032, Reg:5229.5010) beta=19.10
+Iter  7000 | Total loss: 3369.5369 (MSE:0.0036, Reg:3369.5332) beta=18.20
+Iter  8000 | Total loss: 2496.3726 (MSE:0.0038, Reg:2496.3689) beta=17.30
+Iter  9000 | Total loss: 1993.6158 (MSE:0.0038, Reg:1993.6121) beta=16.40
+Iter 10000 | Total loss: 1663.8231 (MSE:0.0041, Reg:1663.8190) beta=15.50
+Iter 11000 | Total loss: 1385.0104 (MSE:0.0033, Reg:1385.0071) beta=14.60
+Iter 12000 | Total loss: 1141.2546 (MSE:0.0037, Reg:1141.2510) beta=13.70
+Iter 13000 | Total loss: 868.1973 (MSE:0.0036, Reg:868.1937) beta=12.80
+Iter 14000 | Total loss: 656.3701 (MSE:0.0035, Reg:656.3666) beta=11.90
+Iter 15000 | Total loss: 456.9866 (MSE:0.0034, Reg:456.9832) beta=11.00
+Iter 16000 | Total loss: 265.7083 (MSE:0.0038, Reg:265.7045) beta=10.10
+Iter 17000 | Total loss: 131.2531 (MSE:0.0035, Reg:131.2496) beta=9.20
+Iter 18000 | Total loss: 47.0028 (MSE:0.0034, Reg:46.9995) beta=8.30
+Iter 19000 | Total loss: 11.0033 (MSE:0.0035, Reg:10.9997) beta=7.40
+Iter 20000 | Total loss: 2.0033 (MSE:0.0033, Reg:2.0000) beta=6.50
+Iter 20232 | Total loss: 0.0038 (MSE:0.0038, Reg:0.0000) beta=6.29 ... Early stopping
+
+encoder.layers.encoder_layer_7.self_attention.in_proj
+   FP_OUTPUT shape torch.Size([1024, 197, 2304])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([2304, 768])
+Iter     1 | Total loss: 0.0240 (MSE:0.0240, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0223 (MSE:0.0223, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0236 (MSE:0.0236, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0214 (MSE:0.0214, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0233 (MSE:0.0233, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 559930.4375 (MSE:0.0224, Reg:559930.4375) beta=20.00
+Iter  6000 | Total loss: 95309.4844 (MSE:0.0199, Reg:95309.4609) beta=19.10
+Iter  7000 | Total loss: 69830.9141 (MSE:0.0202, Reg:69830.8906) beta=18.20
+Iter  8000 | Total loss: 56160.7109 (MSE:0.0236, Reg:56160.6875) beta=17.30
+Iter  9000 | Total loss: 46455.8164 (MSE:0.0205, Reg:46455.7969) beta=16.40
+Iter 10000 | Total loss: 38294.3789 (MSE:0.0208, Reg:38294.3594) beta=15.50
+Iter 11000 | Total loss: 30960.9727 (MSE:0.0234, Reg:30960.9492) beta=14.60
+Iter 12000 | Total loss: 23921.8809 (MSE:0.0222, Reg:23921.8594) beta=13.70
+Iter 13000 | Total loss: 17665.4551 (MSE:0.0237, Reg:17665.4316) beta=12.80
+Iter 14000 | Total loss: 12252.5137 (MSE:0.0217, Reg:12252.4922) beta=11.90
+Iter 15000 | Total loss: 7692.3818 (MSE:0.0241, Reg:7692.3579) beta=11.00
+Iter 16000 | Total loss: 4144.8242 (MSE:0.0240, Reg:4144.8003) beta=10.10
+Iter 17000 | Total loss: 1857.3674 (MSE:0.0235, Reg:1857.3439) beta=9.20
+Iter 18000 | Total loss: 559.6442 (MSE:0.0234, Reg:559.6208) beta=8.30
+Iter 19000 | Total loss: 91.7148 (MSE:0.0218, Reg:91.6930) beta=7.40
+Iter 20000 | Total loss: 3.3016 (MSE:0.0268, Reg:3.2748) beta=6.50
+Iter 20476 | Total loss: 0.0200 (MSE:0.0200, Reg:0.0000) beta=6.07 ... Early stopping
+
+encoder.layers.encoder_layer_7.self_attention.out_proj
+   FP_OUTPUT shape torch.Size([1024, 197, 768])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([768, 768])
+Iter     1 | Total loss: 0.0017 (MSE:0.0017, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0014 (MSE:0.0014, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0013 (MSE:0.0013, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0013 (MSE:0.0013, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0013 (MSE:0.0013, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 151582.0156 (MSE:0.0014, Reg:151582.0156) beta=20.00
+Iter  6000 | Total loss: 19517.5625 (MSE:0.0012, Reg:19517.5605) beta=19.10
+Iter  7000 | Total loss: 12850.2568 (MSE:0.0013, Reg:12850.2559) beta=18.20
+Iter  8000 | Total loss: 9257.2783 (MSE:0.0013, Reg:9257.2773) beta=17.30
+Iter  9000 | Total loss: 7009.8330 (MSE:0.0012, Reg:7009.8320) beta=16.40
+Iter 10000 | Total loss: 5439.1919 (MSE:0.0014, Reg:5439.1904) beta=15.50
+Iter 11000 | Total loss: 4264.2720 (MSE:0.0013, Reg:4264.2705) beta=14.60
+Iter 12000 | Total loss: 3236.0447 (MSE:0.0012, Reg:3236.0435) beta=13.70
+Iter 13000 | Total loss: 2338.1111 (MSE:0.0015, Reg:2338.1096) beta=12.80
+Iter 14000 | Total loss: 1627.7720 (MSE:0.0013, Reg:1627.7708) beta=11.90
+Iter 15000 | Total loss: 1011.7878 (MSE:0.0015, Reg:1011.7863) beta=11.00
+Iter 16000 | Total loss: 569.6176 (MSE:0.0013, Reg:569.6163) beta=10.10
+Iter 17000 | Total loss: 268.3057 (MSE:0.0013, Reg:268.3044) beta=9.20
+Iter 18000 | Total loss: 81.2385 (MSE:0.0013, Reg:81.2372) beta=8.30
+Iter 19000 | Total loss: 14.0012 (MSE:0.0012, Reg:14.0000) beta=7.40
+Iter 20000 | Total loss: 1.0013 (MSE:0.0013, Reg:1.0000) beta=6.50
+Iter 20153 | Total loss: 0.0014 (MSE:0.0014, Reg:0.0000) beta=6.36 ... Early stopping
+
+encoder.layers.encoder_layer_7.mlp.linear_1
+   FP_OUTPUT shape torch.Size([1024, 197, 3072])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([3072, 768])
+Iter     1 | Total loss: 0.0468 (MSE:0.0468, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0427 (MSE:0.0427, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0446 (MSE:0.0446, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0400 (MSE:0.0400, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0364 (MSE:0.0364, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 562642.9375 (MSE:0.0402, Reg:562642.8750) beta=20.00
+Iter  6000 | Total loss: 91632.2109 (MSE:0.0366, Reg:91632.1719) beta=19.10
+Iter  7000 | Total loss: 69916.4766 (MSE:0.0388, Reg:69916.4375) beta=18.20
+Iter  8000 | Total loss: 58072.3359 (MSE:0.0392, Reg:58072.2969) beta=17.30
+Iter  9000 | Total loss: 49206.2266 (MSE:0.0441, Reg:49206.1836) beta=16.40
+Iter 10000 | Total loss: 41106.7227 (MSE:0.0411, Reg:41106.6797) beta=15.50
+Iter 11000 | Total loss: 33623.8398 (MSE:0.0411, Reg:33623.7969) beta=14.60
+Iter 12000 | Total loss: 26209.2754 (MSE:0.0394, Reg:26209.2363) beta=13.70
+Iter 13000 | Total loss: 19333.0137 (MSE:0.0426, Reg:19332.9707) beta=12.80
+Iter 14000 | Total loss: 13043.2217 (MSE:0.0404, Reg:13043.1816) beta=11.90
+Iter 15000 | Total loss: 7667.0845 (MSE:0.0388, Reg:7667.0459) beta=11.00
+Iter 16000 | Total loss: 3699.9214 (MSE:0.0449, Reg:3699.8765) beta=10.10
+Iter 17000 | Total loss: 1217.7780 (MSE:0.0360, Reg:1217.7419) beta=9.20
+Iter 18000 | Total loss: 178.1669 (MSE:0.0446, Reg:178.1224) beta=8.30
+Iter 19000 | Total loss: 5.8273 (MSE:0.0434, Reg:5.7838) beta=7.40
+Iter 19225 | Total loss: 0.0433 (MSE:0.0433, Reg:0.0000) beta=7.20 ... Early stopping
+
+encoder.layers.encoder_layer_7.mlp.linear_2
+   FP_OUTPUT shape torch.Size([1024, 197, 768])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([768, 3072])
+Iter     1 | Total loss: 0.0050 (MSE:0.0050, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0045 (MSE:0.0045, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0047 (MSE:0.0047, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0042 (MSE:0.0042, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0050 (MSE:0.0050, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 180573.0000 (MSE:0.0046, Reg:180573.0000) beta=20.00
+Iter  6000 | Total loss: 6801.0693 (MSE:0.0049, Reg:6801.0645) beta=19.10
+Iter  7000 | Total loss: 4574.2329 (MSE:0.0044, Reg:4574.2285) beta=18.20
+Iter  8000 | Total loss: 3487.7776 (MSE:0.0051, Reg:3487.7725) beta=17.30
+Iter  9000 | Total loss: 2810.9651 (MSE:0.0055, Reg:2810.9597) beta=16.40
+Iter 10000 | Total loss: 2350.1643 (MSE:0.0047, Reg:2350.1597) beta=15.50
+Iter 11000 | Total loss: 1921.8832 (MSE:0.0048, Reg:1921.8784) beta=14.60
+Iter 12000 | Total loss: 1530.4551 (MSE:0.0049, Reg:1530.4502) beta=13.70
+Iter 13000 | Total loss: 1213.6863 (MSE:0.0047, Reg:1213.6816) beta=12.80
+Iter 14000 | Total loss: 887.0006 (MSE:0.0052, Reg:886.9954) beta=11.90
+Iter 15000 | Total loss: 585.7864 (MSE:0.0051, Reg:585.7813) beta=11.00
+Iter 16000 | Total loss: 309.9532 (MSE:0.0047, Reg:309.9484) beta=10.10
+Iter 17000 | Total loss: 126.6527 (MSE:0.0052, Reg:126.6475) beta=9.20
+Iter 18000 | Total loss: 31.0048 (MSE:0.0048, Reg:31.0000) beta=8.30
+Iter 19000 | Total loss: 5.0051 (MSE:0.0051, Reg:5.0000) beta=7.40
+Iter 19730 | Total loss: 0.0048 (MSE:0.0048, Reg:0.0000) beta=6.74 ... Early stopping
+
+encoder.layers.encoder_layer_8.self_attention.in_proj
+   FP_OUTPUT shape torch.Size([1024, 197, 2304])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([2304, 768])
+Iter     1 | Total loss: 0.0236 (MSE:0.0236, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0189 (MSE:0.0189, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0216 (MSE:0.0216, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0185 (MSE:0.0185, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0203 (MSE:0.0203, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 602247.6875 (MSE:0.0234, Reg:602247.6875) beta=20.00
+Iter  6000 | Total loss: 113917.2109 (MSE:0.0203, Reg:113917.1875) beta=19.10
+Iter  7000 | Total loss: 85661.7812 (MSE:0.0197, Reg:85661.7578) beta=18.20
+Iter  8000 | Total loss: 69549.3047 (MSE:0.0195, Reg:69549.2812) beta=17.30
+Iter  9000 | Total loss: 57653.9883 (MSE:0.0212, Reg:57653.9688) beta=16.40
+Iter 10000 | Total loss: 47918.5859 (MSE:0.0230, Reg:47918.5625) beta=15.50
+Iter 11000 | Total loss: 38956.1523 (MSE:0.0224, Reg:38956.1289) beta=14.60
+Iter 12000 | Total loss: 30590.8633 (MSE:0.0217, Reg:30590.8418) beta=13.70
+Iter 13000 | Total loss: 22817.7129 (MSE:0.0225, Reg:22817.6895) beta=12.80
+Iter 14000 | Total loss: 16057.5762 (MSE:0.0219, Reg:16057.5547) beta=11.90
+Iter 15000 | Total loss: 10285.6387 (MSE:0.0197, Reg:10285.6191) beta=11.00
+Iter 16000 | Total loss: 5705.6670 (MSE:0.0223, Reg:5705.6445) beta=10.10
+Iter 17000 | Total loss: 2531.9675 (MSE:0.0232, Reg:2531.9443) beta=9.20
+Iter 18000 | Total loss: 763.3356 (MSE:0.0211, Reg:763.3145) beta=8.30
+Iter 19000 | Total loss: 118.5275 (MSE:0.0176, Reg:118.5099) beta=7.40
+Iter 20000 | Total loss: 3.0214 (MSE:0.0214, Reg:3.0000) beta=6.50
+Iter 20107 | Total loss: 0.0225 (MSE:0.0225, Reg:0.0000) beta=6.40 ... Early stopping
+
+encoder.layers.encoder_layer_8.self_attention.out_proj
+   FP_OUTPUT shape torch.Size([1024, 197, 768])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([768, 768])
+Iter     1 | Total loss: 0.0014 (MSE:0.0014, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0015 (MSE:0.0015, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0015 (MSE:0.0015, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0015 (MSE:0.0015, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0011 (MSE:0.0011, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 147586.2656 (MSE:0.0013, Reg:147586.2656) beta=20.00
+Iter  6000 | Total loss: 22581.1387 (MSE:0.0013, Reg:22581.1367) beta=19.10
+Iter  7000 | Total loss: 15422.7549 (MSE:0.0012, Reg:15422.7539) beta=18.20
+Iter  8000 | Total loss: 11391.3662 (MSE:0.0012, Reg:11391.3652) beta=17.30
+Iter  9000 | Total loss: 8822.1621 (MSE:0.0013, Reg:8822.1611) beta=16.40
+Iter 10000 | Total loss: 6780.7959 (MSE:0.0014, Reg:6780.7944) beta=15.50
+Iter 11000 | Total loss: 5188.7847 (MSE:0.0013, Reg:5188.7832) beta=14.60
+Iter 12000 | Total loss: 3876.8147 (MSE:0.0011, Reg:3876.8137) beta=13.70
+Iter 13000 | Total loss: 2836.5168 (MSE:0.0012, Reg:2836.5156) beta=12.80
+Iter 14000 | Total loss: 1933.3207 (MSE:0.0011, Reg:1933.3196) beta=11.90
+Iter 15000 | Total loss: 1228.2588 (MSE:0.0012, Reg:1228.2576) beta=11.00
+Iter 16000 | Total loss: 661.7808 (MSE:0.0011, Reg:661.7797) beta=10.10
+Iter 17000 | Total loss: 272.5884 (MSE:0.0015, Reg:272.5869) beta=9.20
+Iter 18000 | Total loss: 59.4389 (MSE:0.0012, Reg:59.4377) beta=8.30
+Iter 19000 | Total loss: 6.0012 (MSE:0.0012, Reg:6.0000) beta=7.40
+Iter 19875 | Total loss: 0.0013 (MSE:0.0013, Reg:0.0000) beta=6.61 ... Early stopping
+
+encoder.layers.encoder_layer_8.mlp.linear_1
+   FP_OUTPUT shape torch.Size([1024, 197, 3072])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([3072, 768])
+Iter     1 | Total loss: 0.0591 (MSE:0.0591, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0476 (MSE:0.0476, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0462 (MSE:0.0462, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0443 (MSE:0.0443, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0449 (MSE:0.0449, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 554712.4375 (MSE:0.0555, Reg:554712.3750) beta=20.00
+Iter  6000 | Total loss: 95305.9922 (MSE:0.0476, Reg:95305.9453) beta=19.10
+Iter  7000 | Total loss: 75360.1406 (MSE:0.0447, Reg:75360.0938) beta=18.20
+Iter  8000 | Total loss: 63540.2930 (MSE:0.0489, Reg:63540.2422) beta=17.30
+Iter  9000 | Total loss: 54369.0195 (MSE:0.0417, Reg:54368.9766) beta=16.40
+Iter 10000 | Total loss: 46048.0547 (MSE:0.0488, Reg:46048.0078) beta=15.50
+Iter 11000 | Total loss: 37797.3164 (MSE:0.0553, Reg:37797.2617) beta=14.60
+Iter 12000 | Total loss: 29929.7969 (MSE:0.0477, Reg:29929.7500) beta=13.70
+Iter 13000 | Total loss: 22140.1348 (MSE:0.0527, Reg:22140.0820) beta=12.80
+Iter 14000 | Total loss: 15027.9092 (MSE:0.0458, Reg:15027.8633) beta=11.90
+Iter 15000 | Total loss: 8662.1768 (MSE:0.0509, Reg:8662.1260) beta=11.00
+Iter 16000 | Total loss: 4035.3479 (MSE:0.0515, Reg:4035.2964) beta=10.10
+Iter 17000 | Total loss: 1213.0405 (MSE:0.0505, Reg:1212.9901) beta=9.20
+Iter 18000 | Total loss: 177.2949 (MSE:0.0510, Reg:177.2439) beta=8.30
+Iter 19000 | Total loss: 4.4021 (MSE:0.0534, Reg:4.3487) beta=7.40
+Iter 19381 | Total loss: 0.0538 (MSE:0.0538, Reg:0.0000) beta=7.06 ... Early stopping
+
+encoder.layers.encoder_layer_8.mlp.linear_2
+   FP_OUTPUT shape torch.Size([1024, 197, 768])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([768, 3072])
+Iter     1 | Total loss: 0.0044 (MSE:0.0044, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0039 (MSE:0.0039, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0038 (MSE:0.0038, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0036 (MSE:0.0036, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0036 (MSE:0.0036, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 150371.2188 (MSE:0.0040, Reg:150371.2188) beta=20.00
+Iter  6000 | Total loss: 4041.7976 (MSE:0.0039, Reg:4041.7937) beta=19.10
+Iter  7000 | Total loss: 2803.0916 (MSE:0.0037, Reg:2803.0879) beta=18.20
+Iter  8000 | Total loss: 2210.7798 (MSE:0.0039, Reg:2210.7759) beta=17.30
+Iter  9000 | Total loss: 1832.9893 (MSE:0.0037, Reg:1832.9855) beta=16.40
+Iter 10000 | Total loss: 1558.5026 (MSE:0.0037, Reg:1558.4988) beta=15.50
+Iter 11000 | Total loss: 1319.4165 (MSE:0.0037, Reg:1319.4128) beta=14.60
+Iter 12000 | Total loss: 1081.0001 (MSE:0.0038, Reg:1080.9963) beta=13.70
+Iter 13000 | Total loss: 848.5338 (MSE:0.0038, Reg:848.5300) beta=12.80
+Iter 14000 | Total loss: 604.8160 (MSE:0.0038, Reg:604.8121) beta=11.90
+Iter 15000 | Total loss: 389.7334 (MSE:0.0041, Reg:389.7293) beta=11.00
+Iter 16000 | Total loss: 225.9659 (MSE:0.0039, Reg:225.9620) beta=10.10
+Iter 17000 | Total loss: 105.3941 (MSE:0.0037, Reg:105.3903) beta=9.20
+Iter 18000 | Total loss: 28.7521 (MSE:0.0035, Reg:28.7486) beta=8.30
+Iter 19000 | Total loss: 3.0036 (MSE:0.0036, Reg:3.0000) beta=7.40
+Iter 19904 | Total loss: 0.0042 (MSE:0.0042, Reg:0.0000) beta=6.59 ... Early stopping
+
+encoder.layers.encoder_layer_9.self_attention.in_proj
+   FP_OUTPUT shape torch.Size([1024, 197, 2304])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([2304, 768])
+Iter     1 | Total loss: 0.0137 (MSE:0.0137, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0122 (MSE:0.0122, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0129 (MSE:0.0129, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0108 (MSE:0.0108, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0137 (MSE:0.0137, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 593225.3125 (MSE:0.0129, Reg:593225.3125) beta=20.00
+Iter  6000 | Total loss: 108600.5234 (MSE:0.0112, Reg:108600.5156) beta=19.10
+Iter  7000 | Total loss: 83901.5312 (MSE:0.0145, Reg:83901.5156) beta=18.20
+Iter  8000 | Total loss: 69491.5703 (MSE:0.0114, Reg:69491.5625) beta=17.30
+Iter  9000 | Total loss: 58937.4961 (MSE:0.0118, Reg:58937.4844) beta=16.40
+Iter 10000 | Total loss: 49957.5703 (MSE:0.0134, Reg:49957.5586) beta=15.50
+Iter 11000 | Total loss: 41837.5508 (MSE:0.0123, Reg:41837.5391) beta=14.60
+Iter 12000 | Total loss: 34148.5859 (MSE:0.0133, Reg:34148.5742) beta=13.70
+Iter 13000 | Total loss: 26537.5566 (MSE:0.0136, Reg:26537.5430) beta=12.80
+Iter 14000 | Total loss: 19501.7246 (MSE:0.0137, Reg:19501.7109) beta=11.90
+Iter 15000 | Total loss: 13262.4014 (MSE:0.0130, Reg:13262.3887) beta=11.00
+Iter 16000 | Total loss: 7969.6943 (MSE:0.0122, Reg:7969.6821) beta=10.10
+Iter 17000 | Total loss: 3847.9580 (MSE:0.0141, Reg:3847.9438) beta=9.20
+Iter 18000 | Total loss: 1374.6410 (MSE:0.0132, Reg:1374.6278) beta=8.30
+Iter 19000 | Total loss: 270.9196 (MSE:0.0141, Reg:270.9055) beta=7.40
+Iter 20000 | Total loss: 21.3679 (MSE:0.0132, Reg:21.3548) beta=6.50
+Iter 20888 | Total loss: 0.0135 (MSE:0.0135, Reg:0.0000) beta=5.70 ... Early stopping
+
+encoder.layers.encoder_layer_9.self_attention.out_proj
+   FP_OUTPUT shape torch.Size([1024, 197, 768])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([768, 768])
+Iter     1 | Total loss: 0.0006 (MSE:0.0006, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0005 (MSE:0.0005, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0005 (MSE:0.0005, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0005 (MSE:0.0005, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0005 (MSE:0.0005, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 138758.3281 (MSE:0.0004, Reg:138758.3281) beta=20.00
+Iter  6000 | Total loss: 16980.9414 (MSE:0.0004, Reg:16980.9414) beta=19.10
+Iter  7000 | Total loss: 10552.1104 (MSE:0.0005, Reg:10552.1104) beta=18.20
+Iter  8000 | Total loss: 7054.2261 (MSE:0.0004, Reg:7054.2256) beta=17.30
+Iter  9000 | Total loss: 5133.3213 (MSE:0.0004, Reg:5133.3208) beta=16.40
+Iter 10000 | Total loss: 3922.9041 (MSE:0.0005, Reg:3922.9036) beta=15.50
+Iter 11000 | Total loss: 3027.0168 (MSE:0.0005, Reg:3027.0164) beta=14.60
+Iter 12000 | Total loss: 2315.6611 (MSE:0.0004, Reg:2315.6606) beta=13.70
+Iter 13000 | Total loss: 1763.0643 (MSE:0.0004, Reg:1763.0638) beta=12.80
+Iter 14000 | Total loss: 1254.3239 (MSE:0.0004, Reg:1254.3234) beta=11.90
+Iter 15000 | Total loss: 845.7397 (MSE:0.0004, Reg:845.7393) beta=11.00
+Iter 16000 | Total loss: 532.6412 (MSE:0.0004, Reg:532.6407) beta=10.10
+Iter 17000 | Total loss: 271.3413 (MSE:0.0005, Reg:271.3409) beta=9.20
+Iter 18000 | Total loss: 90.7694 (MSE:0.0004, Reg:90.7690) beta=8.30
+Iter 19000 | Total loss: 11.0005 (MSE:0.0005, Reg:11.0000) beta=7.40
+Iter 19700 | Total loss: 0.0004 (MSE:0.0004, Reg:0.0000) beta=6.77 ... Early stopping
+
+encoder.layers.encoder_layer_9.mlp.linear_1
+   FP_OUTPUT shape torch.Size([1024, 197, 3072])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([3072, 768])
+Iter     1 | Total loss: 0.0414 (MSE:0.0414, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0358 (MSE:0.0358, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0380 (MSE:0.0380, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0341 (MSE:0.0341, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0320 (MSE:0.0320, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 615294.5000 (MSE:0.0376, Reg:615294.4375) beta=20.00
+Iter  6000 | Total loss: 105913.8750 (MSE:0.0330, Reg:105913.8438) beta=19.10
+Iter  7000 | Total loss: 84877.6406 (MSE:0.0344, Reg:84877.6094) beta=18.20
+Iter  8000 | Total loss: 72325.3672 (MSE:0.0400, Reg:72325.3281) beta=17.30
+Iter  9000 | Total loss: 62375.0000 (MSE:0.0396, Reg:62374.9609) beta=16.40
+Iter 10000 | Total loss: 53322.8086 (MSE:0.0338, Reg:53322.7734) beta=15.50
+Iter 11000 | Total loss: 44208.6172 (MSE:0.0359, Reg:44208.5820) beta=14.60
+Iter 12000 | Total loss: 35405.3359 (MSE:0.0371, Reg:35405.2969) beta=13.70
+Iter 13000 | Total loss: 26477.0234 (MSE:0.0359, Reg:26476.9883) beta=12.80
+Iter 14000 | Total loss: 17933.6641 (MSE:0.0364, Reg:17933.6270) beta=11.90
+Iter 15000 | Total loss: 10652.0771 (MSE:0.0385, Reg:10652.0391) beta=11.00
+Iter 16000 | Total loss: 5186.3442 (MSE:0.0378, Reg:5186.3066) beta=10.10
+Iter 17000 | Total loss: 1844.7985 (MSE:0.0340, Reg:1844.7644) beta=9.20
+Iter 18000 | Total loss: 299.7468 (MSE:0.0360, Reg:299.7108) beta=8.30
+Iter 19000 | Total loss: 12.7886 (MSE:0.0348, Reg:12.7537) beta=7.40
+Iter 19583 | Total loss: 0.0407 (MSE:0.0407, Reg:0.0000) beta=6.88 ... Early stopping
+
+encoder.layers.encoder_layer_9.mlp.linear_2
+   FP_OUTPUT shape torch.Size([1024, 197, 768])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([768, 3072])
+Iter     1 | Total loss: 0.0043 (MSE:0.0043, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0030 (MSE:0.0030, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0035 (MSE:0.0035, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0035 (MSE:0.0035, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0031 (MSE:0.0031, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 143247.5156 (MSE:0.0035, Reg:143247.5156) beta=20.00
+Iter  6000 | Total loss: 2465.0664 (MSE:0.0034, Reg:2465.0630) beta=19.10
+Iter  7000 | Total loss: 1663.2242 (MSE:0.0035, Reg:1663.2207) beta=18.20
+Iter  8000 | Total loss: 1362.9625 (MSE:0.0034, Reg:1362.9592) beta=17.30
+Iter  9000 | Total loss: 1133.0486 (MSE:0.0034, Reg:1133.0452) beta=16.40
+Iter 10000 | Total loss: 966.0034 (MSE:0.0035, Reg:965.9999) beta=15.50
+Iter 11000 | Total loss: 838.4382 (MSE:0.0037, Reg:838.4346) beta=14.60
+Iter 12000 | Total loss: 691.0531 (MSE:0.0037, Reg:691.0494) beta=13.70
+Iter 13000 | Total loss: 521.9558 (MSE:0.0032, Reg:521.9526) beta=12.80
+Iter 14000 | Total loss: 399.0018 (MSE:0.0037, Reg:398.9980) beta=11.90
+Iter 15000 | Total loss: 293.4093 (MSE:0.0034, Reg:293.4059) beta=11.00
+Iter 16000 | Total loss: 188.1769 (MSE:0.0034, Reg:188.1735) beta=10.10
+Iter 17000 | Total loss: 93.8671 (MSE:0.0036, Reg:93.8635) beta=9.20
+Iter 18000 | Total loss: 40.9725 (MSE:0.0032, Reg:40.9693) beta=8.30
+Iter 19000 | Total loss: 5.9419 (MSE:0.0034, Reg:5.9385) beta=7.40
+Iter 19259 | Total loss: 0.0033 (MSE:0.0033, Reg:0.0000) beta=7.17 ... Early stopping
+
+encoder.layers.encoder_layer_10.self_attention.in_proj
+   FP_OUTPUT shape torch.Size([1024, 197, 2304])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([2304, 768])
+Iter     1 | Total loss: 0.0169 (MSE:0.0169, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0128 (MSE:0.0128, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0151 (MSE:0.0151, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0141 (MSE:0.0141, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0130 (MSE:0.0130, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 501850.1562 (MSE:0.0138, Reg:501850.1562) beta=20.00
+Iter  6000 | Total loss: 73875.5391 (MSE:0.0143, Reg:73875.5234) beta=19.10
+Iter  7000 | Total loss: 57255.7344 (MSE:0.0139, Reg:57255.7188) beta=18.20
+Iter  8000 | Total loss: 47565.8750 (MSE:0.0142, Reg:47565.8594) beta=17.30
+Iter  9000 | Total loss: 40863.3086 (MSE:0.0141, Reg:40863.2930) beta=16.40
+Iter 10000 | Total loss: 35107.4844 (MSE:0.0138, Reg:35107.4688) beta=15.50
+Iter 11000 | Total loss: 29811.0215 (MSE:0.0128, Reg:29811.0078) beta=14.60
+Iter 12000 | Total loss: 24767.8047 (MSE:0.0143, Reg:24767.7910) beta=13.70
+Iter 13000 | Total loss: 19728.3867 (MSE:0.0128, Reg:19728.3730) beta=12.80
+Iter 14000 | Total loss: 14848.8184 (MSE:0.0135, Reg:14848.8047) beta=11.90
+Iter 15000 | Total loss: 10274.3398 (MSE:0.0160, Reg:10274.3242) beta=11.00
+Iter 16000 | Total loss: 6322.4951 (MSE:0.0131, Reg:6322.4819) beta=10.10
+Iter 17000 | Total loss: 3247.4287 (MSE:0.0137, Reg:3247.4150) beta=9.20
+Iter 18000 | Total loss: 1142.2192 (MSE:0.0144, Reg:1142.2048) beta=8.30
+Iter 19000 | Total loss: 258.8307 (MSE:0.0133, Reg:258.8174) beta=7.40
+Iter 20000 | Total loss: 17.0533 (MSE:0.0149, Reg:17.0383) beta=6.50
+Iter 20518 | Total loss: 0.0151 (MSE:0.0151, Reg:0.0000) beta=6.03 ... Early stopping
+
+encoder.layers.encoder_layer_10.self_attention.out_proj
+   FP_OUTPUT shape torch.Size([1024, 197, 768])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([768, 768])
+Iter     1 | Total loss: 0.0005 (MSE:0.0005, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0005 (MSE:0.0005, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0005 (MSE:0.0005, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0005 (MSE:0.0005, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0004 (MSE:0.0004, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 118216.1328 (MSE:0.0004, Reg:118216.1328) beta=20.00
+Iter  6000 | Total loss: 9300.2988 (MSE:0.0004, Reg:9300.2988) beta=19.10
+Iter  7000 | Total loss: 5230.0327 (MSE:0.0004, Reg:5230.0322) beta=18.20
+Iter  8000 | Total loss: 3376.6372 (MSE:0.0005, Reg:3376.6367) beta=17.30
+Iter  9000 | Total loss: 2405.7139 (MSE:0.0005, Reg:2405.7134) beta=16.40
+Iter 10000 | Total loss: 1782.9176 (MSE:0.0005, Reg:1782.9171) beta=15.50
+Iter 11000 | Total loss: 1397.6685 (MSE:0.0004, Reg:1397.6680) beta=14.60
+Iter 12000 | Total loss: 1055.4674 (MSE:0.0005, Reg:1055.4669) beta=13.70
+Iter 13000 | Total loss: 812.0007 (MSE:0.0005, Reg:812.0002) beta=12.80
+Iter 14000 | Total loss: 593.4553 (MSE:0.0005, Reg:593.4548) beta=11.90
+Iter 15000 | Total loss: 422.9530 (MSE:0.0005, Reg:422.9525) beta=11.00
+Iter 16000 | Total loss: 263.4491 (MSE:0.0005, Reg:263.4487) beta=10.10
+Iter 17000 | Total loss: 132.9025 (MSE:0.0004, Reg:132.9021) beta=9.20
+Iter 18000 | Total loss: 43.2613 (MSE:0.0004, Reg:43.2609) beta=8.30
+Iter 19000 | Total loss: 10.0005 (MSE:0.0005, Reg:10.0000) beta=7.40
+Iter 19730 | Total loss: 0.0005 (MSE:0.0005, Reg:0.0000) beta=6.74 ... Early stopping
+
+encoder.layers.encoder_layer_10.mlp.linear_1
+   FP_OUTPUT shape torch.Size([1024, 197, 3072])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([3072, 768])
+Iter     1 | Total loss: 0.0386 (MSE:0.0386, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0369 (MSE:0.0369, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0346 (MSE:0.0346, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0359 (MSE:0.0359, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0324 (MSE:0.0324, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 538291.1875 (MSE:0.0340, Reg:538291.1250) beta=20.00
+Iter  6000 | Total loss: 89970.2656 (MSE:0.0342, Reg:89970.2344) beta=19.10
+Iter  7000 | Total loss: 72493.3516 (MSE:0.0354, Reg:72493.3125) beta=18.20
+Iter  8000 | Total loss: 62025.1836 (MSE:0.0359, Reg:62025.1484) beta=17.30
+Iter  9000 | Total loss: 53671.4219 (MSE:0.0360, Reg:53671.3867) beta=16.40
+Iter 10000 | Total loss: 45929.9531 (MSE:0.0372, Reg:45929.9141) beta=15.50
+Iter 11000 | Total loss: 38183.2891 (MSE:0.0341, Reg:38183.2539) beta=14.60
+Iter 12000 | Total loss: 30431.9609 (MSE:0.0335, Reg:30431.9277) beta=13.70
+Iter 13000 | Total loss: 22769.4492 (MSE:0.0363, Reg:22769.4121) beta=12.80
+Iter 14000 | Total loss: 15541.5732 (MSE:0.0359, Reg:15541.5371) beta=11.90
+Iter 15000 | Total loss: 9217.8926 (MSE:0.0414, Reg:9217.8516) beta=11.00
+Iter 16000 | Total loss: 4479.1797 (MSE:0.0344, Reg:4479.1455) beta=10.10
+Iter 17000 | Total loss: 1520.8287 (MSE:0.0395, Reg:1520.7893) beta=9.20
+Iter 18000 | Total loss: 252.5099 (MSE:0.0325, Reg:252.4774) beta=8.30
+Iter 19000 | Total loss: 10.0602 (MSE:0.0353, Reg:10.0249) beta=7.40
+Iter 19483 | Total loss: 0.0410 (MSE:0.0410, Reg:0.0000) beta=6.97 ... Early stopping
+
+encoder.layers.encoder_layer_10.mlp.linear_2
+   FP_OUTPUT shape torch.Size([1024, 197, 768])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([768, 3072])
+Iter     1 | Total loss: 0.0283 (MSE:0.0283, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0181 (MSE:0.0181, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0278 (MSE:0.0278, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0230 (MSE:0.0230, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0255 (MSE:0.0255, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 108860.0391 (MSE:0.0241, Reg:108860.0156) beta=20.00
+Iter  6000 | Total loss: 3503.3167 (MSE:0.0237, Reg:3503.2930) beta=19.10
+Iter  7000 | Total loss: 2422.4602 (MSE:0.0283, Reg:2422.4319) beta=18.20
+Iter  8000 | Total loss: 1893.5188 (MSE:0.0195, Reg:1893.4993) beta=17.30
+Iter  9000 | Total loss: 1512.1394 (MSE:0.0197, Reg:1512.1196) beta=16.40
+Iter 10000 | Total loss: 1193.3295 (MSE:0.0214, Reg:1193.3081) beta=15.50
+Iter 11000 | Total loss: 925.2667 (MSE:0.0189, Reg:925.2478) beta=14.60
+Iter 12000 | Total loss: 693.2745 (MSE:0.0217, Reg:693.2528) beta=13.70
+Iter 13000 | Total loss: 515.3672 (MSE:0.0184, Reg:515.3488) beta=12.80
+Iter 14000 | Total loss: 371.0142 (MSE:0.0215, Reg:370.9927) beta=11.90
+Iter 15000 | Total loss: 221.1062 (MSE:0.0230, Reg:221.0831) beta=11.00
+Iter 16000 | Total loss: 119.2989 (MSE:0.0193, Reg:119.2797) beta=10.10
+Iter 17000 | Total loss: 54.4590 (MSE:0.0181, Reg:54.4410) beta=9.20
+Iter 18000 | Total loss: 19.4526 (MSE:0.0260, Reg:19.4266) beta=8.30
+Iter 19000 | Total loss: 3.0177 (MSE:0.0177, Reg:3.0000) beta=7.40
+Iter 19910 | Total loss: 0.0198 (MSE:0.0198, Reg:0.0000) beta=6.58 ... Early stopping
+
+encoder.layers.encoder_layer_11.self_attention.in_proj
+   FP_OUTPUT shape torch.Size([1024, 197, 2304])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([2304, 768])
+Iter     1 | Total loss: 0.0228 (MSE:0.0228, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0213 (MSE:0.0213, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0183 (MSE:0.0183, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0226 (MSE:0.0226, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0210 (MSE:0.0210, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 354099.9062 (MSE:0.0212, Reg:354099.8750) beta=20.00
+Iter  6000 | Total loss: 40507.0430 (MSE:0.0212, Reg:40507.0234) beta=19.10
+Iter  7000 | Total loss: 30832.2637 (MSE:0.0206, Reg:30832.2422) beta=18.20
+Iter  8000 | Total loss: 25208.2988 (MSE:0.0223, Reg:25208.2773) beta=17.30
+Iter  9000 | Total loss: 21245.2266 (MSE:0.0236, Reg:21245.2031) beta=16.40
+Iter 10000 | Total loss: 18016.5234 (MSE:0.0229, Reg:18016.5000) beta=15.50
+Iter 11000 | Total loss: 15283.2285 (MSE:0.0205, Reg:15283.2080) beta=14.60
+Iter 12000 | Total loss: 12475.3623 (MSE:0.0201, Reg:12475.3418) beta=13.70
+Iter 13000 | Total loss: 9844.3760 (MSE:0.0238, Reg:9844.3525) beta=12.80
+Iter 14000 | Total loss: 7267.2305 (MSE:0.0210, Reg:7267.2095) beta=11.90
+Iter 15000 | Total loss: 5016.4009 (MSE:0.0211, Reg:5016.3799) beta=11.00
+Iter 16000 | Total loss: 3094.4363 (MSE:0.0189, Reg:3094.4175) beta=10.10
+Iter 17000 | Total loss: 1638.8640 (MSE:0.0204, Reg:1638.8436) beta=9.20
+Iter 18000 | Total loss: 646.4781 (MSE:0.0214, Reg:646.4567) beta=8.30
+Iter 19000 | Total loss: 144.5749 (MSE:0.0200, Reg:144.5549) beta=7.40
+Iter 20000 | Total loss: 9.7731 (MSE:0.0212, Reg:9.7520) beta=6.50
+Iter 20369 | Total loss: 0.0214 (MSE:0.0214, Reg:0.0000) beta=6.17 ... Early stopping
+
+encoder.layers.encoder_layer_11.self_attention.out_proj
+   FP_OUTPUT shape torch.Size([1024, 197, 768])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([768, 768])
+Iter     1 | Total loss: 0.0019 (MSE:0.0019, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0017 (MSE:0.0017, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0014 (MSE:0.0014, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0017 (MSE:0.0017, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0015 (MSE:0.0015, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 89128.4062 (MSE:0.0016, Reg:89128.4062) beta=20.00
+Iter  6000 | Total loss: 2803.4839 (MSE:0.0015, Reg:2803.4824) beta=19.10
+Iter  7000 | Total loss: 1440.3920 (MSE:0.0016, Reg:1440.3904) beta=18.20
+Iter  8000 | Total loss: 892.6129 (MSE:0.0015, Reg:892.6115) beta=17.30
+Iter  9000 | Total loss: 614.4329 (MSE:0.0016, Reg:614.4313) beta=16.40
+Iter 10000 | Total loss: 446.6993 (MSE:0.0015, Reg:446.6978) beta=15.50
+Iter 11000 | Total loss: 342.8357 (MSE:0.0017, Reg:342.8340) beta=14.60
+Iter 12000 | Total loss: 252.7868 (MSE:0.0016, Reg:252.7852) beta=13.70
+Iter 13000 | Total loss: 187.9996 (MSE:0.0015, Reg:187.9982) beta=12.80
+Iter 14000 | Total loss: 141.6991 (MSE:0.0015, Reg:141.6976) beta=11.90
+Iter 15000 | Total loss: 95.0016 (MSE:0.0016, Reg:95.0000) beta=11.00
+Iter 16000 | Total loss: 58.3204 (MSE:0.0015, Reg:58.3189) beta=10.10
+Iter 17000 | Total loss: 23.9679 (MSE:0.0015, Reg:23.9663) beta=9.20
+Iter 18000 | Total loss: 9.0017 (MSE:0.0017, Reg:9.0000) beta=8.30
+Iter 19000 | Total loss: 1.0016 (MSE:0.0016, Reg:1.0000) beta=7.40
+Iter 19174 | Total loss: 0.0015 (MSE:0.0015, Reg:0.0000) beta=7.24 ... Early stopping
+
+encoder.layers.encoder_layer_11.mlp.linear_1
+   FP_OUTPUT shape torch.Size([1024, 197, 3072])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([3072, 768])
+Iter     1 | Total loss: 0.0429 (MSE:0.0429, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0364 (MSE:0.0364, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0355 (MSE:0.0355, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0396 (MSE:0.0396, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0376 (MSE:0.0376, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 410134.2500 (MSE:0.0380, Reg:410134.2188) beta=20.00
+Iter  6000 | Total loss: 52472.4336 (MSE:0.0445, Reg:52472.3906) beta=19.10
+Iter  7000 | Total loss: 40983.9570 (MSE:0.0336, Reg:40983.9219) beta=18.20
+Iter  8000 | Total loss: 34163.8945 (MSE:0.0356, Reg:34163.8594) beta=17.30
+Iter  9000 | Total loss: 28860.5742 (MSE:0.0415, Reg:28860.5332) beta=16.40
+Iter 10000 | Total loss: 24122.9395 (MSE:0.0403, Reg:24122.8984) beta=15.50
+Iter 11000 | Total loss: 19696.3242 (MSE:0.0378, Reg:19696.2871) beta=14.60
+Iter 12000 | Total loss: 15376.3281 (MSE:0.0432, Reg:15376.2852) beta=13.70
+Iter 13000 | Total loss: 11191.0371 (MSE:0.0394, Reg:11190.9980) beta=12.80
+Iter 14000 | Total loss: 7478.3916 (MSE:0.0389, Reg:7478.3525) beta=11.90
+Iter 15000 | Total loss: 4372.3770 (MSE:0.0424, Reg:4372.3345) beta=11.00
+Iter 16000 | Total loss: 2264.9980 (MSE:0.0381, Reg:2264.9600) beta=10.10
+Iter 17000 | Total loss: 907.8430 (MSE:0.0349, Reg:907.8081) beta=9.20
+Iter 18000 | Total loss: 194.4154 (MSE:0.0339, Reg:194.3816) beta=8.30
+Iter 19000 | Total loss: 14.8994 (MSE:0.0366, Reg:14.8628) beta=7.40
+Iter 19635 | Total loss: 0.0357 (MSE:0.0357, Reg:0.0000) beta=6.83 ... Early stopping
+
+encoder.layers.encoder_layer_11.mlp.linear_2
+   FP_OUTPUT shape torch.Size([1024, 197, 768])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([768, 3072])
+Iter     1 | Total loss: 0.0185 (MSE:0.0185, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0086 (MSE:0.0086, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0075 (MSE:0.0075, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0074 (MSE:0.0074, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0084 (MSE:0.0084, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 195521.7969 (MSE:0.0094, Reg:195521.7812) beta=20.00
+Iter  6000 | Total loss: 395.2312 (MSE:0.0104, Reg:395.2208) beta=19.10
+Iter  7000 | Total loss: 234.7208 (MSE:0.0097, Reg:234.7111) beta=18.20
+Iter  8000 | Total loss: 166.0092 (MSE:0.0092, Reg:166.0000) beta=17.30
+Iter  9000 | Total loss: 142.0073 (MSE:0.0077, Reg:141.9996) beta=16.40
+Iter 10000 | Total loss: 115.6768 (MSE:0.0090, Reg:115.6678) beta=15.50
+Iter 11000 | Total loss: 89.0095 (MSE:0.0095, Reg:89.0000) beta=14.60
+Iter 12000 | Total loss: 71.0095 (MSE:0.0095, Reg:71.0000) beta=13.70
+Iter 13000 | Total loss: 56.0091 (MSE:0.0091, Reg:56.0000) beta=12.80
+Iter 14000 | Total loss: 39.0095 (MSE:0.0095, Reg:39.0000) beta=11.90
+Iter 15000 | Total loss: 30.0090 (MSE:0.0090, Reg:30.0000) beta=11.00
+Iter 16000 | Total loss: 22.0091 (MSE:0.0091, Reg:22.0000) beta=10.10
+Iter 17000 | Total loss: 17.0090 (MSE:0.0090, Reg:17.0000) beta=9.20
+Iter 18000 | Total loss: 8.0084 (MSE:0.0086, Reg:7.9998) beta=8.30
+Iter 19000 | Total loss: 2.0089 (MSE:0.0089, Reg:2.0000) beta=7.40
+Iter 19312 | Total loss: 0.0092 (MSE:0.0092, Reg:0.0000) beta=7.12 ... Early stopping
+
+heads.head
+   FP_OUTPUT shape torch.Size([1024, 1000])
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 25000 torch.Size([1000, 768])
+Iter     1 | Total loss: 0.0316 (MSE:0.0316, Reg:0.0000) beta=0.00
+Iter  1000 | Total loss: 0.0258 (MSE:0.0258, Reg:0.0000) beta=0.00
+Iter  2000 | Total loss: 0.0233 (MSE:0.0233, Reg:0.0000) beta=0.00
+Iter  3000 | Total loss: 0.0218 (MSE:0.0218, Reg:0.0000) beta=0.00
+Iter  4000 | Total loss: 0.0193 (MSE:0.0193, Reg:0.0000) beta=0.00
+Iter  5000 | Total loss: 110770.1172 (MSE:0.0235, Reg:110770.0938) beta=20.00
+Iter  6000 | Total loss: 22278.4883 (MSE:0.0201, Reg:22278.4688) beta=19.10
+Iter  7000 | Total loss: 15276.0820 (MSE:0.0219, Reg:15276.0605) beta=18.20
+Iter  8000 | Total loss: 10475.6064 (MSE:0.0187, Reg:10475.5879) beta=17.30
+Iter  9000 | Total loss: 7168.6079 (MSE:0.0221, Reg:7168.5859) beta=16.40
+Iter 10000 | Total loss: 4712.3525 (MSE:0.0236, Reg:4712.3291) beta=15.50
+Iter 11000 | Total loss: 2827.3037 (MSE:0.0194, Reg:2827.2842) beta=14.60
+Iter 12000 | Total loss: 1568.0751 (MSE:0.0223, Reg:1568.0529) beta=13.70
+Iter 13000 | Total loss: 721.5416 (MSE:0.0203, Reg:721.5213) beta=12.80
+Iter 14000 | Total loss: 276.2751 (MSE:0.0212, Reg:276.2538) beta=11.90
+Iter 15000 | Total loss: 76.4279 (MSE:0.0225, Reg:76.4053) beta=11.00
+Iter 16000 | Total loss: 15.0201 (MSE:0.0203, Reg:14.9998) beta=10.10
+Iter 16650 | Total loss: 0.0248 (MSE:0.0248, Reg:0.0000) beta=9.52 ... Early stopping
+
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+    Quantized model Evaluation accuracy on 50000 images, 80.502%
+Total time: 6533.25 sec
