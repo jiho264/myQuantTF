@@ -19,7 +19,11 @@ class QuantBase(nn.Module):
             raise Exception("Weight quantizer is already inited.")
 
         if org_tensor != None:
-            if args.get("scheme") in ["AdaRoundQuantizer", "MinMaxQuantizer"]:
+            if args.get("scheme") in [
+                "AdaRoundQuantizer",
+                "MinMaxQuantizer",
+                "AbsMaxQuantizer",
+            ]:
                 self.Quantizer = quantizerDict[args.get("scheme")](
                     org_tensor=org_tensor, args=args
                 )
@@ -30,6 +34,7 @@ class QuantBase(nn.Module):
         else:
             if args.get("scheme") in [
                 "DynamicMinMaxQuantizer",
+                # "MovingAvgAbsMaxQuantizer",
                 "MovingAvgMinMaxQuantizer",
             ]:
                 self.Quantizer = quantizerDict[args.get("scheme")](
@@ -146,10 +151,59 @@ class QuantMLPBlock(nn.Module):
         self.dropout_2 = orgMLPBlock.get_submodule("4")
         # Dropout(p=0.0, inplace=False)
 
+    def i_POLY(self, q, S, a, b, c):
+        """
+        Kim, Sehoon, et al. "I-bert: Integer-only bert quantization." International conference on machine learning. PMLR, 2021.
+        ref : https://github.com/kssteven418/I-BERT/blob/ibert/fairseq/quantization/utils/quant_modules.py
+
+        여기 논문에서 알고리즘 1에 _s는 floor하라고 적혀있는데 그렇게 하면 그냥 망해버림.
+        """
+        qb = torch.floor(b / S)
+        qc = torch.floor(c / (a * S**2))
+        # _S = torch.floor(a * S**2)
+        _S = a * S**2
+        _q = (q + qb) ** 2 + qc
+
+        return _q, _S
+
+    def i_ERF(self, q, S):
+        with torch.no_grad():
+            a, b, c = -0.2888, -1.769, 1
+            a, b, c = torch.tensor(a), torch.tensor(b), torch.tensor(c)
+
+        q_sgn, q = torch.sign(q), torch.clip(torch.abs(q), max=-b / S)
+        q_L, S_L = self.i_POLY(q, S, a, b, c)
+
+        _q, _S = q_sgn * q_L, S_L
+
+        return _q, _S
+
+    def i_GELU(self, q, S):
+        with torch.device(q.device):
+
+            q_erf, S_erf = self.i_ERF(q, S / math.sqrt(2))
+            q1 = torch.floor(1 / S_erf)
+
+            _q, _S = q * (q_erf + q1), S * S_erf / 2
+
+            return _q, _S
+
+            # for return FP output and scaler
+            # return _q * _S, _S
+
     def forward(self, input: torch.Tensor):
 
         x = self.linear_1(input)
-        x = self.gelu(x)
+        if self.linear_1.activationQuantizer.Quantizer._ready_to_quantize:
+            # the X is quantized value but represent by FP domain.
+            S = torch.max(torch.abs(x)) / 127
+            x_q = torch.round(x / S)
+            # apply the temporary sysmetric quantization
+            x_fp, _S = self.i_GELU(x_q, S)
+            x = x_fp * _S
+            # dequant -> the quantized value represent by FP domain
+        else:
+            x = self.gelu(x)
         x = self.dropout_1(x)
         x = self.linear_2(x)
         x = self.dropout_2(x)
@@ -183,8 +237,8 @@ class QuantMultiheadAttention(nn.MultiheadAttention):
         self.in_proj = QuantLinearLayer(in_proj)
 
         # [1] Q @ K
-        self.attnMapActivationQuantizer = QuantAttnMap()
-        self.attnMapActivationQuantizer.type_of_step = "Q@K"
+        # self.attnMapActivationQuantizer = QuantAttnMap()
+        # self.attnMapActivationQuantizer.type_of_step = "Q@K"
         # [2] Attn = Softmax()
         self.attnMapSoftmaxActivationQuantizer = QuantAttnMap()
         self.attnMapSoftmaxActivationQuantizer.type_of_step = "Softmax(Attn)"

@@ -91,8 +91,7 @@ def main(main_args={}, args_w={}, args_a={}, args_attn={}, args_ln={}):
     model.eval().to("cuda")
 
     args_w = {"scheme": "MinMaxQuantizer", "bit_width": 4, "per_channel": True}
-    args_w.update({"scheme": "AdaRoundQuantizer"})
-
+    # args_w.update({"scheme": "AdaRoundQuantizer"})
     args_a = {
         "scheme": "MovingAvgMinMaxQuantizer",
         "bit_width": 8,
