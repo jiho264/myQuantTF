@@ -110,6 +110,29 @@ class QuantAttnMap(nn.Module):
         return self.activationQuantizer(input)
 
 
+class QuantSoftmax(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.activationQuantizer = QuantBase()
+
+        self.onoff = False
+
+    def forward(self, input: torch.Tensor):
+        if self.onoff:
+            return self.activationQuantizer(F.softmax(input, dim=-1))
+        else:
+            return F.softmax(input, dim=-1)
+
+
+class QuantActOnly(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.activationQuantizer = QuantBase()
+
+    def forward(self, input: torch.Tensor):
+        return self.activationQuantizer(input)
+
+
 class QuantLayerNorm(nn.Module):
     def __init__(self, orgLayerNorm):
         super().__init__()
@@ -141,6 +164,8 @@ class QuantMLPBlock(nn.Module):
 
         self.gelu = orgMLPBlock.get_submodule("1")
         # GELU(approximate='none')
+        self.using_int_gelu = False
+        self.int_gelu_bit_width = None
 
         self.dropout_1 = orgMLPBlock.get_submodule("2")
         # Dropout(p=0.0, inplace=False)
@@ -182,9 +207,12 @@ class QuantMLPBlock(nn.Module):
     def forward(self, input: torch.Tensor):
 
         x = self.linear_1(input)
-        if self.linear_1.activationQuantizer.Quantizer._ready_to_quantize:
+        if (
+            self.using_int_gelu
+            and self.linear_1.activationQuantizer.Quantizer._ready_to_quantize
+        ):
             # the X is quantized value but represent by FP domain.
-            S = torch.max(torch.abs(x)) / 127
+            S = torch.max(torch.abs(x)) / (2 ** (self.int_gelu_bit_width - 1) - 1)
             x_q = torch.round(x / S)
             # apply the temporary sysmetric quantization
             x_q, _S = self.i_GELU(x_q, S)
@@ -394,6 +422,7 @@ class QuantViT(nn.Module):
         args_a: dict = {},
         args_attn: dict = {},
         args_ln: dict = {},
+        args_gelu: dict = {},
     ):
         super().__init__()
         self.__dict__.update(orgViT.__dict__)
@@ -411,10 +440,11 @@ class QuantViT(nn.Module):
 
         self.heads = nn.Sequential(heads_layers)
 
-        self.model_w_quant = False if args_w == {} else True
-        self.model_a_quant = False if args_a == {} else True
-        self.model_attn_quant = False if args_attn == {} else True
-        self.model_ln_quant = False if args_ln == {} else True
+        self.vit_w_quant = False if args_w == {} else True
+        self.vit_a_quant = False if args_a == {} else True
+        self.vit_attn_quant = False if args_attn == {} else True
+        self.vit_ln_quant = False if args_ln == {} else True
+        self.vit_INT_GELU = False if args_gelu == {} else True
 
         for name, module in self.named_modules():
             if isinstance(module, QuantLinearLayer):
@@ -436,20 +466,27 @@ class QuantViT(nn.Module):
                 if args_ln:
                     module.activationQuantizer.init_quantizer(args_ln)
                     print("[A]", name)
+            elif isinstance(module, QuantMLPBlock):
+                if args_gelu:
+                    module.int_gelu_bit_width = args_gelu.get("bit_width")
+                    print(f"[INT{module.int_gelu_bit_width} GELU]", name)
+
         self.orgforward = orgViT.forward
 
     def _quant_switch(self):
         for name, module in self.named_modules():
             if isinstance(module, QuantLinearLayer):
-                module.weightQuantizer.do_quant = self.model_w_quant
-                module.activationQuantizer.do_quant = self.model_a_quant
+                module.weightQuantizer.do_quant = self.vit_w_quant
+                module.activationQuantizer.do_quant = self.vit_a_quant
             elif isinstance(module, QuantAttnMap):
                 if module.type_of_step in ["Q@K", "Attn@V"]:
-                    module.activationQuantizer.do_quant = self.model_a_quant
+                    module.activationQuantizer.do_quant = self.vit_a_quant
                 elif module.type_of_step == "Softmax(Attn)":
-                    module.activationQuantizer.do_quant = self.model_attn_quant
+                    module.activationQuantizer.do_quant = self.vit_attn_quant
             elif isinstance(module, QuantLayerNorm):
-                module.activationQuantizer.do_quant = self.model_ln_quant
+                module.activationQuantizer.do_quant = self.vit_ln_quant
+            elif isinstance(module, QuantMLPBlock):
+                module.using_int_gelu = self.vit_INT_GELU
 
     def forward(self, x: torch.Tensor):
         self._quant_switch()
