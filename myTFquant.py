@@ -90,8 +90,8 @@ def main(main_args={}, args_w={}, args_a={}, args_attn={}, args_ln={}, args_gelu
         raise NotImplementedError
     model.eval().to("cuda")
 
-    args_w = {"scheme": "MinMaxQuantizer", "bit_width": 4, "per_channel": True}
-    # args_w.update({"scheme": "AdaRoundQuantizer"})
+    args_w = {"scheme": "MinMaxQuantizer", "bit_width": 8, "per_channel": True}
+    args_w.update({"scheme": "AdaRoundQuantizer"})
     args_a = {
         "scheme": "MovingAvgMinMaxQuantizer",
         "bit_width": 8,
@@ -100,7 +100,7 @@ def main(main_args={}, args_w={}, args_a={}, args_attn={}, args_ln={}, args_gelu
         # "momentum": 0.9,
         # "batches": 16,
     }
-    args_gelu = {"bit_width": 8}
+    # args_gelu = {"bit_width": 8}
     # args_attn = {"bit_width": 8}
     if args_a=={} and args_gelu!={}:
         raise ValueError("Activation quantization is required for GELU quantization")
@@ -111,16 +111,6 @@ def main(main_args={}, args_w={}, args_a={}, args_attn={}, args_ln={}, args_gelu
     # args_ln = {"scheme": "MinMaxQuantizer", "bit_width": 4, "per_channel": False}
 
     model = QuantViT(model, args_w, args_a, args_attn, args_ln, args_gelu)
-
-    if type(model) == QuantViT:
-        print(f"Weight quantization parameter : {args_w}")
-        print(f"Activation quantization parameter : {args_a}")
-        print(f"Attention quantization parameter : {args_attn}")
-        print(f"LayerNorm quantization parameter : {args_ln}")
-        model.vit_w_quant = False if args_w == {} else True
-        model.vit_a_quant = False if args_a == {} else True
-        model.vit_attn_quant = False if args_attn == {} else True
-        model.vit_ln_quant = False if args_ln == {} else True
 
     model.eval().to("cuda")
 

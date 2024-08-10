@@ -204,7 +204,7 @@ class QuantMultiheadAttention(nn.MultiheadAttention):
         # self.attnMapActivationQuantizer = QuantAttnMap()
         # self.attnMapActivationQuantizer.type_of_step = "Q@K"
         # [2] Attn = Softmax()
-        self.attnMapSoftmaxActivationQuantizer = QuantSoftmax()
+        self.quantSoftmax = QuantSoftmax()
         # [3] Attn @ V
         self.attnOutActivationQuantizer = QuantActOnly()
 
@@ -257,7 +257,7 @@ class QuantMultiheadAttention(nn.MultiheadAttention):
         ## >> torch.Size([128, 12, 197, 197])
 
         """ INT32 -> return log softmax INT8 """
-        attn_map = self.attnMapSoftmaxActivationQuantizer(qk)
+        attn_map = self.quantSoftmax(qk)
         ## >> torch.Size([128, 12, 197, 197])
 
         """ INT GEMM -> return INT32 -> return INT8 """
@@ -268,6 +268,8 @@ class QuantMultiheadAttention(nn.MultiheadAttention):
             attn_output.permute(0, 2, 1, 3).contiguous().view(bsz, tgt_len, embed_dim)
         )
         ## >> torch.Size([128, 197, 768])
+        # torch.save(attn_output, "prac/attn_output.pt")
+        # torch.save(attn_map, "prac/attn_map.pt")
 
         """ INT GEMM -> return INT32 -> return INT8 """
         attn_output = self.out_proj(attn_output)  # with W_out
@@ -375,6 +377,12 @@ class QuantViT(nn.Module):
         args_gelu: dict = {},
     ):
         super().__init__()
+        print(f"Weight quantization parameter : {args_w}")
+        print(f"Activation quantization parameter : {args_a}")
+        print(f"Attention quantization parameter : {args_attn}")
+        print(f"LayerNorm quantization parameter : {args_ln}")
+        print(f"GELU quantization parameter : {args_gelu}")
+
         self.__dict__.update(orgViT.__dict__)
         self.conv_proj = QuantLinearLayer(orgViT.conv_proj)
         self.encoder = QuantEncoder(orgViT.encoder)
@@ -392,9 +400,9 @@ class QuantViT(nn.Module):
 
         self.vit_w_quant = False if args_w == {} else True
         self.vit_a_quant = False if args_a == {} else True
-        self.vit_attn_quant = False if args_attn == {} else True
         self.vit_ln_quant = False if args_ln == {} else True
-        self.vit_INT_GELU = False if args_gelu == {} else True
+        self.vit_int_gelu = False if args_gelu == {} else True
+        self.vit_int_softmax = False if args_attn == {} else True
 
         for name, module in self.named_modules():
             if isinstance(module, QuantLinearLayer):
@@ -434,9 +442,9 @@ class QuantViT(nn.Module):
             elif isinstance(module, QuantLayerNorm):
                 module.activationQuantizer.do_quant = self.vit_ln_quant
             elif isinstance(module, QuantMLPBlock):
-                module.using_int_gelu = self.vit_INT_GELU
+                module.using_int_gelu = self.vit_int_gelu
             elif isinstance(module, QuantSoftmax):
-                module.using_int_softmax = self.vit_attn_quant
+                module.using_int_softmax = self.vit_int_softmax
 
     def forward(self, x: torch.Tensor):
         self._quant_switch()
