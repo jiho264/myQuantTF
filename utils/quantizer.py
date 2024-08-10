@@ -72,6 +72,40 @@ class UniformAffineQuantizer(nn.Module):
         return self._dequantize(self._quantize(x))
 
 
+class AbsMaxQuantizer(UniformAffineQuantizer):
+    def __init__(self, org_tensor, args):
+        """
+        [ Absolute Maximum Quantization ]
+        - When zero_point is zero, the quantization range is symmetric.
+            (Uniform Symmetric Quantization)
+        - range: [-max(abs(x)), max(abs(x))]
+        """
+        super(AbsMaxQuantizer, self).__init__(org_tensor, args)
+
+        _AbsMax = None
+        if self.per_channel == True:
+            _AbsMax = org_tensor.view(org_tensor.size(0), -1).abs().max(dim=1).values
+        else:
+            _AbsMax = org_tensor.abs().max()
+
+        if self.one_side_dist == "no":
+            # if s8, scaler = 2 * org_weight.abs().max() / (127 - (-128))
+            #               = org_weight.abs().max() - (-org_weight.abs().max()) / (127 - (-128))
+            self.compute_qparams(-_AbsMax, _AbsMax)
+            # will convert to (-max, max) -> (-128, 127)
+        elif self.one_side_dist == "pos":
+            # if u8, scaler = org_weight.abs().max() / (255 - 0)
+            self.compute_qparams(torch.zeros_like(_AbsMax), _AbsMax)
+            # will convert to (0, max) -> (0, 255)
+        else:
+            print("This distribution is unexpected. plaese check the input data.")
+            # self.compute_qparams(_AbsMax, torch.zeros_like(_AbsMax))
+            raise ValueError("Unknown distribution type.")
+
+        # if s8 or u8, zero_point = 0
+        self.zero_point = torch.zeros_like(self._scaler)
+
+
 class MinMaxQuantizer(UniformAffineQuantizer):
     def __init__(self, org_tensor, args):
         """
@@ -222,6 +256,75 @@ class DynamicMinMaxQuantizer(UniformAffineQuantizer):
         return super().forward(input)
 
 
+# class MovingAvgAbsMaxQuantizer(UniformAffineQuantizer):
+#     def __init__(self, org_tensor, args):
+#         """
+#         In the [ MovingAvgMinMaxQuantizer ]
+#             - [self.a_inited = False] DOSE NOT MEAN init process was completed.
+#             - JUST represent that the "make instance" process was completed.
+
+#         There are verify process in the forward function.
+#             - if not computed yet, forward with org pass.
+#             - if computed, forward with quantized pass.
+#             This process is controlled by [self.ready_to_quantize] flag.
+
+#         DESIGNED FOR PER-LAYER SCHEME.
+#         """
+#         assert (
+#             org_tensor == None
+#         ), "MovingAvgMinMaxQuantizer should not have org_tensor."
+#         super().__init__(org_tensor=torch.randn((128, 197, 768)), args=args)
+
+#         # 0.9 is default value in the white paper.
+#         self._m = args.get("momentum") if args.get("momentum") else 0.9
+#         self._batches = args.get("batches") if args.get("batches") else 16
+#         self.per_channel = True
+
+#         self._ready_to_quantize = False
+#         self._computed_batches_cnt = 0
+#         self._threshold_batches = int((1 / (1 - self._m)))
+#         self.first_n_times_min = []
+#         self.first_n_times_max = []
+#         self._min, self._max = None, None
+
+#     def _update_moving_avg(self, input):
+#         with torch.no_grad():
+#             """calibration process"""
+#             if self._computed_batches_cnt < self._threshold_batches:
+#                 ## >> save first n times min, max
+#                 self._computed_batches_cnt += 1
+#                 tgt = input.abs().max()
+#                 self.first_n_times_min.append(tgt)
+#                 self.first_n_times_max.append(tgt)
+
+#             elif self._computed_batches_cnt == self._threshold_batches:
+#                 ## >> compute the mean of first n times min, max
+#                 self._computed_batches_cnt += 1
+#                 assert len(self.first_n_times_min) == self._threshold_batches
+#                 self._min = torch.tensor(self.first_n_times_min).mean()
+#                 self._max = torch.tensor(self.first_n_times_max).mean()
+
+#             elif self._computed_batches_cnt > self._threshold_batches:
+#                 ## >> update min, max with momentum ( moving average )
+#                 self._computed_batches_cnt += 1
+#                 tgt = input.abs().max()
+#                 self._min = self._min * self._m + (1 - self._m) * tgt
+#                 self._max = self._max * self._m + (1 - self._m) * tgt
+
+#             """ determine the quantization parameter """
+#             if self._computed_batches_cnt == self._batches:
+#                 # if 16 == 16, calibration is done.
+#                 self.compute_qparams(self._min, self._max)
+#                 self._ready_to_quantize = True
+
+#     def forward(self, input: Tensor) -> Tensor:
+#         if self._ready_to_quantize == False:
+#             self._update_moving_avg(input)
+#             return input
+#         else:
+#             return super().forward(input)
+
+
 class MovingAvgMinMaxQuantizer(UniformAffineQuantizer):
     def __init__(self, org_tensor, args):
         """
@@ -290,8 +393,10 @@ class MovingAvgMinMaxQuantizer(UniformAffineQuantizer):
 
 
 quantizerDict = {
+    "AbsMaxQuantizer": AbsMaxQuantizer,
     "MinMaxQuantizer": MinMaxQuantizer,
     "DynamicMinMaxQuantizer": DynamicMinMaxQuantizer,
+    # "MovingAvgAbsMaxQuantizer": MovingAvgAbsMaxQuantizer,
     "MovingAvgMinMaxQuantizer": MovingAvgMinMaxQuantizer,
     "AdaRoundQuantizer": AdaRoundQuantizer,
     # "NormQuantizer": NormQuantizer,

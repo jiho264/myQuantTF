@@ -19,7 +19,11 @@ class QuantBase(nn.Module):
             raise Exception("Weight quantizer is already inited.")
 
         if org_tensor != None:
-            if args.get("scheme") in ["AdaRoundQuantizer", "MinMaxQuantizer"]:
+            if args.get("scheme") in [
+                "AdaRoundQuantizer",
+                "MinMaxQuantizer",
+                "AbsMaxQuantizer",
+            ]:
                 self.Quantizer = quantizerDict[args.get("scheme")](
                     org_tensor=org_tensor, args=args
                 )
@@ -30,6 +34,7 @@ class QuantBase(nn.Module):
         else:
             if args.get("scheme") in [
                 "DynamicMinMaxQuantizer",
+                # "MovingAvgAbsMaxQuantizer",
                 "MovingAvgMinMaxQuantizer",
             ]:
                 self.Quantizer = quantizerDict[args.get("scheme")](
@@ -146,10 +151,47 @@ class QuantMLPBlock(nn.Module):
         self.dropout_2 = orgMLPBlock.get_submodule("4")
         # Dropout(p=0.0, inplace=False)
 
+    def i_ERF(self, q, S):
+        with torch.no_grad():
+            a, b, c = -0.2888, -1.769, 1
+            a, b, c = torch.tensor(a), torch.tensor(b), torch.tensor(c)
+            qb = torch.floor(b / S)  # PRE-COMPUTED >> INT
+            qc = torch.floor(c / (a * S**2))  # PRE-COMPUTED >> INT
+
+        """ONLY INT OPERATION"""
+        _q = q.sign() * ((torch.min(q.abs(), -qb) + qb).pow(2) + qc)
+
+        _S = a * S**2  # PRE-COMPUTED >> FP
+
+        return _q, _S
+
+    def i_GELU(self, q, S):
+        with torch.device(q.device):
+
+            # input : (INT, PRE-COMPUTED-FP)
+            q_erf, S_erf = self.i_ERF(q, S / math.sqrt(2))
+            # output : (INT, PRE-COMPUTED-FP)
+
+            q1 = torch.floor(1 / S_erf)  # floor(1 / PRE-COMPUTED-FP) >> INT
+
+            _q = q * (q_erf + q1)  # INT
+            _S = S * S_erf / 2  # PRE-COMPUTED-FP
+
+            return _q, _S
+
     def forward(self, input: torch.Tensor):
 
         x = self.linear_1(input)
-        x = self.gelu(x)
+        if self.linear_1.activationQuantizer.Quantizer._ready_to_quantize:
+            # the X is quantized value but represent by FP domain.
+            S = torch.max(torch.abs(x)) / 127
+            x_q = torch.round(x / S)
+            # apply the temporary sysmetric quantization
+            x_q, _S = self.i_GELU(x_q, S)
+            x = x_q * _S
+            # dequant -> the quantized value represent by FP domain
+        else:
+            x = self.gelu(x)
         x = self.dropout_1(x)
         x = self.linear_2(x)
         x = self.dropout_2(x)
@@ -183,8 +225,8 @@ class QuantMultiheadAttention(nn.MultiheadAttention):
         self.in_proj = QuantLinearLayer(in_proj)
 
         # [1] Q @ K
-        self.attnMapActivationQuantizer = QuantAttnMap()
-        self.attnMapActivationQuantizer.type_of_step = "Q@K"
+        # self.attnMapActivationQuantizer = QuantAttnMap()
+        # self.attnMapActivationQuantizer.type_of_step = "Q@K"
         # [2] Attn = Softmax()
         self.attnMapSoftmaxActivationQuantizer = QuantAttnMap()
         self.attnMapSoftmaxActivationQuantizer.type_of_step = "Softmax(Attn)"
