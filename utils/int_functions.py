@@ -46,27 +46,29 @@ def int_GELU(x_q, s_x):
         return q_out, s_out
 
 
-# def int_EXP(x_q, s_x):
-#     with torch.no_grad():
-#         a, b, c = 0.3585, 1.353, 0.344
-#         a, b, c = torch.tensor(a), torch.tensor(b), torch.tensor(c)
+def int_EXP(x_q, s_x):
+    a, b, c = 0.3585, 1.353, 0.344
+    a, b, c = torch.tensor(a), torch.tensor(b), torch.tensor(c)
 
-#         q_ln2 = torch.floor(math.log(2) / s_x)  # PRE-COMPUTED >> INT
+    q_ln2 = torch.floor(0.693147 / s_x)
+    z = torch.floor(-x_q / q_ln2)
+    # print(f"z min : {z.min()}, z max : {z.max()}")
+    q_p = x_q + z * q_ln2
+    p = q_p * s_x
+    # print(f"p min : {p.min()}, p max : {p.max()}")
+    q_L, s_L = second_order_polynomial(q_p, s_x, a, b, c)
 
-#     """ONLY INT OPERATION"""
-#     z = torch.floor(-x_q / q_ln2)  # INT
+    q_out = torch.bitwise_right_shift(q_L.to(torch.int32), z.to(torch.int32)).to(
+        torch.float32
+    )
+    # q_out = (q_L / 2**z).round()
+    s_out = s_L
 
-#     q_p = x_q + z * q_ln2  # INT
-
-#     q_L, s_L = second_order_polynomial(q_p, s_x, a, b, c)
-
-#     q_out = q_L / 2**z
-
-#     return q_out, s_L
+    return q_out, s_out
 
 
-# def int_Softmax(x_q, s_x):
-#     q_hat = x_q - x_q.max(dim=-1).values.unsqueeze(-1)
-#     q_exp, s_exp = int_EXP(q_hat, s_x)
-#     q_out = q_exp / q_exp.sum(dim=-1).unsqueeze(-1)
-#     return q_out, s_exp
+def int_Softmax(x_q, s_x):
+    q_hat = x_q - x_q.max(dim=-1).values.unsqueeze(-1)
+    q_exp, s_exp = int_EXP(q_hat, s_x)
+    q_out = q_exp / q_exp.sum(dim=-1).unsqueeze(-1)
+    return q_out, s_exp

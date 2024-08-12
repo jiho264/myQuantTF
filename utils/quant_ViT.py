@@ -226,15 +226,14 @@ class QuantMultiheadAttention(nn.MultiheadAttention):
             and self.in_proj.activationQuantizer.Quantizer._ready_to_quantize
         ):
             # [ ] implement the INT8 softmax
-            # x = qk
-            # S = torch.max(torch.abs(x)) / (2 ** (self.int_softmax_bit_width - 1) - 1)
-            # x_q = torch.round(x / S)
-            # # apply the temporary sysmetric quantization
-            # x_q, _S = int_Softmax(x_q, S)
-            # x = x_q * _S
-            # attn_map = x
 
-            attn_map = torch.softmax(qk, dim=-1)
+            S = torch.max(torch.abs(qk)) / (2 ** (self.int_softmax_bit_width - 1) - 1)
+            qk_q = torch.round(qk / S)
+            # apply the temporary sysmetric quantization
+            qk_q, _S = int_Softmax(qk_q, S)
+            x = qk_q  # * _S
+            attn_map = x
+
         else:
             attn_map = torch.softmax(qk, dim=-1)
         ## >> torch.Size([128, 12, 197, 197])
