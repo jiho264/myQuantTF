@@ -74,7 +74,7 @@ def run_AdaRound(
     return None
 
 
-def main(main_args={}, args_w={}, args_a={}, args_attn={}, args_ln={}, args_gelu={}):
+def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_gelu={}):
     main_args = {
         "arch": "ViT_B_16",
         "batch_size": 128,
@@ -91,7 +91,7 @@ def main(main_args={}, args_w={}, args_a={}, args_attn={}, args_ln={}, args_gelu
     model.eval().to("cuda")
 
     args_w = {"scheme": "MinMaxQuantizer", "bit_width": 4, "per_channel": True}
-    args_w.update({"scheme": "AdaRoundQuantizer"})
+    # args_w.update({"scheme": "AdaRoundQuantizer"})
     args_a = {
         "scheme": "MovingAvgMinMaxQuantizer",
         "bit_width": 8,
@@ -100,17 +100,13 @@ def main(main_args={}, args_w={}, args_a={}, args_attn={}, args_ln={}, args_gelu
         # "momentum": 0.9,
         # "batches": 16,
     }
-    # args_gelu = {"bit_width": 8}
-    # args_attn = {"bit_width": 8}
+    args_gelu = {"bit_width": 8}
+    # args_softmax = {"bit_width": 8}
     if args_a=={} and args_gelu!={}:
         raise ValueError("Activation quantization is required for GELU quantization")
     # args_a = {}
-    # args_attn, args_ln = args_a, args_a
-    # args_attn = {"scheme": "DynamicMinMaxQuantizer", "bit_width": 4, "per_channel": False}
-    # args_attn = {"scheme": "DynamicMinMaxQuantizer", "bit_width": 4, "per_channel": False}
-    # args_ln = {"scheme": "MinMaxQuantizer", "bit_width": 4, "per_channel": False}
 
-    model = QuantViT(model, args_w, args_a, args_attn, args_ln, args_gelu)
+    model = QuantViT(model, args_w, args_a, args_softmax, args_ln, args_gelu)
 
     model.eval().to("cuda")
 
@@ -127,6 +123,7 @@ def main(main_args={}, args_w={}, args_a={}, args_attn={}, args_ln={}, args_gelu
 
     """ evaluation """
     _top1, _ = evaluate(model, test_loader, len(test_loader), "cuda")
+    # _top1, _ = evaluate(model, test_loader, 10, "cuda")
     print(
         f"\n    Quantized model Evaluation accuracy on 50000 images, {_top1.avg:2.3f}%"
     )
