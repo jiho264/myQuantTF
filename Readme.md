@@ -18,7 +18,7 @@
 | [W] MinMax                      | 4   | 32  | 32       | 32       | 32  | 80.144% |
 | [W] AdaRoundMinMax + [A] MovAvg | 4   | 8   | 32       | 32       | 32  | 80.502% |
 | [W] MinMax + [A] MovAvg         | 4   | 8   | 32       | 32       | 32  | 79.952% |
-| [W] MinMax + [A] MovAvg         | 4   | 8   | 32       | I-BERT 8 | 32  | 79.514% |
+| [W] MinMax + [A] MovAvg         | 4   | 8   | 32       | I-BERT 8 | 32  | 79.558% |
 | [W] MinMax + [A] MovAvg         | 4   | 8   | I-BERT 8 | 32       | 32  | 00000%  |
 | [W] MinMax + [A] MovAvg         | 4   | 8   | I-BERT 8 | I-BERT 8 | 32  | 00000%  |
 

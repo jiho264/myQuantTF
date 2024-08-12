@@ -101,7 +101,7 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         # "batches": 16,
     }
     args_gelu = {"bit_width": 8}
-    args_softmax = {"bit_width": 8}
+    # args_softmax = {"bit_width": 8}
     if args_a=={} and args_gelu!={}:
         raise ValueError("Activation quantization is required for GELU quantization")
     # args_a = {}

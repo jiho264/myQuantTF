@@ -71,4 +71,5 @@ def int_Softmax(x_q, s_x):
     q_hat = x_q - x_q.max(dim=-1).values.unsqueeze(-1)
     q_exp, s_exp = int_EXP(q_hat, s_x)
     q_out = q_exp / q_exp.sum(dim=-1).unsqueeze(-1)
+    # FIXME not clear! output is not int8
     return q_out, s_exp

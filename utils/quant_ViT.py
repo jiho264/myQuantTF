@@ -5,7 +5,6 @@ from torchvision.models.vision_transformer import Encoder, EncoderBlock, MLPBloc
 from collections import OrderedDict
 from torch import Tensor
 from .quantizer import quantizerDict, StraightThrough
-
 from .int_functions import int_GELU, int_Softmax
 
 
@@ -121,6 +120,10 @@ class QuantMLPBlock(nn.Module):
             self.using_int_gelu
             and self.linear_1.activationQuantizer.Quantizer._ready_to_quantize
         ):
+            """ 
+            The activation of linear_1 is INT8 from INT8 GEMM with INT32 output.
+            so, temporary dynamic int8 quantization is not depressed.
+            """
             # the X is quantized value but represent by FP domain.
             S = torch.max(torch.abs(x)) / (2 ** (self.int_gelu_bit_width - 1) - 1)
             x_q = torch.round(x / S)
@@ -225,14 +228,15 @@ class QuantMultiheadAttention(nn.MultiheadAttention):
             self.using_int_softmax
             and self.in_proj.activationQuantizer.Quantizer._ready_to_quantize
         ):
-            # [ ] implement the INT8 softmax
-
-            S = torch.max(torch.abs(qk)) / (2 ** (self.int_softmax_bit_width - 1) - 1)
-            qk_q = torch.round(qk / S)
-            # apply the temporary sysmetric quantization
-            qk_q, _S = int_Softmax(qk_q, S)
-            x = qk_q  # * _S
-            attn_map = x
+            attn_map = torch.softmax(qk, dim=-1)
+            
+            # # [ ] dose not need to apply the temporary sysmetric quantization
+            # # the input of softmax is [ INT32 ] and the output is [ INT8 ]
+            # scaler = qk.abs().max()/(2**(self.int_softmax_bit_width-1)-1)
+            # qk_q = torch.round(qk/scaler)
+            # qk_q, _ = int_Softmax(qk_q, scaler)
+            # attn_map = qk_q
+            # # FIXME : output is not quantized
 
         else:
             attn_map = torch.softmax(qk, dim=-1)
