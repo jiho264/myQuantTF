@@ -1,8 +1,5 @@
 import torch, tqdm
-import torch.nn as nn
-import random
-import os
-import numpy as np
+
 
 #################################################################################################
 ## 1. Prepare the dataset and utility functions
@@ -10,9 +7,9 @@ import numpy as np
 
 
 def seed_all(seed=0):
-    random.seed(seed)
-    os.environ["PYTHONHASHSEED"] = str(seed)
-    np.random.seed(seed)
+    # random.seed(seed)
+    # os.environ["PYTHONHASHSEED"] = str(seed)
+    # np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)  # if you are using multi-GPU..
@@ -57,10 +54,10 @@ def GetDataset(batch_size=64):
                 transforms.RandomResizedCrop(224),
                 transforms.RandomHorizontalFlip(),
                 transforms.ToTensor(),
-                #     transforms.Normalize(
-                #         mean=[0.485, 0.456, 0.406],
-                #         std=[0.229, 0.224, 0.225],
-                # ),
+                transforms.Normalize(
+                    mean=[0.485, 0.456, 0.406],
+                    std=[0.229, 0.224, 0.225],
+                ),
             ]
         ),
     )
@@ -72,10 +69,10 @@ def GetDataset(batch_size=64):
                 transforms.Resize(256),
                 transforms.CenterCrop(224),
                 transforms.ToTensor(),
-                # transforms.Normalize(
-                #     mean=[0.485, 0.456, 0.406],
-                #     std=[0.229, 0.224, 0.225],
-                # ),
+                transforms.Normalize(
+                    mean=[0.485, 0.456, 0.406],
+                    std=[0.229, 0.224, 0.225],
+                ),
             ]
         ),
     )

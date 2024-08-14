@@ -4,14 +4,16 @@ import torch.nn.functional as F
 from torchvision.models.vision_transformer import Encoder, EncoderBlock, MLPBlock
 from collections import OrderedDict
 from torch import Tensor
-from typing import Optional, Tuple
+from .quantizer import quantizerDict, StraightThrough
+from .int_functions import int_GELU  # , int_Softmax, int_LayerNorm
+from .quant_modules import QuantLinearLayer, QuantActOnly, QuantLayerNorm
 
 
 class QuantMLPBlock(nn.Module):
     def __init__(self, orgMLPBlock: MLPBlock):
         super().__init__()
 
-        self.linear_1 = orgMLPBlock.get_submodule("0")
+        self.linear_1 = QuantLinearLayer(orgMLPBlock.get_submodule("0"))
         # Linear(in_features=768, out_features=3072, bias=True)
 
         self.gelu = orgMLPBlock.get_submodule("1")
@@ -22,7 +24,7 @@ class QuantMLPBlock(nn.Module):
         self.dropout_1 = orgMLPBlock.get_submodule("2")
         # Dropout(p=0.0, inplace=False)
 
-        self.linear_2 = orgMLPBlock.get_submodule("3")
+        self.linear_2 = QuantLinearLayer(orgMLPBlock.get_submodule("3"))
         # Linear(in_features=3072, out_features=768, bias=True)
 
         self.dropout_2 = orgMLPBlock.get_submodule("4")
@@ -31,7 +33,23 @@ class QuantMLPBlock(nn.Module):
     def forward(self, input: torch.Tensor):
 
         x = self.linear_1(input)
-        x = self.gelu(x)
+        if (
+            self.using_int_gelu
+            and self.linear_1.activationQuantizer.Quantizer._ready_to_quantize
+        ):
+            """
+            The activation of linear_1 is INT8 from INT8 GEMM with INT32 output.
+            so, temporary dynamic int8 quantization is not depressed.
+            """
+            # the X is quantized value but represent by FP domain.
+            S = torch.max(torch.abs(x)) / (2 ** (self.int_gelu_bit_width - 1) - 1)
+            x_q = torch.round(x / S)
+            # apply the temporary sysmetric quantization
+            x_q, _S = int_GELU(x_q, S)
+            x = x_q * _S
+            # dequant -> the quantized value represent by FP domain
+        else:
+            x = self.gelu(x)
         x = self.dropout_1(x)
         x = self.linear_2(x)
         x = self.dropout_2(x)
@@ -62,17 +80,34 @@ class QuantMultiheadAttention(nn.MultiheadAttention):
         in_proj.weight = self.in_proj_weight
         in_proj.bias = self.in_proj_bias
 
-        self.in_proj = in_proj
+        self.in_proj = QuantLinearLayer(in_proj)
 
         # [1] Q @ K
         # INT8 GEMM -> return INT32
 
         # [2] Softmax(Q @ K / sqrt(d_k))
+        self.using_int_softmax = False
+        self.int_softmax_bit_width = None
 
         # [3] Attn @ V
-        self.out_proj = OUT_PROJ
+        self.attnOutActivationQuantizer = QuantActOnly()
+
+        self.out_proj = QuantLinearLayer(OUT_PROJ)
 
         # print("    - QuantMultiheadAttention is created")
+
+    def forward_int_Softmax(self, input):
+
+        attn_map = torch.softmax(input, dim=-1)
+
+        # # [ ] dose not need to apply the temporary sysmetric quantization
+        # # the input of softmax is [ INT32 ] and the output is [ INT8 ]
+        # scaler = qk.abs().max()/(2**(self.int_softmax_bit_width-1)-1)
+        # qk_q = torch.round(qk/scaler)
+        # qk_q, _ = int_Softmax(qk_q, scaler)
+        # attn_map = qk_q
+        # # FIXME : output is not quantized
+        return attn_map
 
     def QuantMSA(self, *args, **kwargs):
         """
@@ -97,6 +132,7 @@ class QuantMultiheadAttention(nn.MultiheadAttention):
         """ INT GEMM -> return INT32 -> return INT8 """
         proj = self.in_proj(query)  # with W_qkv
         ## >> torch.Size([128, 197, 2304])
+        # scaler.shape = ([2304, 1])
 
         proj = (
             proj.unflatten(-1, (3, query.size(-1)))
@@ -118,7 +154,14 @@ class QuantMultiheadAttention(nn.MultiheadAttention):
         ## >> torch.Size([128, 12, 197, 197])
 
         """ INT32 -> return log softmax INT8 """
-        attn_map = torch.softmax(qk, dim=-1)
+        if (
+            self.using_int_softmax
+            and self.in_proj.activationQuantizer.Quantizer._ready_to_quantize
+        ):
+            # attn_map = self.forward_int_Softmax(qk)
+            attn_map = torch.softmax(qk, dim=-1)
+        else:
+            attn_map = torch.softmax(qk, dim=-1)
         ## >> torch.Size([128, 12, 197, 197])
 
         """ INT GEMM -> return INT32 -> return INT8 """
@@ -129,6 +172,8 @@ class QuantMultiheadAttention(nn.MultiheadAttention):
             attn_output.permute(0, 2, 1, 3).contiguous().view(bsz, tgt_len, embed_dim)
         )
         ## >> torch.Size([128, 197, 768])
+        # torch.save(attn_output, "prac/attn_output.pt")
+        # torch.save(attn_map, "prac/attn_map.pt")
 
         """ INT GEMM -> return INT32 -> return INT8 """
         attn_output = self.out_proj(attn_output)  # with W_out
@@ -154,19 +199,19 @@ class QuantEncoderBlock(nn.Module):
         self.num_heads = orgEncoderBlock.num_heads
 
         ## nn.LayerNorm : LayerNorm((768,), eps=1e-06, elementwise_affine=True)
-        self.ln_1 = orgEncoderBlock.ln_1
+        self.ln_1 = QuantLayerNorm(orgEncoderBlock.ln_1)
 
         ## nn.MultiheadAttention
-        self.self_attention = orgEncoderBlock.self_attention
+        self.self_attention = QuantMultiheadAttention(orgEncoderBlock.self_attention)
 
         ## nn.Dropout : Dropout(p=0.0, inplace=False)
         self.dropout = orgEncoderBlock.dropout
 
         ## nn.LayerNorm : LayerNorm((768,), eps=1e-06, elementwise_affine=True)
-        self.ln_2 = orgEncoderBlock.ln_2
+        self.ln_2 = QuantLayerNorm(orgEncoderBlock.ln_2)
 
         ## MLPBlock
-        self.mlp = orgEncoderBlock.mlp
+        self.mlp = QuantMLPBlock(orgEncoderBlock.mlp)
 
     def forward(self, input: torch.Tensor):
         torch._assert(
@@ -197,7 +242,7 @@ class QuantEncoder(nn.Module):
                 orgEncoderBlock=orgEncoderBlock
             )
         self.layers = nn.Sequential(layers)
-        self.ln = orgEncoder.ln
+        self.ln = QuantLayerNorm(orgEncoder.ln)
 
     def forward(self, input: torch.Tensor):
         torch._assert(
@@ -221,17 +266,17 @@ class QuantViT(nn.Module):
         super().__init__()
         print(f"Weight quantization parameter : {args_w}")
         print(f"Activation quantization parameter : {args_a}")
-        print(f"Softmax quantization parameter : {args_softmax}")
+        print(f"Attention quantization parameter : {args_softmax}")
         print(f"LayerNorm quantization parameter : {args_ln}")
         print(f"GELU quantization parameter : {args_gelu}")
 
         self.__dict__.update(orgViT.__dict__)
-        self.conv_proj = orgViT.conv_proj
-        self.encoder = orgViT.encoder
+        self.conv_proj = QuantLinearLayer(orgViT.conv_proj)
+        self.encoder = QuantEncoder(orgViT.encoder)
 
         heads_layers: OrderedDict[str, nn.Module] = OrderedDict()
         if self.representation_size is None:
-            heads_layers["head"] = orgViT.heads.head
+            heads_layers["head"] = QuantLinearLayer(orgViT.heads.head)
         else:
             pass
             # heads_layers["pre_logits"] = nn.Linear(hidden_dim, representation_size)
@@ -246,50 +291,50 @@ class QuantViT(nn.Module):
         self.vit_int_gelu = False if args_gelu == {} else True
         self.vit_int_softmax = False if args_softmax == {} else True
 
-        # for name, module in self.named_modules():
-        #     if isinstance(module, QuantLinearLayer):
-        #         if args_w:
-        #             module.weightQuantizer.init_quantizer(args_w, module.weight)
-        #             print("[W]", name)
-        #         if args_a:
-        #             if name != "heads.head":
-        #                 module.activationQuantizer.init_quantizer(args_a)
-        #                 print("[A]", name)
-        #     elif isinstance(module, QuantActOnly):
-        #         if args_a:
-        #             module.activationQuantizer.init_quantizer(args_a)
-        #             print("[A]", name)
-        #     elif isinstance(module, QuantLayerNorm):
-        #         if args_ln:
-        #             module.int_ln_bit_width = args_ln.get("bit_width")
-        #             print(f"[INT{module.int_ln_bit_width} LN]", name)
-        #     elif isinstance(module, QuantMLPBlock):
-        #         if args_gelu:
-        #             module.int_gelu_bit_width = args_gelu.get("bit_width")
-        #             print(f"[INT{module.int_gelu_bit_width} GELU]", name)
-        #     elif isinstance(module, QuantMultiheadAttention):
-        #         if args_softmax:
-        #             module.int_softmax_bit_width = args_softmax.get("bit_width")
-        #             print(f"[INT{module.int_softmax_bit_width} Softmax]", name)
+        for name, module in self.named_modules():
+            if isinstance(module, QuantLinearLayer):
+                if args_w:
+                    module.weightQuantizer.init_quantizer(args_w, module.weight)
+                    print("[W]", name)
+                if args_a:
+                    if name != "heads.head":
+                        module.activationQuantizer.init_quantizer(args_a)
+                        print("[A]", name)
+            elif isinstance(module, QuantActOnly):
+                if args_a:
+                    module.activationQuantizer.init_quantizer(args_a)
+                    print("[A]", name)
+            elif isinstance(module, QuantLayerNorm):
+                if args_ln:
+                    module.int_ln_bit_width = args_ln.get("bit_width")
+                    print(f"[INT{module.int_ln_bit_width} LN]", name)
+            elif isinstance(module, QuantMLPBlock):
+                if args_gelu:
+                    module.int_gelu_bit_width = args_gelu.get("bit_width")
+                    print(f"[INT{module.int_gelu_bit_width} GELU]", name)
+            elif isinstance(module, QuantMultiheadAttention):
+                if args_softmax:
+                    module.int_softmax_bit_width = args_softmax.get("bit_width")
+                    print(f"[INT{module.int_softmax_bit_width} Softmax]", name)
 
         self.orgforward = orgViT.forward
 
-    # def _quant_switch(self):
-    #     for name, module in self.named_modules():
-    #         if isinstance(module, QuantLinearLayer):
-    #             module.weightQuantizer.do_quant = self.vit_w_quant
-    #             module.activationQuantizer.do_quant = self.vit_a_quant
-    #         elif isinstance(module, QuantActOnly):
-    #             module.activationQuantizer.do_quant = self.vit_a_quant
-    #         elif isinstance(module, QuantLayerNorm):
-    #             module.using_int_ln = self.vit_int_ln
-    #         elif isinstance(module, QuantMLPBlock):
-    #             module.using_int_gelu = self.vit_int_gelu
-    #         elif isinstance(module, QuantMultiheadAttention):
-    #             module.using_int_softmax = self.vit_int_softmax
+    def _quant_switch(self):
+        for name, module in self.named_modules():
+            if isinstance(module, QuantLinearLayer):
+                module.weightQuantizer.do_quant = self.vit_w_quant
+                module.activationQuantizer.do_quant = self.vit_a_quant
+            elif isinstance(module, QuantActOnly):
+                module.activationQuantizer.do_quant = self.vit_a_quant
+            elif isinstance(module, QuantLayerNorm):
+                module.using_int_ln = self.vit_int_ln
+            elif isinstance(module, QuantMLPBlock):
+                module.using_int_gelu = self.vit_int_gelu
+            elif isinstance(module, QuantMultiheadAttention):
+                module.using_int_softmax = self.vit_int_softmax
 
     def forward(self, x: torch.Tensor):
-        # self._quant_switch()
+        self._quant_switch()
         return self.orgforward(x)
 
 
