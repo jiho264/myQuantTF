@@ -1,4 +1,11 @@
 
+
+DEPRECATED at 2024.08.14
+
+when i realized that the bulding int inference code is very difficult, so i decided to use the I-ViT's code.
+
+
+
 # Made by
 - LEE, JIHO
 - Embedded AI LAB, INU 
