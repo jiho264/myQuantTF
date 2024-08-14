@@ -1,10 +1,20 @@
 import torch, time, argparse
 import torch.nn as nn
 
-from utils.data_utils import save_inp_oup_data, _get_train_samples, GetDataset, evaluate
-from utils.quant_ViT import QuantViT, QuantLinearLayer
+from data_utils import save_inp_oup_data, _get_train_samples, GetDataset, evaluate
+from quant_ViT import QuantViT, QuantLinearLayer
 import torchvision.models.vision_transformer as vision_transformer
 
+"""
+
+[OLD version]
+
+- my quantization implementation for torch ViT-B model 
+- working with [myUtils] package
+
+
+
+"""
 
 def _computeAdaRoundValues(model, layer, cali_data, batch_size, lr, n_iter):
     model.eval()
@@ -48,7 +58,7 @@ def _computeAdaRoundValues(model, layer, cali_data, batch_size, lr, n_iter):
 
     del layer.weightQuantizer.Quantizer.fp_outputs
     del X_q_lth, A_fp_lth
-    
+
     layer.weightQuantizer.Quantizer.setRoundingValues()
     return None
 
@@ -63,9 +73,9 @@ def run_AdaRound(
 
     for name, module in model.named_modules():
         if isinstance(module, QuantLinearLayer):
-            model.model_w_quant = False
+            model.vit_w_quant = False
             _, FP_OUTPUT = save_inp_oup_data(model, module, cali_data)
-            model.model_w_quant = True
+            model.vit_w_quant = True
             module.weightQuantizer.Quantizer.fp_outputs = FP_OUTPUT
             print(name)
             print("   FP_OUTPUT shape", FP_OUTPUT.shape)
@@ -74,7 +84,7 @@ def run_AdaRound(
     return None
 
 
-def main(main_args={}, args_w={}, args_a={}, args_attn={}, args_ln={}, args_gelu={}):
+def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_gelu={}):
     main_args = {
         "arch": "ViT_B_16",
         "batch_size": 128,
@@ -100,26 +110,14 @@ def main(main_args={}, args_w={}, args_a={}, args_attn={}, args_ln={}, args_gelu
         # "momentum": 0.9,
         # "batches": 16,
     }
-    # args_gelu = {"bit_width": 8}
+    args_gelu = {"bit_width": 8}
+    # args_softmax = {"bit_width": 8}
+    # args_ln = {"bit_width": 16}
     if args_a=={} and args_gelu!={}:
         raise ValueError("Activation quantization is required for GELU quantization")
     # args_a = {}
-    # args_attn, args_ln = args_a, args_a
-    # args_attn = {"scheme": "DynamicMinMaxQuantizer", "bit_width": 4, "per_channel": False}
-    # args_attn = {"scheme": "DynamicMinMaxQuantizer", "bit_width": 4, "per_channel": False}
-    # args_ln = {"scheme": "MinMaxQuantizer", "bit_width": 4, "per_channel": False}
 
-    model = QuantViT(model, args_w, args_a, args_attn, args_ln, args_gelu)
-
-    if type(model) == QuantViT:
-        print(f"Weight quantization parameter : {args_w}")
-        print(f"Activation quantization parameter : {args_a}")
-        print(f"Attention quantization parameter : {args_attn}")
-        print(f"LayerNorm quantization parameter : {args_ln}")
-        model.vit_w_quant = False if args_w == {} else True
-        model.vit_a_quant = False if args_a == {} else True
-        model.vit_attn_quant = False if args_attn == {} else True
-        model.vit_ln_quant = False if args_ln == {} else True
+    model = QuantViT(model, args_w, args_a, args_softmax, args_ln, args_gelu)
 
     model.eval().to("cuda")
 
@@ -136,6 +134,7 @@ def main(main_args={}, args_w={}, args_a={}, args_attn={}, args_ln={}, args_gelu
 
     """ evaluation """
     _top1, _ = evaluate(model, test_loader, len(test_loader), "cuda")
+    # _top1, _ = evaluate(model, test_loader, 10, "cuda")
     print(
         f"\n    Quantized model Evaluation accuracy on 50000 images, {_top1.avg:2.3f}%"
     )
