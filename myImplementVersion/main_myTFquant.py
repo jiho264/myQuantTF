@@ -1,10 +1,20 @@
 import torch, time, argparse
 import torch.nn as nn
 
-from utils.data_utils import save_inp_oup_data, _get_train_samples, GetDataset, evaluate
-from utils.quant_ViT import QuantViT, QuantLinearLayer
+from data_utils import save_inp_oup_data, _get_train_samples, GetDataset, evaluate
+from quant_ViT import QuantViT, QuantLinearLayer
 import torchvision.models.vision_transformer as vision_transformer
 
+"""
+
+[OLD version]
+
+- my quantization implementation for torch ViT-B model 
+- working with [myUtils] package
+
+
+
+"""
 
 def _computeAdaRoundValues(model, layer, cali_data, batch_size, lr, n_iter):
     model.eval()
