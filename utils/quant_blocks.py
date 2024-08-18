@@ -40,16 +40,16 @@ class QuantMLP(nn.Module):
         self.dropout_2 = orgModule.get_submodule("4")
         # Dropout(p=0.0, inplace=False)
 
-    def forward(self, input: torch.Tensor):
+    def forward(self, x, s_x):
 
-        x = self.linear_1(input)
-        x = self.linear_1_act(x)
-        x = self.gelu(x)
+        x, s_x = self.linear_1(x, s_x)
+        x, s_x = self.linear_1_act(x, s_x)
+        x, s_x = self.gelu(x, s_x)
         x = self.dropout_1(x)
-        x = self.linear_2(x)
-        x = self.linear_2_act(x)
+        x, s_x = self.linear_2(x, s_x)
+        x, s_x = self.linear_2_act(x, s_x)
         x = self.dropout_2(x)
-        return x
+        return x, s_x
 
 
 class QuantMSA(nn.Module):
@@ -94,42 +94,42 @@ class QuantMSA(nn.Module):
         )
         self.out_proj_act = QuantAct(args_a=args_a)
 
-    def forward(self, input: torch.Tensor, **kwargs):
+    def forward(self, x, s_x):
         # query, key, value = input, input, input
         ## >> torch.Size([128, 197, 768])
 
         """[1] INT GEMM -> return INT32 -> return INT8"""
-        proj = self.in_proj(input)
-        proj = self.in_proj_act(proj)
+        qk, s_qk = self.in_proj(x, s_x)
+        qk, s_qk = self.in_proj_act(qk, s_qk)
         ## >> torch.Size([128, 197, 2304])
 
-        proj = (
-            proj.unflatten(-1, (3, input.size(-1)))
+        qk = (
+            qk.unflatten(-1, (3, x.size(-1)))
             .unsqueeze(0)
             .transpose(0, -2)
             .squeeze(-2)
             .contiguous()
         )  ## >> torch.Size([3, 128, 197, 768])
 
-        bsz, tgt_len, embed_dim = input.shape
-        _, src_len, _ = input.shape
+        bsz, tgt_len, embed_dim = x.shape
+        _, src_len, _ = x.shape
 
-        q = proj[0].view(bsz, tgt_len, self.num_heads, self.head_dim).transpose(1, 2)
-        k = proj[1].view(bsz, src_len, self.num_heads, self.head_dim).transpose(1, 2)
-        v = proj[2].view(bsz, src_len, self.num_heads, self.head_dim).transpose(1, 2)
+        q = qk[0].view(bsz, tgt_len, self.num_heads, self.head_dim).transpose(1, 2)
+        k = qk[1].view(bsz, src_len, self.num_heads, self.head_dim).transpose(1, 2)
+        v = qk[2].view(bsz, src_len, self.num_heads, self.head_dim).transpose(1, 2)
 
         """ [2] INT GEMM -> return INT32 """
         qk = q @ k.transpose(-2, -1) / math.sqrt(q.size(-1))
-        qk = self.qk_act(qk)
+        qk, s_qk = self.qk_act(qk, s_qk)
         ## >> torch.Size([128, 12, 197, 197])
 
         """ [3] INT32 -> return log softmax INT8 """
-        attn_map = self.softmax(qk, dim=-1)
+        attn_map, s_amap = self.softmax(qk, s_qk, dim=-1)
         ## >> torch.Size([128, 12, 197, 197])
 
         """ [4] INT GEMM -> return INT32 -> return INT8 """
         attn_output = attn_map @ v
-        attn_output = self.attnout_act(attn_output)
+        attn_output, s_aout = self.attnout_act(attn_output, s_amap)  # with s_qk
         ## >> torch.Size([128, 12, 197, 64])
 
         attn_output = (
@@ -138,8 +138,8 @@ class QuantMSA(nn.Module):
         ## >> torch.Size([128, 197, 768])
 
         """ [5] INT GEMM -> return INT32 -> return INT8 """
-        attn_output = self.out_proj(attn_output)
-        attn_output = self.out_proj_act(attn_output)
+        attn_output, s_aout = self.out_proj(attn_output, s_aout)
+        attn_output, s_aout = self.out_proj_act(attn_output, s_aout)
         ## >> torch.Size([128, 197, 768])
 
-        return attn_output, attn_map
+        return attn_output, s_aout

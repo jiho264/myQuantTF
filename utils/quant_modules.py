@@ -12,10 +12,10 @@ class QuantAct(nn.Module):
         super().__init__()
         self.do_quant = False
 
-    def forward(self, x: Tensor):
+    def forward(self, x, s_x=1):
         if self.do_quant:
-            return x
-        return x
+            return x, s_x
+        return x, s_x
 
 
 class QuantLinearWithWeight(nn.Module):
@@ -48,7 +48,7 @@ class QuantLinearWithWeight(nn.Module):
         else:
             raise NotImplementedError
 
-    def forward(self, input: torch.Tensor):
+    def forward(self, input, s_in=1):
         if self.do_quant:
             _weight = self.WEIGHT_INT
             # _bias = self.BIAS_INT
@@ -58,7 +58,7 @@ class QuantLinearWithWeight(nn.Module):
             _bias = self.BIAS_FP
 
         x = self.fwd_func(input, _weight, _bias, **self.fwd_kwargs)
-        return x
+        return x, s_in
 
 
 class IntGELU(nn.Module):
@@ -71,8 +71,8 @@ class IntGELU(nn.Module):
         # else:
         #     raise NotImplementedError
 
-    def forward(self, input: torch.Tensor):
-        return F.gelu(input)
+    def forward(self, input, s_in=1):
+        return F.gelu(input), s_in
 
 
 class IntSoftMax(nn.Module):
@@ -86,8 +86,8 @@ class IntSoftMax(nn.Module):
         # else:
         #     raise NotImplementedError
 
-    def forward(self, input: torch.Tensor, dim: int = -1):
-        return F.softmax(input, dim=dim)
+    def forward(self, input, s_in=1, dim: int = -1):
+        return F.softmax(input, dim=dim), s_in
 
 
 class IntLayerNorm(nn.Module):
@@ -102,5 +102,5 @@ class IntLayerNorm(nn.Module):
         self.bias = orgModule.bias.clone().detach()
         self.orgModule = orgModule
 
-    def forward(self, input: torch.Tensor):
-        return self.orgModule(input)
+    def forward(self, input, s_in=1):
+        return self.orgModule(input), s_in
