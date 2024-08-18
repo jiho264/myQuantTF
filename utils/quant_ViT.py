@@ -8,12 +8,13 @@ from typing import Optional, Tuple
 
 from .quant_blocks import QuantMLP, QuantMSA
 from .quant_modules import (
-    QuantLayerNorm,
+    IntLayerNorm,
+    QuantConv2d,
     QuantLinear,
     QuantWeight,
     QuantAct,
-    QuantGELU,
-    QuantSoftMax,
+    IntGELU,
+    IntSoftMax,
 )
 
 
@@ -25,7 +26,7 @@ class QuantEncoderBlock(nn.Module):
         self.num_heads = orgModule.num_heads
 
         ## nn.LayerNorm : LayerNorm((768,), eps=1e-06, elementwise_affine=True)
-        self.ln_1 = QuantLayerNorm(orgModule.ln_1, args_ln=kwargs["args_ln"])
+        self.ln_1 = IntLayerNorm(orgModule.ln_1, args_ln=kwargs["args_ln"])
 
         ## nn.MultiheadAttention
         self.self_attention = QuantMSA(
@@ -39,7 +40,7 @@ class QuantEncoderBlock(nn.Module):
         self.dropout = orgModule.dropout
 
         ## nn.LayerNorm : LayerNorm((768,), eps=1e-06, elementwise_affine=True)
-        self.ln_2 = QuantLayerNorm(orgModule.ln_2, args_ln=kwargs["args_ln"])
+        self.ln_2 = IntLayerNorm(orgModule.ln_2, args_ln=kwargs["args_ln"])
 
         ## MLPBlock
         self.mlp = QuantMLP(
@@ -123,7 +124,7 @@ class QuantViT(nn.Module):
         self.class_token = orgViT.class_token
         self.representation_size = orgViT.representation_size
         """ [1] define the quantized modules """
-        self.conv_proj = QuantLinear(
+        self.conv_proj = QuantConv2d(
             orgModule=orgViT.conv_proj, args_w=args_w, args_a=args_a
         )
         self.encoder = QuantEncoder(
@@ -160,11 +161,11 @@ class QuantViT(nn.Module):
                 module.do_quant = self.vit_w_quant
             elif isinstance(module, QuantAct):
                 module.do_quant = self.vit_a_quant
-            elif isinstance(module, QuantLayerNorm):
+            elif isinstance(module, IntLayerNorm):
                 module.do_quant = self.vit_int_ln
-            elif isinstance(module, QuantGELU):
+            elif isinstance(module, IntGELU):
                 module.do_quant = self.vit_int_gelu
-            elif isinstance(module, QuantSoftMax):
+            elif isinstance(module, IntSoftMax):
                 module.do_quant = self.vit_int_softmax
 
     def _process_input(self, x: torch.Tensor) -> torch.Tensor:

@@ -6,7 +6,7 @@ from collections import OrderedDict
 from torch import Tensor
 from typing import Optional, Tuple
 
-from .quant_modules import QuantWeight, QuantAct, QuantLinear, QuantGELU, QuantSoftMax
+from .quant_modules import QuantWeight, QuantAct, QuantLinear, IntGELU, IntSoftMax
 
 
 class QuantMLP(nn.Module):
@@ -19,7 +19,7 @@ class QuantMLP(nn.Module):
 
         # Linear(in_features=768, out_features=3072, bias=True)
 
-        self.gelu = QuantGELU(args_gelu=args_gelu)
+        self.gelu = IntGELU(args_gelu=args_gelu)
         # GELU(approximate='none')
 
         self.dropout_1 = orgModule.get_submodule("2")
@@ -72,7 +72,7 @@ class QuantMSA(nn.Module):
         # INT8 GEMM -> return INT32
 
         # [3] Softmax()
-        self.softmax = QuantSoftMax(args_softmax=args_softmax)
+        self.softmax = IntSoftMax(args_softmax=args_softmax)
 
         # [4] Softmaxed @ V
         self.attn_map_act = QuantAct(args_a=args_a)
