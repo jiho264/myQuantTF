@@ -68,7 +68,7 @@ class QuantEncoder(nn.Module):
     def __init__(self, orgModule: Encoder, **kwargs):
         super().__init__()
         self.pos_embedding = orgModule.pos_embedding
-        self.pos_act = QuantAct()
+        self.pos_act = QuantAct(args_a=kwargs["args_a"])
         self.dropout = orgModule.dropout
         self.layers = nn.ModuleList()
 
@@ -114,12 +114,12 @@ class QuantViT(nn.Module):
         self.class_token = orgViT.class_token
         self.representation_size = orgViT.representation_size
         """ [1] define the quantized modules """
-        self.input_act = QuantAct()
+        self.input_act = QuantAct(args_a=args_a)
         self.conv_proj = QuantLinearWithWeight(
             orgModule=orgViT.conv_proj, args_w=args_w
         )
-        self.conv_proj_act = QuantAct()
-        self.cls_token_act = QuantAct()
+        self.conv_proj_act = QuantAct(args_a=args_a)
+        self.cls_token_act = QuantAct(args_a=args_a)
 
         self.encoder = QuantEncoder(
             orgModule=orgViT.encoder,

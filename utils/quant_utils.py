@@ -111,17 +111,8 @@ class AbsMaxQuantizer(UniformSymmetricQuantizer):
 
 
 class MovAvgAbsMaxQuantizer(UniformSymmetricQuantizer):
-    def __init__(self, org_tensor, args):
+    def __init__(self, org_tensor=None, args=None):
         """
-        In the [ MovAvgAbsMaxQuantizer ]
-            - [self.a_inited = False] DOSE NOT MEAN init process was completed.
-            - JUST represent that the "make instance" process was completed.
-
-        There are verify process in the forward function.
-            - if not computed yet, forward with org pass.
-            - if computed, forward with quantized pass.
-            This process is controlled by [self.ready_to_quantize] flag.
-
         DESIGNED FOR PER-LAYER SCHEME.
         """
         assert org_tensor == None, "MovAvgAbsMaxQuantizer should not have org_tensor."

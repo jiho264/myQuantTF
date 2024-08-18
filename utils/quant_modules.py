@@ -8,12 +8,15 @@ from .quant_utils import AbsMaxQuantizer, MovAvgAbsMaxQuantizer
 
 
 class QuantAct(nn.Module):
-    def __init__(self, args_a=None):
+    def __init__(self, args_a):
         super().__init__()
         self.do_quant = False
+        if args_a is not None:
+            self.activationQuantizer = MovAvgAbsMaxQuantizer(None, args_a)
 
     def forward(self, x, s_x=1):
         if self.do_quant:
+            x = self.activationQuantizer(x)
             return x, s_x
         return x, s_x
 
@@ -44,7 +47,7 @@ class QuantLinearWithWeight(nn.Module):
                 org_tensor=self.WEIGHT_FP, args=args_w
             )
             self.WEIGHT_INT = self.weightQuantizer(self.WEIGHT_FP)
-
+            del self.weightQuantizer
         else:
             raise NotImplementedError
 
