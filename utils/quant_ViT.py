@@ -87,6 +87,16 @@ class QuantEncoder(nn.Module):
             f"Expected (batch_size, seq_length, hidden_dim) got {input.shape}",
         )
         input = input + self.pos_embedding
+        """ 
+        여기 16비트로하면 81.064%
+        8비트로 노이즈주면 80.976% 오버플로 막으려면 아무리 크게해도 16비트까지만.
+        32비트가로 하면 layer norm 과정에서 분명 overflow 발생.
+        
+        16bit -> 65535
+        -32768 ~ 32767
+        """
+        s = input.abs().max() / 2**15
+        input = (input / s).round().clamp(-(2**15), 2**15 - 1) * s
         return self.ln(self.layers(self.dropout(input)))
 
 
