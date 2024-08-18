@@ -101,11 +101,11 @@ class IntGELU(nn.Module):
     def __init__(self, args_gelu):
         super().__init__()
         self.do_quant = False
-        if args_gelu.get("scheme") in ["I-ViT"]:
+        # if args_gelu.get("scheme") in ["I-ViT"]:
 
-            pass
-        else:
-            raise NotImplementedError
+        #     pass
+        # else:
+        #     raise NotImplementedError
 
     def forward(self, input: torch.Tensor):
         return F.gelu(input)
@@ -115,33 +115,12 @@ class IntSoftMax(nn.Module):
     def __init__(self, args_softmax):
         super().__init__()
         self.do_quant = False
-        if args_softmax.get("scheme") in ["I-ViT"]:
-            self.N = 15
-            self.M = 1
-            pass
-        else:
-            raise NotImplementedError
-
-    def ShiftExp(self, I, S):
-        I_p = I + (I / 2**1).round() - (I / 2**4).round()  # I * log2(e) = I * 1.442695
-        I_0 = (1 / S).round()
-        q = (I_p / (-I_0)).floor()  # Integer part
-        r = -(I_p - q * (-I_0))  # Decimal part
-        I_b = (-r / 2**1).round() + I_0  # Ep. 15
-        I_exp = I_b * (self.N - q)  # Ep. 14
-        S_exp = S / 2**self.N
-        return I_exp, S_exp  # S_exp * I_exp = e**(S*I)
-
-    def Shiftmax(self, I_in, S_in, k_out):
-        I_delta = I_in - I_in.max()  # Ep. 12
-        (I_exp, S_exp) = self.ShiftExp(I_delta, S_in)
-
-        # Ep. 16
-        I_out = (2**self.M / I_exp.sum(dim=-1).floor() * I_exp).round() / (
-            2 ** (self.M - (k_out - 1))
-        )
-        S_out = 1 / (2 ** (k_out - 1))
-        return I_out, S_out
+        # if args_softmax.get("scheme") in ["I-ViT"]:
+        #     self.N = 15
+        #     self.M = 1
+        #     pass
+        # else:
+        #     raise NotImplementedError
 
     def forward(self, input: torch.Tensor, dim: int = -1):
         return F.softmax(input, dim=dim)
@@ -151,10 +130,10 @@ class IntLayerNorm(nn.Module):
     def __init__(self, orgModule, args_ln):
         super().__init__()
         self.do_quant = False
-        if args_ln.get("scheme") in ["I-ViT"]:
-            pass
-        else:
-            raise NotImplementedError
+        # if args_ln.get("scheme") in ["I-ViT"]:
+        #     pass
+        # else:
+        #     raise NotImplementedError
         self.weight = orgModule.weight.clone().detach()
         self.bias = orgModule.bias.clone().detach()
         self.orgModule = orgModule
