@@ -9,9 +9,7 @@ from typing import Optional, Tuple
 from .quant_blocks import QuantMLP, QuantMSA
 from .quant_modules import (
     IntLayerNorm,
-    QuantConv2d,
-    QuantLinear,
-    QuantWeight,
+    QuantLinearWithWeight,
     QuantAct,
     IntGELU,
     IntSoftMax,
@@ -71,6 +69,7 @@ class QuantEncoder(nn.Module):
     def __init__(self, orgModule: Encoder, **kwargs):
         super().__init__()
         self.pos_embedding = orgModule.pos_embedding
+        self.pos_act = QuantAct()
         self.dropout = orgModule.dropout
         self.layers = orgModule.layers
         layers: OrderedDict[str, nn.Module] = OrderedDict()
@@ -87,18 +86,14 @@ class QuantEncoder(nn.Module):
             input.dim() == 3,
             f"Expected (batch_size, seq_length, hidden_dim) got {input.shape}",
         )
-        input = input + self.pos_embedding
-        """ 
-        여기 16비트로하면 81.064%
-        8비트로 노이즈주면 80.976% 오버플로 막으려면 아무리 크게해도 16비트까지만.
-        32비트가로 하면 layer norm 과정에서 분명 overflow 발생.
-        
-        16bit -> 65535
-        -32768 ~ 32767
-        """
-        s = input.abs().max() / 2**15
-        input = (input / s).round().clamp(-(2**15), 2**15 - 1) * s
-        return self.ln(self.layers(self.dropout(input)))
+        pos = self.pos_act(self.pos_embedding)
+        input = input + pos
+        # s = input.abs().max() / 2**15
+        # input = (input / s).round().clamp(-(2**15), 2**15 - 1) * s
+        x = self.dropout(input)
+        x = self.layers(x)
+        x = self.ln(x)
+        return x
 
 
 class QuantViT(nn.Module):
@@ -124,9 +119,13 @@ class QuantViT(nn.Module):
         self.class_token = orgViT.class_token
         self.representation_size = orgViT.representation_size
         """ [1] define the quantized modules """
-        self.conv_proj = QuantConv2d(
-            orgModule=orgViT.conv_proj, args_w=args_w, args_a=args_a
+        self.input_act = QuantAct()
+        self.conv_proj = QuantLinearWithWeight(
+            orgModule=orgViT.conv_proj, args_w=args_w
         )
+        self.conv_proj_act = QuantAct()
+        self.cls_token_act = QuantAct()
+
         self.encoder = QuantEncoder(
             orgModule=orgViT.encoder,
             args_w=args_w,
@@ -138,8 +137,8 @@ class QuantViT(nn.Module):
 
         heads_layers: OrderedDict[str, nn.Module] = OrderedDict()
         if self.representation_size is None:
-            heads_layers["head"] = QuantLinear(
-                orgModule=orgViT.heads.head, args_w=args_w, args_a=args_a
+            heads_layers["head"] = QuantLinearWithWeight(
+                orgModule=orgViT.heads.head, args_w=args_w
             )
         else:
             pass
@@ -148,6 +147,7 @@ class QuantViT(nn.Module):
             # heads_layers["head"] = nn.Linear(representation_size, num_classes)
 
         self.heads = nn.Sequential(heads_layers)
+        self.heads_act = QuantAct()
 
         self.vit_w_quant = False if args_w == {} else True
         self.vit_a_quant = False if args_a == {} else True
@@ -157,7 +157,7 @@ class QuantViT(nn.Module):
 
     def _quant_switch(self):
         for name, module in self.named_modules():
-            if isinstance(module, QuantWeight):
+            if isinstance(module, QuantLinearWithWeight):
                 module.do_quant = self.vit_w_quant
             elif isinstance(module, QuantAct):
                 module.do_quant = self.vit_a_quant
@@ -184,6 +184,7 @@ class QuantViT(nn.Module):
 
         # (n, c, h, w) -> (n, hidden_dim, n_h, n_w)
         x = self.conv_proj(x)
+        x = self.conv_proj_act(x)
         # (n, hidden_dim, n_h, n_w) -> (n, hidden_dim, (n_h * n_w))
         x = x.reshape(n, self.hidden_dim, n_h * n_w)
 
@@ -205,12 +206,15 @@ class QuantViT(nn.Module):
         batch_class_token = self.class_token.expand(n, -1, -1)
         x = torch.cat([batch_class_token, x], dim=1)
 
+        x = self.cls_token_act(x)
+
         x = self.encoder(x)
 
         # Classifier "token" as used by standard language architectures
         x = x[:, 0]
 
         x = self.heads(x)
+        x = self.heads_act(x)
 
         return x
 

@@ -7,50 +7,22 @@ from typing import Optional, Tuple
 from .quant_utils import AbsMaxQuantizer, MovAvgAbsMaxQuantizer
 
 
-class QuantWeight(nn.Module):
-    def __init__(self, orgModule: nn.Module, args_w):
-        super().__init__()
-        self.do_quant = False
-
-        self.WEIGHT_FP = orgModule.weight.clone().detach()
-
-        if args_w.get("scheme") in ["AbsMaxQuantizer"]:
-            self.weightQuantizer = AbsMaxQuantizer(
-                org_tensor=self.WEIGHT_FP, args=args_w
-            )
-        else:
-            raise NotImplementedError
-
-        """현재는 FP도메인의 INT반환"""
-        self.WEIGHT_INT = self.weightQuantizer(self.WEIGHT_FP)
-
-    def get_weight(self):
-        if self.do_quant:
-            return self.WEIGHT_INT
-        return self.WEIGHT_FP
-
-    def forward(self, x: Tensor) -> Tensor:
-        raise NotImplementedError
-
-
 class QuantAct(nn.Module):
-    def __init__(self, args_a):
+    def __init__(self, args_a=None):
         super().__init__()
         self.do_quant = False
-        if args_a.get("scheme") in ["MovAvgAbsMaxQuantizer"]:
-            self.actQuantizer = MovAvgAbsMaxQuantizer(org_tensor=None, args=args_a)
-        else:
-            raise NotImplementedError
 
-    def forward(self, x: Tensor) -> Tuple[Tensor, Tensor]:
+    def forward(self, x: Tensor):
         if self.do_quant:
-            return self.actQuantizer(x)
+            return x
         return x
 
 
-class QuantConv2d(nn.Module):
-    def __init__(self, orgModule, args_w, args_a):
+class QuantLinearWithWeight(nn.Module):
+    def __init__(self, orgModule, args_w):
         super().__init__()
+        self.do_quant = False
+
         """forward function setting"""
         if isinstance(orgModule, nn.Conv2d):
             self.fwd_kwargs = dict(
@@ -60,41 +32,33 @@ class QuantConv2d(nn.Module):
                 groups=orgModule.groups,
             )
             self.fwd_func = F.conv2d
-
-        self.weightQuantizer = QuantWeight(orgModule=orgModule, args_w=args_w)
-        self.BIAS_FP = (
-            orgModule.bias.clone().detach() if orgModule.bias is not None else None
-        )
-        self.activationQuantizer = QuantAct(args_a=args_a)
-
-    def forward(self, input: torch.Tensor):
-        _weight = self.weightQuantizer.get_weight()
-
-        x = self.fwd_func(input, _weight, self.BIAS_FP, **self.fwd_kwargs)
-
-        return self.activationQuantizer(x)
-
-
-class QuantLinear(nn.Module):
-    def __init__(self, orgModule, args_w, args_a):
-        super().__init__()
-        """forward function setting"""
-        if isinstance(orgModule, nn.Linear):
+        elif isinstance(orgModule, nn.Linear):
             self.fwd_kwargs = dict()
             self.fwd_func = F.linear
 
-        self.weightQuantizer = QuantWeight(orgModule=orgModule, args_w=args_w)
-        self.BIAS_FP = (
-            orgModule.bias.clone().detach() if orgModule.bias is not None else None
-        )
-        self.activationQuantizer = QuantAct(args_a=args_a)
+        self.WEIGHT_FP = orgModule.weight.clone().detach()
+        self.BIAS_FP = orgModule.bias.clone().detach()
+
+        if args_w.get("scheme") in ["AbsMaxQuantizer"]:
+            self.weightQuantizer = AbsMaxQuantizer(
+                org_tensor=self.WEIGHT_FP, args=args_w
+            )
+            self.WEIGHT_INT = self.weightQuantizer(self.WEIGHT_FP)
+
+        else:
+            raise NotImplementedError
 
     def forward(self, input: torch.Tensor):
-        _weight = self.weightQuantizer.get_weight()
+        if self.do_quant:
+            _weight = self.WEIGHT_INT
+            # _bias = self.BIAS_INT
+            _bias = self.BIAS_FP
+        else:
+            _weight = self.WEIGHT_FP
+            _bias = self.BIAS_FP
 
-        x = self.fwd_func(input, _weight, self.BIAS_FP, **self.fwd_kwargs)
-
-        return self.activationQuantizer(x)
+        x = self.fwd_func(input, _weight, _bias, **self.fwd_kwargs)
+        return x
 
 
 class IntGELU(nn.Module):

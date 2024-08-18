@@ -6,16 +6,22 @@ from collections import OrderedDict
 from torch import Tensor
 from typing import Optional, Tuple
 
-from .quant_modules import QuantWeight, QuantAct, QuantLinear, IntGELU, IntSoftMax
+from .quant_modules import (
+    QuantAct,
+    QuantLinearWithWeight,
+    IntGELU,
+    IntSoftMax,
+)
 
 
 class QuantMLP(nn.Module):
     def __init__(self, orgModule: MLPBlock, args_w, args_a, args_gelu):
         super().__init__()
 
-        self.linear_1 = QuantLinear(
-            orgModule=orgModule.get_submodule("0"), args_w=args_w, args_a=args_a
+        self.linear_1 = QuantLinearWithWeight(
+            orgModule=orgModule.get_submodule("0"), args_w=args_w
         )
+        self.linear_1_act = QuantAct(args_a=args_a)
 
         # Linear(in_features=768, out_features=3072, bias=True)
 
@@ -25,9 +31,10 @@ class QuantMLP(nn.Module):
         self.dropout_1 = orgModule.get_submodule("2")
         # Dropout(p=0.0, inplace=False)
 
-        self.linear_2 = QuantLinear(
-            orgModule=orgModule.get_submodule("3"), args_w=args_w, args_a=args_a
+        self.linear_2 = QuantLinearWithWeight(
+            orgModule=orgModule.get_submodule("3"), args_w=args_w
         )
+        self.linear_2_act = QuantAct(args_a=args_a)
         # Linear(in_features=3072, out_features=768, bias=True)
 
         self.dropout_2 = orgModule.get_submodule("4")
@@ -36,9 +43,11 @@ class QuantMLP(nn.Module):
     def forward(self, input: torch.Tensor):
 
         x = self.linear_1(input)
+        x = self.linear_1_act(x)
         x = self.gelu(x)
         x = self.dropout_1(x)
         x = self.linear_2(x)
+        x = self.linear_2_act(x)
         x = self.dropout_2(x)
         return x
 
@@ -66,21 +75,24 @@ class QuantMSA(nn.Module):
         tmp_in_proj.bias = orgModule.in_proj_bias
 
         # [1] get Q, K, V
-        self.in_proj = QuantLinear(orgModule=tmp_in_proj, args_w=args_w, args_a=args_a)
+        self.in_proj = QuantLinearWithWeight(orgModule=tmp_in_proj, args_w=args_w)
+        self.in_proj_act = QuantAct(args_a=args_a)
 
         # [2] Q @ K / sqrt(d_k)
         # INT8 GEMM -> return INT32
+        self.qk_act = QuantAct(args_a=args_a)
 
         # [3] Softmax()
         self.softmax = IntSoftMax(args_softmax=args_softmax)
 
         # [4] Softmaxed @ V
-        self.attn_map_act = QuantAct(args_a=args_a)
+        self.attnout_act = QuantAct(args_a=args_a)
 
         # [5] Attn @ w_out
-        self.out_proj = QuantLinear(
-            orgModule=orgModule.out_proj, args_w=args_w, args_a=args_a
+        self.out_proj = QuantLinearWithWeight(
+            orgModule=orgModule.out_proj, args_w=args_w
         )
+        self.out_proj_act = QuantAct(args_a=args_a)
 
     def forward(self, input: torch.Tensor, **kwargs):
         # query, key, value = input, input, input
@@ -88,6 +100,7 @@ class QuantMSA(nn.Module):
 
         """[1] INT GEMM -> return INT32 -> return INT8"""
         proj = self.in_proj(input)
+        proj = self.in_proj_act(proj)
         ## >> torch.Size([128, 197, 2304])
 
         proj = (
@@ -107,6 +120,7 @@ class QuantMSA(nn.Module):
 
         """ [2] INT GEMM -> return INT32 """
         qk = q @ k.transpose(-2, -1) / math.sqrt(q.size(-1))
+        qk = self.qk_act(qk)
         ## >> torch.Size([128, 12, 197, 197])
 
         """ [3] INT32 -> return log softmax INT8 """
@@ -114,7 +128,8 @@ class QuantMSA(nn.Module):
         ## >> torch.Size([128, 12, 197, 197])
 
         """ [4] INT GEMM -> return INT32 -> return INT8 """
-        attn_output = self.attn_map_act(attn_map @ v)
+        attn_output = attn_map @ v
+        attn_output = self.attnout_act(attn_output)
         ## >> torch.Size([128, 12, 197, 64])
 
         attn_output = (
@@ -124,6 +139,7 @@ class QuantMSA(nn.Module):
 
         """ [5] INT GEMM -> return INT32 -> return INT8 """
         attn_output = self.out_proj(attn_output)
+        attn_output = self.out_proj_act(attn_output)
         ## >> torch.Size([128, 197, 768])
 
         return attn_output, attn_map
