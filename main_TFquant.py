@@ -93,8 +93,8 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     args_w = {"scheme": "AbsMaxQuantizer", "bit_width": 4, "per_channel": True}
     # args_w.update({"scheme": "AdaRoundQuantizer"})
     args_a = {
-        # "scheme": "MovAvgAbsMaxQuantizer",
-        # "bit_width": 8,
+        "scheme": "MovAvgAbsMaxQuantizer",
+        "bit_width": 8,
         #  75.198%
         # below values are default in the class
         # "per_channel": False,

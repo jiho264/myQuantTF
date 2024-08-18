@@ -274,9 +274,10 @@ heads
         >>> output.shape: torch.Size([1, 1000])
         
 
-w4a32 79.834
-w4a8 79.638
-        
+w4a32 79.834 / my old code 79.834%
+w4a8 79.638 / my old code 79.756% without input, cls, pos quantization
+
+
 weiht quantizer : 50
 - conv_proj : 1
 - MSA * 2 : 24
