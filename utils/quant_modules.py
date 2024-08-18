@@ -11,6 +11,8 @@ class QuantAct(nn.Module):
     def __init__(self, args_a):
         super().__init__()
         self.do_quant = False
+        if args_a == {}:  # No quantization
+            return
         if args_a is not None:
             self.activationQuantizer = MovAvgAbsMaxQuantizer(None, args_a)
 

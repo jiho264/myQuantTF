@@ -272,5 +272,25 @@ heads
     [head] heads.head
         Linear(in_features=768, out_features=1000, bias=True)
         >>> output.shape: torch.Size([1, 1000])
+        
+
+w4a32 79.834
+w4a8 79.638
+        
+weiht quantizer : 50
+- conv_proj : 1
+- MSA * 2 : 24
+- MLP * 2 : 24
+- head : 1
+
+activation quantizer : 76
+- input_act : 1
+- conv_proj_act : 1
+- cls_token_act : 1
+- pos_act : 1
+- MSA * 4 : 48
+- MLP * 2 : 24
+- head : None
+
 =================================================================================================
 """
