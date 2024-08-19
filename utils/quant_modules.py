@@ -40,11 +40,14 @@ class QuantAct(nn.Module):
         if args_a is not None:
             self.activationQuantizer = MovAvgAbsMaxQuantizer(None, args_a)
 
-    def forward(self, x, s_in=None):
+    def forward(self, x, s_pre=None):
         if self.do_quant:
+            # do dynamic quant
+            # s_x =
+
             x = self.activationQuantizer(x)
-            return x, s_in
-        return x, s_in
+            return x, s_pre
+        return x, s_pre
 
 
 class QuantLinearWithWeight(nn.Module):
@@ -77,7 +80,7 @@ class QuantLinearWithWeight(nn.Module):
         else:
             raise NotImplementedError
 
-    def forward(self, input, s_in):
+    def forward(self, input, s_pre):
         if self.do_quant:
             _weight = self.WEIGHT_INT
             # _bias = self.BIAS_INT
@@ -87,7 +90,7 @@ class QuantLinearWithWeight(nn.Module):
             _bias = self.BIAS_FP
 
         x = self.fwd_func(input, _weight, _bias, **self.fwd_kwargs)
-        return x, s_in
+        return x, s_pre
 
 
 class floor_ste(Function):
@@ -171,10 +174,10 @@ class IntGELU(nn.Module):
         self.act_scaling_factor = scaling_factor
         return x_int * scaling_factor, scaling_factor
 
-    def forward(self, input, s_in):
+    def forward(self, input, s_pre):
         if self.do_quant:
-            return self.int_forward(input, s_in)
-        return F.gelu(input), s_in
+            return self.int_forward(input, s_pre)
+        return F.gelu(input), s_pre
 
 
 class IntSoftMax(nn.Module):
@@ -219,10 +222,10 @@ class IntSoftMax(nn.Module):
         self.act_scaling_factor = scaling_factor
         return exp_int * scaling_factor, scaling_factor
 
-    def forward(self, input, s_in, dim: int = -1):
+    def forward(self, input, s_pre, dim: int = -1):
         if self.do_quant:
-            return self.int_forward(input, s_in)
-        return F.softmax(input, dim=dim), s_in
+            return self.int_forward(input, s_pre)
+        return F.softmax(input, dim=dim), s_pre
 
 
 class IntLayerNorm(nn.Module):
@@ -273,7 +276,7 @@ class IntLayerNorm(nn.Module):
         self.norm_scaling_factor = scaling_factor
         return x, scaling_factor
 
-    def forward(self, input, s_in):
+    def forward(self, input, s_pre):
         if self.do_quant:
-            return self.int_forward(input, s_in)
-        return self.orgModule(input), s_in
+            return self.int_forward(input, s_pre)
+        return self.orgModule(input), s_pre
