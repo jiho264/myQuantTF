@@ -69,6 +69,7 @@ class QuantEncoder(nn.Module):
         super().__init__()
         self.pos_embedding = orgModule.pos_embedding
         self.pos_act = QuantAct(args_a=kwargs["args_a"])
+        self.cls_token_act = QuantAct(args_a=kwargs["args_a"])
         self.dropout = orgModule.dropout
         self.layers = nn.ModuleList()
 
@@ -82,7 +83,9 @@ class QuantEncoder(nn.Module):
             f"Expected (batch_size, seq_length, hidden_dim) got {x.shape}",
         )
         pos, s_pos = self.pos_act(self.pos_embedding)
+
         x = x + pos
+        x, s_x = self.cls_token_act(x, s_x)
 
         x = self.dropout(x)
         for layer in self.layers:
@@ -119,7 +122,6 @@ class QuantViT(nn.Module):
             orgModule=orgViT.conv_proj, args_w=args_w
         )
         self.conv_proj_act = QuantAct(args_a=args_a)
-        self.cls_token_act = QuantAct(args_a=args_a)
 
         self.encoder = QuantEncoder(
             orgModule=orgViT.encoder,
@@ -200,8 +202,6 @@ class QuantViT(nn.Module):
         # Expand the class token to the full batch
         batch_class_token = self.class_token.expand(n, -1, -1)
         x = torch.cat([batch_class_token, x], dim=1)
-
-        x, s_x = self.cls_token_act(x, s_x)
 
         x, s_x = self.encoder(x, s_x)
 

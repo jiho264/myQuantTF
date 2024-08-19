@@ -11,6 +11,7 @@ from .quant_modules import (
     QuantLinearWithWeight,
     IntGELU,
     IntSoftMax,
+    QuantMatMul,
 )
 
 
@@ -80,12 +81,14 @@ class QuantMSA(nn.Module):
 
         # [2] Q @ K / sqrt(d_k)
         # INT8 GEMM -> return INT32
+        self.qk_mm = QuantMatMul()
         self.qk_act = QuantAct(args_a=args_a)
 
         # [3] Softmax()
         self.softmax = IntSoftMax(args_softmax=args_softmax)
 
         # [4] Softmaxed @ V
+        self.attnout_mm = QuantMatMul()
         self.attnout_act = QuantAct(args_a=args_a)
 
         # [5] Attn @ w_out
@@ -99,12 +102,12 @@ class QuantMSA(nn.Module):
         ## >> torch.Size([128, 197, 768])
 
         """[1] INT GEMM -> return INT32 -> return INT8"""
-        qk, s_qk = self.in_proj(x, s_x)
-        qk, s_qk = self.in_proj_act(qk, s_qk)
+        qkv, s_qkv = self.in_proj(x, s_x)
+        qkv, s_qkv = self.in_proj_act(qkv, s_qkv)
         ## >> torch.Size([128, 197, 2304])
 
-        qk = (
-            qk.unflatten(-1, (3, x.size(-1)))
+        qkv = (
+            qkv.unflatten(-1, (3, x.size(-1)))
             .unsqueeze(0)
             .transpose(0, -2)
             .squeeze(-2)
@@ -114,13 +117,14 @@ class QuantMSA(nn.Module):
         bsz, tgt_len, embed_dim = x.shape
         _, src_len, _ = x.shape
 
-        q = qk[0].view(bsz, tgt_len, self.num_heads, self.head_dim).transpose(1, 2)
-        k = qk[1].view(bsz, src_len, self.num_heads, self.head_dim).transpose(1, 2)
-        v = qk[2].view(bsz, src_len, self.num_heads, self.head_dim).transpose(1, 2)
+        q = qkv[0].view(bsz, tgt_len, self.num_heads, self.head_dim).transpose(1, 2)
+        k = qkv[1].view(bsz, src_len, self.num_heads, self.head_dim).transpose(1, 2)
+        v = qkv[2].view(bsz, src_len, self.num_heads, self.head_dim).transpose(1, 2)
 
         """ [2] INT GEMM -> return INT32 """
         qk = q @ k.transpose(-2, -1) / math.sqrt(q.size(-1))
-        qk, s_qk = self.qk_act(qk, s_qk)
+        # qk, s_qk = self.qk_mm(q, s_qkv, k.transpose(-2, -1), s_qkv)
+        qk, s_qk = self.qk_act(qk, s_qkv)
         ## >> torch.Size([128, 12, 197, 197])
 
         """ [3] INT32 -> return log softmax INT8 """
@@ -129,6 +133,7 @@ class QuantMSA(nn.Module):
 
         """ [4] INT GEMM -> return INT32 -> return INT8 """
         attn_output = attn_map @ v
+        # attn_output, s_aout = self.attnout_mm(attn_map, s_amap, v, s_qkv)
         attn_output, s_aout = self.attnout_act(attn_output, s_amap)  # with s_qk
         ## >> torch.Size([128, 12, 197, 64])
 

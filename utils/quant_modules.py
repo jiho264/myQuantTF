@@ -8,6 +8,29 @@ from .quant_utils import AbsMaxQuantizer, MovAvgAbsMaxQuantizer
 from torch.autograd import Function
 
 
+class QuantMatMul(nn.Module):
+    """
+    Class to quantize weights of given matmul layer
+    """
+
+    def __init__(self):
+        super(QuantMatMul, self).__init__()
+        self.register_buffer("act_scaling_factor", torch.zeros(1))
+
+    def fix(self):
+        pass
+
+    def unfix(self):
+        pass
+
+    def forward(self, A, pre_act_scaling_factor_A, B, pre_act_scaling_factor_B):
+        A_int = A / pre_act_scaling_factor_A
+        B_int = B / pre_act_scaling_factor_B
+        act_scaling_factor = pre_act_scaling_factor_A * pre_act_scaling_factor_B
+        self.act_scaling_factor = act_scaling_factor
+        return (A_int @ B_int) * act_scaling_factor, act_scaling_factor
+
+
 class QuantAct(nn.Module):
     def __init__(self, args_a):
         super().__init__()
@@ -17,11 +40,11 @@ class QuantAct(nn.Module):
         if args_a is not None:
             self.activationQuantizer = MovAvgAbsMaxQuantizer(None, args_a)
 
-    def forward(self, x, s_x=1):
+    def forward(self, x, s_in=None):
         if self.do_quant:
             x = self.activationQuantizer(x)
-            return x, s_x
-        return x, s_x
+            return x, s_in
+        return x, s_in
 
 
 class QuantLinearWithWeight(nn.Module):
@@ -54,7 +77,7 @@ class QuantLinearWithWeight(nn.Module):
         else:
             raise NotImplementedError
 
-    def forward(self, input, s_in=1):
+    def forward(self, input, s_in):
         if self.do_quant:
             _weight = self.WEIGHT_INT
             # _bias = self.BIAS_INT
@@ -148,7 +171,7 @@ class IntGELU(nn.Module):
         self.act_scaling_factor = scaling_factor
         return x_int * scaling_factor, scaling_factor
 
-    def forward(self, input, s_in=1):
+    def forward(self, input, s_in):
         if self.do_quant:
             return self.int_forward(input, s_in)
         return F.gelu(input), s_in
@@ -159,7 +182,7 @@ class IntSoftMax(nn.Module):
         super().__init__()
         self.do_quant = False
 
-        self.output_bit = args_softmax.get("output_bit", 8)
+        self.output_bit = args_softmax.get("output_bit", 16)
 
         self.n = 15  # sufficiently large integer
         # The minimum value for ensuring accuracy (varies depending on models)
@@ -196,7 +219,7 @@ class IntSoftMax(nn.Module):
         self.act_scaling_factor = scaling_factor
         return exp_int * scaling_factor, scaling_factor
 
-    def forward(self, input, s_in=1, dim: int = -1):
+    def forward(self, input, s_in, dim: int = -1):
         if self.do_quant:
             return self.int_forward(input, s_in)
         return F.softmax(input, dim=dim), s_in
@@ -250,7 +273,7 @@ class IntLayerNorm(nn.Module):
         self.norm_scaling_factor = scaling_factor
         return x, scaling_factor
 
-    def forward(self, input, s_in=1):
+    def forward(self, input, s_in):
         if self.do_quant:
             return self.int_forward(input, s_in)
         return self.orgModule(input), s_in
