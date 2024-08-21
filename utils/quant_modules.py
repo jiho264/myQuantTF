@@ -4,7 +4,8 @@ import torch.nn.functional as F
 from collections import OrderedDict
 from torch import Tensor
 from typing import Optional, Tuple
-from .quant_utils import AbsMaxQuantizer, MovAvgAbsMaxQuantizer
+
+# from .quant_utils import AbsMaxQuantizer, MovAvgAbsMaxQuantizer
 from torch.autograd import Function
 
 
@@ -32,22 +33,56 @@ class QuantMatMul(nn.Module):
 
 
 class QuantAct(nn.Module):
-    def __init__(self, args_a):
-        super().__init__()
-        self.do_quant = False
-        if args_a == {}:  # No quantization
-            return
-        if args_a is not None:
-            self.activationQuantizer = MovAvgAbsMaxQuantizer(None, args_a)
+    def __init__(self, args_a={}):
+        super(QuantAct, self).__init__()
+        # print("qant!")
 
-    def forward(self, x, s_pre=None):
-        if self.do_quant:
-            # do dynamic quant
-            # s_x =
+        self.activation_bit = args_a.get("bit_width", 16)
 
-            x = self.activationQuantizer(x)
-            return x, s_pre
-        return x, s_pre
+    def forward(self, x_hat, s_x=None, id_hat=None, s_id=None):
+        with torch.no_grad():
+            x_out = x_hat if id_hat == None else id_hat + x_hat
+
+            s_out = x_out.abs().max() / (2 ** (self.activation_bit - 1) - 1)
+
+        if s_x == None:
+            # input quantization
+            out_int = (
+                (x_hat / s_out)
+                .round()
+                .clamp(
+                    -(2 ** (self.activation_bit - 1)),
+                    2 ** (self.activation_bit - 1) - 1,
+                )
+            )
+        else:
+            x_int = (x_hat / s_x).round()
+            new_scaler = s_x / s_out
+            out_int = (
+                (x_int * new_scaler)
+                .round()
+                .clamp(
+                    -(2 ** (self.activation_bit - 1)),
+                    2 ** (self.activation_bit - 1) - 1,
+                )
+            )
+
+            if id_hat is not None:
+                id_int = (id_hat / s_id).round()
+                new_scaler = s_id / s_out
+                id_int = (
+                    (id_int * new_scaler)
+                    .round()
+                    .clamp(
+                        -(2 ** (self.activation_bit - 1)),
+                        2 ** (self.activation_bit - 1) - 1,
+                    )
+                )
+
+                out_int += id_int
+
+        out_hat = out_int * s_out.view(-1)
+        return out_hat, s_out
 
 
 class QuantLinearWithWeight(nn.Module):
@@ -68,29 +103,45 @@ class QuantLinearWithWeight(nn.Module):
             self.fwd_kwargs = dict()
             self.fwd_func = F.linear
 
-        self.WEIGHT_FP = orgModule.weight.clone().detach()
-        self.BIAS_FP = orgModule.bias.clone().detach()
+        self.bits = args_w.get("bit_width", 8)
+        # only per-channel quantization is supported
 
-        if args_w.get("scheme") in ["AbsMaxQuantizer"]:
-            self.weightQuantizer = AbsMaxQuantizer(
-                org_tensor=self.WEIGHT_FP, args=args_w
-            )
-            self.WEIGHT_INT = self.weightQuantizer(self.WEIGHT_FP)
-            del self.weightQuantizer
-        else:
-            raise NotImplementedError
+        weight_fp32 = orgModule.weight.clone().detach()
+        bias_fp32 = orgModule.bias.clone().detach()
 
-    def forward(self, input, s_pre):
-        if self.do_quant:
-            _weight = self.WEIGHT_INT
-            # _bias = self.BIAS_INT
-            _bias = self.BIAS_FP
-        else:
-            _weight = self.WEIGHT_FP
-            _bias = self.BIAS_FP
+        s_w = weight_fp32.view(weight_fp32.size(0), -1).abs().max(dim=1).values / (
+            2 ** (self.bits - 1) - 1
+        )
 
-        x = self.fwd_func(input, _weight, _bias, **self.fwd_kwargs)
-        return x, s_pre
+        self._n_ch = len(weight_fp32.size())
+        self.s_w = s_w.view(-1, *([1] * (self._n_ch - 1)))
+
+        self.w_int8 = (
+            (weight_fp32.clone().detach() / self.s_w)
+            .round()
+            .clamp(-(2 ** (self.bits - 1)), 2 ** (self.bits - 1) - 1)
+        )
+        self.b_int8 = (bias_fp32.clone().detach() / self.s_w.squeeze()).round()
+
+    def forward(self, x_hat, s_x):
+        # # 여기 x의 bit repr는 이전 layer에서 몇으로 줄였느냐에 따라 다름
+
+        s_a = self.s_w * s_x
+        b_int32 = (self.b_int8 / s_x).round()
+
+        if self.fwd_func == F.conv2d:
+            s_x = s_x.view(1, -1, 1, 1)
+            s_a = s_a.view(1, -1, 1, 1)
+
+        elif self.fwd_func == F.linear:
+            s_a = s_a.view(1, -1)
+
+        x_int = (x_hat / s_x).round()
+
+        a_int32 = self.fwd_func(x_int, self.w_int8, b_int32, **self.fwd_kwargs)
+        a_hat = a_int32 * s_a
+
+        return a_hat, s_a
 
 
 class floor_ste(Function):
@@ -128,7 +179,7 @@ class IntGELU(nn.Module):
 
         self.output_bit = args_gelu.get("output_bit", 8)
 
-        self.n = 23  # sufficiently large integer
+        self.n = 17  # sufficiently large integer
         # The minimum value for ensuring accuracy (varies depending on models)
 
         self.register_buffer("act_scaling_factor", torch.zeros(1))
@@ -177,7 +228,9 @@ class IntGELU(nn.Module):
     def forward(self, input, s_pre):
         if self.do_quant:
             return self.int_forward(input, s_pre)
-        return F.gelu(input), s_pre
+        else:
+            print("FP GELU")
+            return F.gelu(input), s_pre
 
 
 class IntSoftMax(nn.Module):
@@ -225,7 +278,9 @@ class IntSoftMax(nn.Module):
     def forward(self, input, s_pre, dim: int = -1):
         if self.do_quant:
             return self.int_forward(input, s_pre)
-        return F.softmax(input, dim=dim), s_pre
+        else:
+            print("FP Softmax")
+            return F.softmax(input, dim=dim), s_pre
 
 
 class IntLayerNorm(nn.Module):
@@ -241,7 +296,7 @@ class IntLayerNorm(nn.Module):
         self.register_buffer("norm_scaling_factor", torch.zeros(1))
         self.register_buffer("bias_integer", torch.zeros_like(self.bias))
 
-    def forward(self, x, scaling_factor=None):
+    def int_forward(self, x, scaling_factor=None):
         if self.dim_sqrt is None:
             n = torch.tensor(x.shape[2], dtype=torch.float)
             self.dim_sqrt = torch.sqrt(n).cuda()
@@ -279,4 +334,6 @@ class IntLayerNorm(nn.Module):
     def forward(self, input, s_pre):
         if self.do_quant:
             return self.int_forward(input, s_pre)
-        return self.orgModule(input), s_pre
+        else:
+            print("FP LayerNorm")
+            return self.orgModule(input), s_pre
