@@ -23,10 +23,10 @@ class QuantMLP(nn.Module):
             orgModule=orgModule.get_submodule("0"), args_w=args_w
         )
         self.linear_1_act = QuantAct(args_a=args_a)
-
         # Linear(in_features=768, out_features=3072, bias=True)
 
         self.gelu = IntGELU(args_gelu=args_gelu)
+        self.gelu_act = QuantAct(args_a=args_a)
         # GELU(approximate='none')
 
         self.dropout_1 = orgModule.get_submodule("2")
@@ -46,6 +46,7 @@ class QuantMLP(nn.Module):
         x, s_x = self.linear_1(x, s_x)
         x, s_x = self.linear_1_act(x, s_x)
         x, s_x = self.gelu(x, s_x)
+        x, s_x = self.gelu_act(x, s_x)
         x = self.dropout_1(x)
         x, s_x = self.linear_2(x, s_x)
         x, s_x = self.linear_2_act(x, s_x)
@@ -122,8 +123,10 @@ class QuantMSA(nn.Module):
         v = qkv[2].view(bsz, src_len, self.num_heads, self.head_dim).transpose(1, 2)
 
         """ [2] INT GEMM -> return INT32 """
-        qk = q @ k.transpose(-2, -1) / math.sqrt(q.size(-1))
-        # qk, s_qk = self.qk_mm(q, s_qkv, k.transpose(-2, -1), s_qkv)
+
+        qk, s_qk = self.qk_mm(q, s_qkv, k.transpose(-2, -1), s_qkv)
+        qk = qk / math.sqrt(q.size(-1))
+        s_qk = s_qk / math.sqrt(q.size(-1))
         qk, s_qk = self.qk_act(qk, s_qkv)
         ## >> torch.Size([128, 12, 197, 197])
 
@@ -132,8 +135,8 @@ class QuantMSA(nn.Module):
         ## >> torch.Size([128, 12, 197, 197])
 
         """ [4] INT GEMM -> return INT32 -> return INT8 """
-        attn_output = attn_map @ v
-        # attn_output, s_aout = self.attnout_mm(attn_map, s_amap, v, s_qkv)
+
+        attn_output, s_aout = self.attnout_mm(attn_map, s_amap, v, s_qkv)
         attn_output, s_aout = self.attnout_act(attn_output, s_amap)  # with s_qk
         ## >> torch.Size([128, 12, 197, 64])
 

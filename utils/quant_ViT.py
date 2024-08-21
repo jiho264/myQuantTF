@@ -13,6 +13,7 @@ from .quant_modules import (
     QuantAct,
     IntGELU,
     IntSoftMax,
+    QuantMatMul,
 )
 
 
@@ -25,7 +26,7 @@ class QuantEncoderBlock(nn.Module):
 
         ## nn.LayerNorm : LayerNorm((768,), eps=1e-06, elementwise_affine=True)
         self.ln_1 = IntLayerNorm(orgModule.ln_1, args_ln=kwargs["args_ln"])
-
+        self.ln_1_act = QuantAct(args_a=kwargs["args_a"])
         ## nn.MultiheadAttention
         self.self_attention = QuantMSA(
             orgModule.self_attention,
@@ -33,13 +34,13 @@ class QuantEncoderBlock(nn.Module):
             args_a=kwargs["args_a"],
             args_softmax=kwargs["args_softmax"],
         )
-
+        self.idAdd_1 = QuantAct(args_a=kwargs["args_a"])
         ## nn.Dropout : Dropout(p=0.0, inplace=False)
         self.dropout = orgModule.dropout
 
         ## nn.LayerNorm : LayerNorm((768,), eps=1e-06, elementwise_affine=True)
         self.ln_2 = IntLayerNorm(orgModule.ln_2, args_ln=kwargs["args_ln"])
-
+        self.ln_2_act = QuantAct(args_a=kwargs["args_a"])
         ## MLPBlock
         self.mlp = QuantMLP(
             orgModule.mlp,
@@ -47,6 +48,7 @@ class QuantEncoderBlock(nn.Module):
             args_a=kwargs["args_a"],
             args_gelu=kwargs["args_gelu"],
         )
+        self.idAdd_2 = QuantAct(args_a=kwargs["args_a"])
 
     def forward(self, x, s_x):
         torch._assert(
@@ -54,13 +56,16 @@ class QuantEncoderBlock(nn.Module):
             f"Expected (batch_size, seq_length, hidden_dim) got {x.shape}",
         )
         x1, s_x1 = self.ln_1(x, s_x)
+        x1, s_x1 = self.ln_1_act(x1, s_x1)
         x1, s_x1 = self.self_attention(x1, s_x1)
         x1 = self.dropout(x1)
-        x1 += x
+        x1, s_x1 = self.idAdd_1(x1, s_x1, x, s_x)
 
         x2, s_x2 = self.ln_2(x1, s_x1)
+        x2, s_x2 = self.ln_2_act(x2, s_x2)
         x2, s_x2 = self.mlp(x2, s_x2)
-        x2 += x1
+        x2, s_x2 = self.idAdd_2(x2, s_x2, x1, s_x1)
+
         return x2, s_x2
 
 
@@ -69,6 +74,7 @@ class QuantEncoder(nn.Module):
         super().__init__()
         self.pos_embedding = orgModule.pos_embedding
         self.pos_act = QuantAct(args_a=kwargs["args_a"])
+        self.pos_act.activation_bit = 16
         self.cls_token_act = QuantAct(args_a=kwargs["args_a"])
         self.dropout = orgModule.dropout
         self.layers = nn.ModuleList()
@@ -84,8 +90,7 @@ class QuantEncoder(nn.Module):
         )
         pos, s_pos = self.pos_act(self.pos_embedding)
 
-        x = x + pos
-        x, s_x = self.cls_token_act(x, s_x)
+        x, s_x = self.cls_token_act(x, s_x, pos, s_pos)
 
         x = self.dropout(x)
         for layer in self.layers:
@@ -117,11 +122,14 @@ class QuantViT(nn.Module):
         self.class_token = orgViT.class_token
         self.representation_size = orgViT.representation_size
         """ [1] define the quantized modules """
-        self.input_act = QuantAct(args_a=args_a)
+        self.input_act = QuantAct()
+        self.input_act.activation_bit = 16
+
         self.conv_proj = QuantLinearWithWeight(
             orgModule=orgViT.conv_proj, args_w=args_w
         )
-        self.conv_proj_act = QuantAct(args_a=args_a)
+        self.conv_proj_act = QuantAct()
+        self.conv_proj_act.activation_bit = 16
 
         self.encoder = QuantEncoder(
             orgModule=orgViT.encoder,
@@ -131,6 +139,7 @@ class QuantViT(nn.Module):
             args_softmax=args_softmax,
             args_gelu=args_gelu,
         )
+        self.encoder_ln_act = QuantAct()
         heads_layers = []
 
         if self.representation_size is None:
@@ -194,6 +203,41 @@ class QuantViT(nn.Module):
 
     def forward(self, x: torch.Tensor):
         self._quant_switch()
+        """
+        Number of QuantAct layers: 137
+        Number of QuantLinear layers: 49
+        Number of QuantConv2d layers: 1
+        Number of IntLayerNorm layers: 25
+        Number of IntSoftmax layers: 12
+        Number of QuantMatMul layers: 24
+        Number of IntGELU layers: 12
+        """
+        # quantLinaerWeightcnt = 0
+        # quantactcnt = 0
+        # quantgelucnt = 0
+        # quantsoftmaxcnt = 0
+        # quantlncnt = 0
+        # quantmmcnt = 0
+        # for name, module in self.named_modules():
+        #     if isinstance(module, QuantLinearWithWeight):
+        #         quantLinaerWeightcnt += 1
+        #     elif isinstance(module, QuantAct):
+        #         quantactcnt += 1
+        #     elif isinstance(module, IntLayerNorm):
+        #         quantlncnt += 1
+        #     elif isinstance(module, IntGELU):
+        #         quantgelucnt += 1
+        #     elif isinstance(module, IntSoftMax):
+        #         quantsoftmaxcnt += 1
+        #     elif isinstance(module, QuantMatMul):
+        #         quantmmcnt += 1
+        # print(f"QuantAct : {quantactcnt}")
+        # print(f"QuantLinearWithWeight : {quantLinaerWeightcnt}")
+        # print(f"IntLayerNorm : {quantlncnt}")
+        # print(f"IntSoftMax : {quantsoftmaxcnt}")
+        # print(f"QuantMatMul : {quantmmcnt}")
+        # print(f"IntGELU : {quantgelucnt}")
+        # exit()
         # Reshape and permute the input tensor
         x, s_x = self.input_act(x)
         x, s_x = self._process_input(x, s_x)
@@ -207,7 +251,7 @@ class QuantViT(nn.Module):
 
         # Classifier "token" as used by standard language architectures
         x = x[:, 0]
-
+        x, s_x = self.encoder_ln_act(x, s_x)
         for layer in self.heads:
             x, s_x = layer(x, s_x)
 

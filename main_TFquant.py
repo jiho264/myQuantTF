@@ -102,9 +102,9 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         # "batches": 16,
     }
 
-    # args_gelu = {"bit_width": 8}
-    # args_softmax = {"bit_width": 8}
-    # args_ln = {"bit_width": 16}
+    args_gelu = {"bit_width": 8}
+    args_softmax = {"bit_width": 8}
+    args_ln = {"bit_width": 16}
 
     model = QuantViT(model, args_w, args_a, args_softmax, args_ln, args_gelu)
 
@@ -113,17 +113,17 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     _batch_size = main_args["batch_size"]
     train_loader, test_loader = GetDataset(batch_size=_batch_size)
 
-    if args_a != {}:
-        """ calibration for activation """
-        _, _ = evaluate(model, test_loader, 16, "cuda")
-        print("Calibration done \n")
+    # if args_a != {}:
+    #     """ calibration for activation """
+    #     _, _ = evaluate(model, test_loader, 16, "cuda")
+    #     print("Calibration done \n")
 
     # if args_w.get("scheme") == "AdaRoundQuantizer":
     #     run_AdaRound(model, train_loader)
 
     """ evaluation """
-    _top1, _ = evaluate(model, test_loader, len(test_loader), "cuda")
-    # _top1, _ = evaluate(model, test_loader, 10, "cuda")
+    # _top1, _ = evaluate(model, test_loader, len(test_loader), "cuda")
+    _top1, _ = evaluate(model, test_loader, 1, "cuda")
     print(
         f"\n    Quantized model Evaluation accuracy on 50000 images, {_top1.avg:2.3f}%"
     )
