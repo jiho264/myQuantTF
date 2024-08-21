@@ -5,7 +5,7 @@ from torchvision.models.vision_transformer import Encoder, EncoderBlock, MLPBloc
 from collections import OrderedDict
 from torch import Tensor
 
-from .quantizer import quantizerDict, StraightThrough
+from quantizer import quantizerDict, StraightThrough
 
 
 class QuantBase(nn.Module):

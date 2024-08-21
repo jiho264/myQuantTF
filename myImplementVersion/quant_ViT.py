@@ -4,9 +4,9 @@ import torch.nn.functional as F
 from torchvision.models.vision_transformer import Encoder, EncoderBlock, MLPBlock
 from collections import OrderedDict
 from torch import Tensor
-from .quantizer import quantizerDict, StraightThrough
-from .int_functions import int_GELU  # , int_Softmax, int_LayerNorm
-from .quant_modules import QuantLinearLayer, QuantActOnly, QuantLayerNorm
+from quantizer import quantizerDict, StraightThrough
+from int_functions import int_GELU  # , int_Softmax, int_LayerNorm
+from quant_modules import QuantLinearLayer, QuantActOnly, QuantLayerNorm
 
 
 class QuantMLPBlock(nn.Module):
