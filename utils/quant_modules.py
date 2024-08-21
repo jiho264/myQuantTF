@@ -179,7 +179,7 @@ class IntGELU(nn.Module):
 
         self.output_bit = args_gelu.get("output_bit", 16)
 
-        self.n = 23  # sufficiently large integer
+        self.n = 17  # sufficiently large integer
         # The minimum value for ensuring accuracy (varies depending on models)
 
         self.register_buffer("act_scaling_factor", torch.zeros(1))
