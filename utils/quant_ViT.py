@@ -207,41 +207,41 @@ class QuantViT(nn.Module):
 
     def forward(self, x: torch.Tensor):
         self._quant_switch()
-        """
-        Number of QuantAct layers: 137
-        Number of QuantLinear layers: 49
-        Number of QuantConv2d layers: 1
-        Number of IntLayerNorm layers: 25
-        Number of IntSoftmax layers: 12
-        Number of QuantMatMul layers: 24
-        Number of IntGELU layers: 12
-        """
-        quantLinaerWeightcnt = 0
-        quantactcnt = 0
-        quantgelucnt = 0
-        quantsoftmaxcnt = 0
-        quantlncnt = 0
-        quantmmcnt = 0
-        for name, module in self.named_modules():
-            if isinstance(module, QuantLinearWithWeight):
-                quantLinaerWeightcnt += 1
-            elif isinstance(module, QuantAct):
-                quantactcnt += 1
-                # print(module.activation_bit)
-            elif isinstance(module, IntLayerNorm):
-                quantlncnt += 1
-            elif isinstance(module, IntGELU):
-                quantgelucnt += 1
-            elif isinstance(module, IntSoftMax):
-                quantsoftmaxcnt += 1
-            elif isinstance(module, QuantMatMul):
-                quantmmcnt += 1
-        print(f"QuantAct : {quantactcnt}")
-        print(f"QuantLinearWithWeight : {quantLinaerWeightcnt}")
-        print(f"IntLayerNorm : {quantlncnt}")
-        print(f"IntSoftMax : {quantsoftmaxcnt}")
-        print(f"QuantMatMul : {quantmmcnt}")
-        print(f"IntGELU : {quantgelucnt}")
+        # """
+        # Number of QuantAct layers: 137
+        # Number of QuantLinear layers: 49
+        # Number of QuantConv2d layers: 1
+        # Number of IntLayerNorm layers: 25
+        # Number of IntSoftmax layers: 12
+        # Number of QuantMatMul layers: 24
+        # Number of IntGELU layers: 12
+        # """
+        # quantLinaerWeightcnt = 0
+        # quantactcnt = 0
+        # quantgelucnt = 0
+        # quantsoftmaxcnt = 0
+        # quantlncnt = 0
+        # quantmmcnt = 0
+        # for name, module in self.named_modules():
+        #     if isinstance(module, QuantLinearWithWeight):
+        #         quantLinaerWeightcnt += 1
+        #     elif isinstance(module, QuantAct):
+        #         quantactcnt += 1
+        #         # print(module.activation_bit)
+        #     elif isinstance(module, IntLayerNorm):
+        #         quantlncnt += 1
+        #     elif isinstance(module, IntGELU):
+        #         quantgelucnt += 1
+        #     elif isinstance(module, IntSoftMax):
+        #         quantsoftmaxcnt += 1
+        #     elif isinstance(module, QuantMatMul):
+        #         quantmmcnt += 1
+        # print(f"QuantAct : {quantactcnt}")
+        # print(f"QuantLinearWithWeight : {quantLinaerWeightcnt}")
+        # print(f"IntLayerNorm : {quantlncnt}")
+        # print(f"IntSoftMax : {quantsoftmaxcnt}")
+        # print(f"QuantMatMul : {quantmmcnt}")
+        # print(f"IntGELU : {quantgelucnt}")
         # exit()
 
         # Reshape and permute the input tensor
