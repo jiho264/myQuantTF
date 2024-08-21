@@ -177,7 +177,7 @@ class IntGELU(nn.Module):
         super().__init__()
         self.do_quant = False
 
-        self.output_bit = args_gelu.get("output_bit", 16)
+        self.output_bit = args_gelu.get("output_bit", 8)
 
         self.n = 17  # sufficiently large integer
         # The minimum value for ensuring accuracy (varies depending on models)

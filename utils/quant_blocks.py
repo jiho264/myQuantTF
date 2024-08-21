@@ -39,6 +39,7 @@ class QuantMLP(nn.Module):
             orgModule=orgModule.get_submodule("3"), args_w=args_w
         )
         self.linear_2_act = QuantAct(args_a=args_a)
+        self.linear_2_act.activation_bit = 16
         # Linear(in_features=3072, out_features=768, bias=True)
 
         self.dropout_2 = orgModule.get_submodule("4")
@@ -100,6 +101,7 @@ class QuantMSA(nn.Module):
             orgModule=orgModule.out_proj, args_w=args_w
         )
         self.out_proj_act = QuantAct(args_a=args_a)
+        self.out_proj_act.activation_bit = 16
 
     def forward(self, x, s_x):
         # query, key, value = input, input, input

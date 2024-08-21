@@ -35,6 +35,7 @@ class QuantEncoderBlock(nn.Module):
             args_softmax=kwargs["args_softmax"],
         )
         self.idAdd_1 = QuantAct(args_a=kwargs["args_a"])
+        self.idAdd_1.activation_bit = 16
         ## nn.Dropout : Dropout(p=0.0, inplace=False)
         self.dropout = orgModule.dropout
 
@@ -49,6 +50,7 @@ class QuantEncoderBlock(nn.Module):
             args_gelu=kwargs["args_gelu"],
         )
         self.idAdd_2 = QuantAct(args_a=kwargs["args_a"])
+        self.idAdd_2.activation_bit = 16
 
     def forward(self, x, s_x):
         torch._assert(
@@ -75,7 +77,10 @@ class QuantEncoder(nn.Module):
         self.pos_embedding = orgModule.pos_embedding
         self.pos_act = QuantAct(args_a=kwargs["args_a"])
         self.pos_act.activation_bit = 16
+
         self.cls_token_act = QuantAct(args_a=kwargs["args_a"])
+        self.cls_token_act.activation_bit = 16
+
         self.dropout = orgModule.dropout
         self.layers = nn.ModuleList()
 
@@ -123,7 +128,6 @@ class QuantViT(nn.Module):
         self.representation_size = orgViT.representation_size
         """ [1] define the quantized modules """
         self.input_act = QuantAct()
-        self.input_act.activation_bit = 16
 
         self.conv_proj = QuantLinearWithWeight(
             orgModule=orgViT.conv_proj, args_w=args_w
