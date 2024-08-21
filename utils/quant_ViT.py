@@ -212,32 +212,34 @@ class QuantViT(nn.Module):
         Number of QuantMatMul layers: 24
         Number of IntGELU layers: 12
         """
-        # quantLinaerWeightcnt = 0
-        # quantactcnt = 0
-        # quantgelucnt = 0
-        # quantsoftmaxcnt = 0
-        # quantlncnt = 0
-        # quantmmcnt = 0
-        # for name, module in self.named_modules():
-        #     if isinstance(module, QuantLinearWithWeight):
-        #         quantLinaerWeightcnt += 1
-        #     elif isinstance(module, QuantAct):
-        #         quantactcnt += 1
-        #     elif isinstance(module, IntLayerNorm):
-        #         quantlncnt += 1
-        #     elif isinstance(module, IntGELU):
-        #         quantgelucnt += 1
-        #     elif isinstance(module, IntSoftMax):
-        #         quantsoftmaxcnt += 1
-        #     elif isinstance(module, QuantMatMul):
-        #         quantmmcnt += 1
-        # print(f"QuantAct : {quantactcnt}")
-        # print(f"QuantLinearWithWeight : {quantLinaerWeightcnt}")
-        # print(f"IntLayerNorm : {quantlncnt}")
-        # print(f"IntSoftMax : {quantsoftmaxcnt}")
-        # print(f"QuantMatMul : {quantmmcnt}")
-        # print(f"IntGELU : {quantgelucnt}")
+        quantLinaerWeightcnt = 0
+        quantactcnt = 0
+        quantgelucnt = 0
+        quantsoftmaxcnt = 0
+        quantlncnt = 0
+        quantmmcnt = 0
+        for name, module in self.named_modules():
+            if isinstance(module, QuantLinearWithWeight):
+                quantLinaerWeightcnt += 1
+            elif isinstance(module, QuantAct):
+                quantactcnt += 1
+                # print(module.activation_bit)
+            elif isinstance(module, IntLayerNorm):
+                quantlncnt += 1
+            elif isinstance(module, IntGELU):
+                quantgelucnt += 1
+            elif isinstance(module, IntSoftMax):
+                quantsoftmaxcnt += 1
+            elif isinstance(module, QuantMatMul):
+                quantmmcnt += 1
+        print(f"QuantAct : {quantactcnt}")
+        print(f"QuantLinearWithWeight : {quantLinaerWeightcnt}")
+        print(f"IntLayerNorm : {quantlncnt}")
+        print(f"IntSoftMax : {quantsoftmaxcnt}")
+        print(f"QuantMatMul : {quantmmcnt}")
+        print(f"IntGELU : {quantgelucnt}")
         # exit()
+
         # Reshape and permute the input tensor
         x, s_x = self.input_act(x)
         x, s_x = self._process_input(x, s_x)
@@ -333,9 +335,12 @@ activation quantizer : 76
 - conv_proj_act : 1
 - cls_token_act : 1
 - pos_act : 1
-- MSA * 4 : 48
-- MLP * 2 : 24
+- LN : 25 (2*24 + 1)
+- LN ID add : 24 ( 2*12 )
+- MSA * 4 : 48 ( inproj, qkv, softmax, outproj )
+- MLP * 3 : 36 ( linear, gelu , linear)
 - head : None
+
 
 =================================================================================================
 """

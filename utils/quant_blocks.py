@@ -19,12 +19,14 @@ class QuantMLP(nn.Module):
     def __init__(self, orgModule: MLPBlock, args_w, args_a, args_gelu):
         super().__init__()
 
+        # [1]
         self.linear_1 = QuantLinearWithWeight(
             orgModule=orgModule.get_submodule("0"), args_w=args_w
         )
         self.linear_1_act = QuantAct(args_a=args_a)
         # Linear(in_features=768, out_features=3072, bias=True)
 
+        # [2]
         self.gelu = IntGELU(args_gelu=args_gelu)
         self.gelu_act = QuantAct(args_a=args_a)
         # GELU(approximate='none')
@@ -32,6 +34,7 @@ class QuantMLP(nn.Module):
         self.dropout_1 = orgModule.get_submodule("2")
         # Dropout(p=0.0, inplace=False)
 
+        # [3]
         self.linear_2 = QuantLinearWithWeight(
             orgModule=orgModule.get_submodule("3"), args_w=args_w
         )

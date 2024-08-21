@@ -102,7 +102,7 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         # "batches": 16,
     }
 
-    args_gelu = {"bit_width": 16}
+    # args_gelu = {"bit_width": 16}
     args_softmax = {"bit_width": 16}
     args_ln = {"bit_width": 16}
 
