@@ -90,11 +90,11 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         raise NotImplementedError
     model.eval().to("cuda")
 
-    args_w = {"scheme": "AbsMaxQuantizer", "bit_width": 4, "per_channel": True}
+    args_w = {"scheme": "AbsMaxQuantizer", "bit_width": 8, "per_channel": True}
     # args_w.update({"scheme": "AdaRoundQuantizer"})
     args_a = {
         "scheme": "MovAvgAbsMaxQuantizer",
-        "bit_width": 8,
+        "bit_width": 16,
         #  75.198%
         # below values are default in the class
         # "per_channel": False,
@@ -102,8 +102,8 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         # "batches": 16,
     }
 
-    args_gelu = {"bit_width": 8}
-    args_softmax = {"bit_width": 8}
+    args_gelu = {"bit_width": 16}
+    args_softmax = {"bit_width": 16}
     args_ln = {"bit_width": 16}
 
     model = QuantViT(model, args_w, args_a, args_softmax, args_ln, args_gelu)

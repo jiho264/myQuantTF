@@ -254,7 +254,7 @@ class QuantViT(nn.Module):
         x, s_x = self.encoder_ln_act(x, s_x)
         for layer in self.heads:
             x, s_x = layer(x, s_x)
-
+        # print(x.shape)
         return x
 
 

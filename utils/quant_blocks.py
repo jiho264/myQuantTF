@@ -125,9 +125,9 @@ class QuantMSA(nn.Module):
         """ [2] INT GEMM -> return INT32 """
 
         qk, s_qk = self.qk_mm(q, s_qkv, k.transpose(-2, -1), s_qkv)
-        qk = qk / math.sqrt(q.size(-1))
-        s_qk = s_qk / math.sqrt(q.size(-1))
-        qk, s_qk = self.qk_act(qk, s_qkv)
+        qk /= math.sqrt(q.size(-1))
+        s_qk /= math.sqrt(q.size(-1))
+        qk, s_qk = self.qk_act(qk, s_qk)
         ## >> torch.Size([128, 12, 197, 197])
 
         """ [3] INT32 -> return log softmax INT8 """
@@ -137,7 +137,7 @@ class QuantMSA(nn.Module):
         """ [4] INT GEMM -> return INT32 -> return INT8 """
 
         attn_output, s_aout = self.attnout_mm(attn_map, s_amap, v, s_qkv)
-        attn_output, s_aout = self.attnout_act(attn_output, s_amap)  # with s_qk
+        attn_output, s_aout = self.attnout_act(attn_output, s_aout)  # with s_qk
         ## >> torch.Size([128, 12, 197, 64])
 
         attn_output = (
