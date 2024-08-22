@@ -87,14 +87,15 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         "scheme": "MovAvgAbsMaxQuantizer",
         "bit_width": 8,
         "per_channel": False,
-        #  75.198%
         # below values are default in the class
-        # "momentum": 0.9,
-        # "batches": 16,
+        "momentum": 0.99,
+        "batches": 16,
     }
     args_gelu = {"bit_width": 8}
     args_softmax = {"bit_width": 16}
     args_ln = {"bit_width": 8}
+
+    calib_len = args_a.get("batches", 16)
 
     argses = [main_args, args_w, args_a, args_softmax, args_ln, args_gelu]
     names = ["main_args", "weight", "activation", "softmax", "layer_norm", "gelu"]
@@ -118,17 +119,17 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     _batch_size = main_args["batch_size"]
     train_loader, test_loader = GetDataset(batch_size=_batch_size)
 
-    # if args_a != {}:
-    #     """ calibration for activation """
-    #     _, _ = evaluate(model, test_loader, 16, "cuda")
-    #     print("Calibration done \n")
+    if args_a != {}:
+        """ calibration for activation """
+        _, _ = evaluate(model, test_loader, calib_len, "cuda")
+        print("Activation calibration is done.")
 
     # if args_w.get("scheme") == "AdaRoundQuantizer":
     #     run_AdaRound(model, train_loader)
 
     """ evaluation """
-    _top1, _ = evaluate(model, test_loader, len(test_loader), "cuda")
-    # _top1, _ = evaluate(model, test_loader, 1, "cuda")
+    # _top1, _ = evaluate(model, test_loader, len(test_loader), "cuda")
+    _top1, _ = evaluate(model, test_loader, 1, "cuda")
     print(
         f"\n    Quantized model Evaluation accuracy on 50000 images, {_top1.avg:2.3f}%"
     )
