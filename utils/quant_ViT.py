@@ -34,8 +34,7 @@ class QuantEncoderBlock(nn.Module):
             args_a=kwargs["args_a"],
             args_softmax=kwargs["args_softmax"],
         )
-        self.idAdd_1 = QuantAct(args_a=kwargs["args_a"])
-        self.idAdd_1.activation_bit = 16
+        self.idAdd_1 = QuantAct(args_a=kwargs["args_a"], which="idAdd")
         ## nn.Dropout : Dropout(p=0.0, inplace=False)
         self.dropout = orgModule.dropout
 
@@ -49,8 +48,7 @@ class QuantEncoderBlock(nn.Module):
             args_a=kwargs["args_a"],
             args_gelu=kwargs["args_gelu"],
         )
-        self.idAdd_2 = QuantAct(args_a=kwargs["args_a"])
-        self.idAdd_2.activation_bit = 16
+        self.idAdd_2 = QuantAct(args_a=kwargs["args_a"], which="idAdd")
 
     def forward(self, x, s_x):
         torch._assert(
@@ -76,10 +74,8 @@ class QuantEncoder(nn.Module):
         super().__init__()
         self.pos_embedding = orgModule.pos_embedding
         self.pos_act = QuantAct(args_a=kwargs["args_a"])
-        self.pos_act.activation_bit = 16
 
-        self.cls_token_act = QuantAct(args_a=kwargs["args_a"])
-        self.cls_token_act.activation_bit = 16
+        self.cls_token_act = QuantAct(args_a=kwargs["args_a"], which="cls_token")
 
         self.dropout = orgModule.dropout
         self.layers = nn.ModuleList()
@@ -126,6 +122,7 @@ class QuantViT(nn.Module):
         self.hidden_dim = orgViT.hidden_dim
         self.class_token = orgViT.class_token
         self.representation_size = orgViT.representation_size
+
         """ [1] define the quantized modules """
         self.input_act = QuantAct()
 
@@ -133,7 +130,6 @@ class QuantViT(nn.Module):
             orgModule=orgViT.conv_proj, args_w=args_w
         )
         self.conv_proj_act = QuantAct()
-        self.conv_proj_act.activation_bit = 16
 
         self.encoder = QuantEncoder(
             orgModule=orgViT.encoder,
@@ -144,20 +140,22 @@ class QuantViT(nn.Module):
             args_gelu=args_gelu,
         )
         self.encoder_ln_act = QuantAct()
+
         heads_layers = []
 
         if self.representation_size is None:
             heads_layers.append(
                 QuantLinearWithWeight(orgModule=orgViT.heads.head, args_w=args_w)
             )
-        else:
-            # heads_layers.append(nn.Linear(hidden_dim, representation_size))
-            # heads_layers.append(nn.Tanh())
-            # heads_layers.append(nn.Linear(representation_size, num_classes))
-            pass
+        # else:
+        #     heads_layers.append(nn.Linear(self.hidden_dim, self.representation_size))
+        #     heads_layers.append(nn.Tanh())
+        #     heads_layers.append(nn.Linear(self.representation_size, 1000))
+        #     pass
 
         self.heads = nn.ModuleList(heads_layers)
 
+        """ [2] Quant setting """
         self.vit_w_quant = False if args_w == {} else True
         self.vit_a_quant = False if args_a == {} else True
         self.vit_int_ln = False if args_ln == {} else True

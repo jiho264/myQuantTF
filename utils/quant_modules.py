@@ -33,11 +33,16 @@ class QuantMatMul(nn.Module):
 
 
 class QuantAct(nn.Module):
-    def __init__(self, args_a={}):
+    def __init__(self, args_a={}, which=None):
         super(QuantAct, self).__init__()
         # print("qant!")
 
-        self.activation_bit = args_a.get("bit_width", 16)
+        if which in ["cls_token", "idAdd"]:
+            self.activation_bit = 16
+            print(f"Int Activation {self.activation_bit} for {which}")
+        else:
+            self.activation_bit = args_a.get("bit_width", 8)
+            print(f"Int Activation {self.activation_bit}")
 
     def forward(self, x_hat, s_x=None, id_hat=None, s_id=None):
         with torch.no_grad():
@@ -177,12 +182,13 @@ class IntGELU(nn.Module):
         super().__init__()
         self.do_quant = False
 
-        self.output_bit = args_gelu.get("output_bit", 8)
+        self.output_bit = args_gelu.get("bit_width", 8)
 
         self.n = 17  # sufficiently large integer
         # The minimum value for ensuring accuracy (varies depending on models)
 
         self.register_buffer("act_scaling_factor", torch.zeros(1))
+        print(f"IntGELU bit: {self.output_bit}")
 
     def int_exp_shift(self, x_int, scaling_factor):
         x_int = x_int + floor_ste.apply(x_int / 2) - floor_ste.apply(x_int / 2**4)
@@ -238,12 +244,13 @@ class IntSoftMax(nn.Module):
         super().__init__()
         self.do_quant = False
 
-        self.output_bit = args_softmax.get("output_bit", 16)
+        self.output_bit = args_softmax.get("bit_width", 8)
 
         self.n = 15  # sufficiently large integer
         # The minimum value for ensuring accuracy (varies depending on models)
 
         self.register_buffer("act_scaling_factor", torch.zeros(1))
+        print(f"IntSoftMax {self.output_bit}")
 
     def int_exp_shift(self, x_int, scaling_factor):
         x_int = x_int + floor_ste.apply(x_int / 2) - floor_ste.apply(x_int / 2**4)
@@ -280,7 +287,11 @@ class IntSoftMax(nn.Module):
             return self.int_forward(input, s_pre)
         else:
             print("FP Softmax")
-            return F.softmax(input, dim=dim), s_pre
+            """ 
+            The result of softmax's range is [0, 1], 
+            So we can return 1/127 for INT8 quantization.
+            """
+            return F.softmax(input, dim=dim), 1 / 127
 
 
 class IntLayerNorm(nn.Module):

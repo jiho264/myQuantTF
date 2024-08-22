@@ -101,10 +101,9 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         # "momentum": 0.9,
         # "batches": 16,
     }
-
-    args_gelu = {"bit_width": 8}
+    # args_gelu = {"bit_width": 8}
     args_softmax = {"bit_width": 16}
-    args_ln = {"bit_width": 8}
+    # args_ln = {"bit_width": 8}
 
     model = QuantViT(model, args_w, args_a, args_softmax, args_ln, args_gelu)
 
@@ -122,8 +121,8 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     #     run_AdaRound(model, train_loader)
 
     """ evaluation """
-    _top1, _ = evaluate(model, test_loader, len(test_loader), "cuda")
-    # _top1, _ = evaluate(model, test_loader, 1, "cuda")
+    # _top1, _ = evaluate(model, test_loader, len(test_loader), "cuda")
+    _top1, _ = evaluate(model, test_loader, 1, "cuda")
     print(
         f"\n    Quantized model Evaluation accuracy on 50000 images, {_top1.avg:2.3f}%"
     )

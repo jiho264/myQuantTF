@@ -39,7 +39,6 @@ class QuantMLP(nn.Module):
             orgModule=orgModule.get_submodule("3"), args_w=args_w
         )
         self.linear_2_act = QuantAct(args_a=args_a)
-        self.linear_2_act.activation_bit = 16
         # Linear(in_features=3072, out_features=768, bias=True)
 
         self.dropout_2 = orgModule.get_submodule("4")
@@ -91,6 +90,7 @@ class QuantMSA(nn.Module):
 
         # [3] Softmax()
         self.softmax = IntSoftMax(args_softmax=args_softmax)
+        self.softmax_act = QuantAct(args_a=args_a)
 
         # [4] Softmaxed @ V
         self.attnout_mm = QuantMatMul()
@@ -101,7 +101,6 @@ class QuantMSA(nn.Module):
             orgModule=orgModule.out_proj, args_w=args_w
         )
         self.out_proj_act = QuantAct(args_a=args_a)
-        self.out_proj_act.activation_bit = 16
 
     def forward(self, x, s_x):
         # query, key, value = input, input, input
@@ -136,7 +135,11 @@ class QuantMSA(nn.Module):
         ## >> torch.Size([128, 12, 197, 197])
 
         """ [3] INT32 -> return log softmax INT8 """
+
+        # qk is INT8 [-128, 127]
         attn_map, s_amap = self.softmax(qk, s_qk, dim=-1)
+        attn_map, s_amap = self.softmax_act(attn_map, s_amap)
+        # attn_map is UINT7 [0, 127] == INT8
         ## >> torch.Size([128, 12, 197, 197])
 
         """ [4] INT GEMM -> return INT32 -> return INT8 """
