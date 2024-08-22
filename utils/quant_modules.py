@@ -37,9 +37,15 @@ class QuantAct(nn.Module):
         elif which == "idAdd":
             self.bit_width = 16
             print(f"Int Activation {self.bit_width} for {which}")
+        elif which == "softmax_act":
+            self.bit_width = 9
+            # UINT8
+            print(f"Int Activation {self.bit_width} for {which}")
         else:
             self.bit_width = args_a.get("bit_width", 8)
             print(f"Int Activation {self.bit_width}")
+
+    # def _quantize(self, x_hat, s_x):
 
     def forward(self, x_hat, s_x=None, id_hat=None, s_id=None):
         with torch.no_grad():
@@ -239,7 +245,7 @@ class IntSoftMax(nn.Module):
         super().__init__()
         self.do_quant = False
 
-        self.bit_width = args_softmax.get("bit_width", 8)
+        self.bit_width = args_softmax.get("bit_width", 16)
 
         self.n = 15  # sufficiently large integer
         # The minimum value for ensuring accuracy (varies depending on models)

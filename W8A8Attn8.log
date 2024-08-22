@@ -1,5 +1,6 @@
 cls_token_act = 16 bit
 idAdd_act = 16 bit
+activation of softmax UINT8
 
 - main_args params:
     - arch: ViT_B_16
@@ -198,5 +199,5 @@ Int Activation 8
 Int Activation 16 for idAdd
 Int Activation 8
 
-    Quantized model Evaluation accuracy on 50000 images, 77.190%
-Total time: 505.04 sec
+    Quantized model Evaluation accuracy on 50000 images, 77.698%
+Total time: 505.24 sec

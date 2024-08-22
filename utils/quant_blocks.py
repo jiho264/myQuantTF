@@ -96,7 +96,7 @@ class QuantMSA(nn.Module):
 
         # [3] Softmax(16bit) -> return INT8
         self.softmax = IntSoftMax(args_softmax=args_softmax)
-        self.softmax_act = QuantAct(args_a=args_a)
+        self.softmax_act = QuantAct(args_a=args_a, which="softmax_act")
 
         # [4] Softmaxed @ V (INT8 GEMM -> return INT32 -> return INT8)
         self.attnout_mm = QuantMatMul()
