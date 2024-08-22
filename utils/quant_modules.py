@@ -16,39 +16,33 @@ class QuantMatMul(nn.Module):
 
     def __init__(self):
         super(QuantMatMul, self).__init__()
-        self.register_buffer("act_scaling_factor", torch.zeros(1))
-
-    def fix(self):
-        pass
-
-    def unfix(self):
-        pass
 
     def forward(self, A, pre_act_scaling_factor_A, B, pre_act_scaling_factor_B):
         A_int = A / pre_act_scaling_factor_A
         B_int = B / pre_act_scaling_factor_B
         act_scaling_factor = pre_act_scaling_factor_A * pre_act_scaling_factor_B
-        self.act_scaling_factor = act_scaling_factor
         return (A_int @ B_int) * act_scaling_factor, act_scaling_factor
 
 
 class QuantAct(nn.Module):
     def __init__(self, args_a={}, which=None):
         super(QuantAct, self).__init__()
-        # print("qant!")
+        assert (
+            args_a.get("per_channel", True) == False
+        ), "only per-tensor quantization is supported for Activation Quantization"
 
         if which in ["cls_token", "idAdd"]:
-            self.activation_bit = 16
-            print(f"Int Activation {self.activation_bit} for {which}")
+            self.bit_width = 16
+            print(f"Int Activation {self.bit_width} for {which}")
         else:
-            self.activation_bit = args_a.get("bit_width", 8)
-            print(f"Int Activation {self.activation_bit}")
+            self.bit_width = args_a.get("bit_width", 8)
+            print(f"Int Activation {self.bit_width}")
 
     def forward(self, x_hat, s_x=None, id_hat=None, s_id=None):
         with torch.no_grad():
             x_out = x_hat if id_hat == None else id_hat + x_hat
 
-            s_out = x_out.abs().max() / (2 ** (self.activation_bit - 1) - 1)
+            s_out = x_out.abs().max() / (2 ** (self.bit_width - 1) - 1)
 
         if s_x == None:
             # input quantization
@@ -56,8 +50,8 @@ class QuantAct(nn.Module):
                 (x_hat / s_out)
                 .round()
                 .clamp(
-                    -(2 ** (self.activation_bit - 1)),
-                    2 ** (self.activation_bit - 1) - 1,
+                    -(2 ** (self.bit_width - 1)),
+                    2 ** (self.bit_width - 1) - 1,
                 )
             )
         else:
@@ -67,8 +61,8 @@ class QuantAct(nn.Module):
                 (x_int * new_scaler)
                 .round()
                 .clamp(
-                    -(2 ** (self.activation_bit - 1)),
-                    2 ** (self.activation_bit - 1) - 1,
+                    -(2 ** (self.bit_width - 1)),
+                    2 ** (self.bit_width - 1) - 1,
                 )
             )
 
@@ -79,8 +73,8 @@ class QuantAct(nn.Module):
                     (id_int * new_scaler)
                     .round()
                     .clamp(
-                        -(2 ** (self.activation_bit - 1)),
-                        2 ** (self.activation_bit - 1) - 1,
+                        -(2 ** (self.bit_width - 1)),
+                        2 ** (self.bit_width - 1) - 1,
                     )
                 )
 
@@ -94,6 +88,11 @@ class QuantLinearWithWeight(nn.Module):
     def __init__(self, orgModule, args_w):
         super().__init__()
         self.do_quant = False
+        self.bit_width = args_w.get("bit_width", 8)
+
+        assert (
+            args_w.get("per_channel", False) == True
+        ), "only per-channel quantization is supported for Weight Quantization"
 
         """forward function setting"""
         if isinstance(orgModule, nn.Conv2d):
@@ -108,23 +107,20 @@ class QuantLinearWithWeight(nn.Module):
             self.fwd_kwargs = dict()
             self.fwd_func = F.linear
 
-        self.bits = args_w.get("bit_width", 8)
-        # only per-channel quantization is supported
-
         weight_fp32 = orgModule.weight.clone().detach()
         bias_fp32 = orgModule.bias.clone().detach()
 
         s_w = weight_fp32.view(weight_fp32.size(0), -1).abs().max(dim=1).values / (
-            2 ** (self.bits - 1) - 1
+            2 ** (self.bit_width - 1) - 1
         )
 
-        self._n_ch = len(weight_fp32.size())
-        self.s_w = s_w.view(-1, *([1] * (self._n_ch - 1)))
+        _n_ch = len(weight_fp32.size())
+        self.s_w = s_w.view(-1, *([1] * (_n_ch - 1)))
 
         self.w_int8 = (
             (weight_fp32.clone().detach() / self.s_w)
             .round()
-            .clamp(-(2 ** (self.bits - 1)), 2 ** (self.bits - 1) - 1)
+            .clamp(-(2 ** (self.bit_width - 1)), 2 ** (self.bit_width - 1) - 1)
         )
         self.b_int8 = (bias_fp32.clone().detach() / self.s_w.squeeze()).round()
 
@@ -182,13 +178,12 @@ class IntGELU(nn.Module):
         super().__init__()
         self.do_quant = False
 
-        self.output_bit = args_gelu.get("bit_width", 8)
+        self.bit_width = args_gelu.get("bit_width", 8)
 
         self.n = 17  # sufficiently large integer
         # The minimum value for ensuring accuracy (varies depending on models)
 
-        self.register_buffer("act_scaling_factor", torch.zeros(1))
-        print(f"IntGELU bit: {self.output_bit}")
+        print(f"IntGELU bit: {self.bit_width}")
 
     def int_exp_shift(self, x_int, scaling_factor):
         x_int = x_int + floor_ste.apply(x_int / 2) - floor_ste.apply(x_int / 2**4)
@@ -221,14 +216,11 @@ class IntGELU(nn.Module):
 
         exp_int_sum.clamp_max_(2**31 - 1)
         factor = floor_ste.apply((2**31 - 1) / exp_int_sum)
-        sigmoid_int = floor_ste.apply(
-            exp_int * factor / 2 ** (31 - self.output_bit + 1)
-        )
-        sigmoid_scaling_factor = torch.Tensor([1 / 2 ** (self.output_bit - 1)]).cuda()
+        sigmoid_int = floor_ste.apply(exp_int * factor / 2 ** (31 - self.bit_width + 1))
+        sigmoid_scaling_factor = torch.Tensor([1 / 2 ** (self.bit_width - 1)]).cuda()
 
         x_int = pre_x_int * sigmoid_int
         scaling_factor = scaling_factor * sigmoid_scaling_factor
-        self.act_scaling_factor = scaling_factor
         return x_int * scaling_factor, scaling_factor
 
     def forward(self, input, s_pre):
@@ -244,13 +236,12 @@ class IntSoftMax(nn.Module):
         super().__init__()
         self.do_quant = False
 
-        self.output_bit = args_softmax.get("bit_width", 8)
+        self.bit_width = args_softmax.get("bit_width", 8)
 
         self.n = 15  # sufficiently large integer
         # The minimum value for ensuring accuracy (varies depending on models)
 
-        self.register_buffer("act_scaling_factor", torch.zeros(1))
-        print(f"IntSoftMax {self.output_bit}")
+        print(f"IntSoftMax {self.bit_width}")
 
     def int_exp_shift(self, x_int, scaling_factor):
         x_int = x_int + floor_ste.apply(x_int / 2) - floor_ste.apply(x_int / 2**4)
@@ -276,10 +267,9 @@ class IntSoftMax(nn.Module):
 
         exp_int_sum.clamp_max_(2**31 - 1)
         factor = floor_ste.apply((2**31 - 1) / exp_int_sum)
-        exp_int = floor_ste.apply(exp_int * factor / 2 ** (31 - self.output_bit + 1))
-        scaling_factor = torch.Tensor([1 / 2 ** (self.output_bit - 1)]).cuda()
+        exp_int = floor_ste.apply(exp_int * factor / 2 ** (31 - self.bit_width + 1))
+        scaling_factor = torch.Tensor([1 / 2 ** (self.bit_width - 1)]).cuda()
 
-        self.act_scaling_factor = scaling_factor
         return exp_int * scaling_factor, scaling_factor
 
     def forward(self, input, s_pre, dim: int = -1):
@@ -304,8 +294,6 @@ class IntLayerNorm(nn.Module):
         self.orgModule = orgModule
 
         self.dim_sqrt = None
-        self.register_buffer("norm_scaling_factor", torch.zeros(1))
-        self.register_buffer("bias_integer", torch.zeros_like(self.bias))
 
     def int_forward(self, x, scaling_factor=None):
         if self.dim_sqrt is None:
@@ -334,12 +322,9 @@ class IntLayerNorm(nn.Module):
         bias = self.bias.data.detach() / (self.weight.data.detach())
         bias_int = floor_ste.apply(bias / scaling_factor)
 
-        self.bias_integer = bias_int
-
         y_int = y_int + bias_int
         scaling_factor = scaling_factor * self.weight
         x = y_int * scaling_factor
-        self.norm_scaling_factor = scaling_factor
         return x, scaling_factor
 
     def forward(self, input, s_pre):

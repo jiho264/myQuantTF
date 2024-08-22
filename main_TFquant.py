@@ -95,15 +95,15 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     args_a = {
         "scheme": "MovAvgAbsMaxQuantizer",
         "bit_width": 8,
+        "per_channel": False,
         #  75.198%
         # below values are default in the class
-        # "per_channel": False,
         # "momentum": 0.9,
         # "batches": 16,
     }
-    # args_gelu = {"bit_width": 8}
+    args_gelu = {"bit_width": 8}
     args_softmax = {"bit_width": 16}
-    # args_ln = {"bit_width": 8}
+    args_ln = {"bit_width": 8}
 
     model = QuantViT(model, args_w, args_a, args_softmax, args_ln, args_gelu)
 

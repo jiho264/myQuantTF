@@ -19,41 +19,46 @@ class QuantMLP(nn.Module):
     def __init__(self, orgModule: MLPBlock, args_w, args_a, args_gelu):
         super().__init__()
 
-        # [1]
+        # [1] Linear(in_features=768, out_features=3072, bias=True)
         self.linear_1 = QuantLinearWithWeight(
             orgModule=orgModule.get_submodule("0"), args_w=args_w
         )
         self.linear_1_act = QuantAct(args_a=args_a)
-        # Linear(in_features=768, out_features=3072, bias=True)
 
-        # [2]
+        # [2] GELU(approximate='none')
         self.gelu = IntGELU(args_gelu=args_gelu)
         self.gelu_act = QuantAct(args_a=args_a)
-        # GELU(approximate='none')
 
         self.dropout_1 = orgModule.get_submodule("2")
         # Dropout(p=0.0, inplace=False)
 
-        # [3]
+        # [3] Linear(in_features=3072, out_features=768, bias=True)
         self.linear_2 = QuantLinearWithWeight(
             orgModule=orgModule.get_submodule("3"), args_w=args_w
         )
         self.linear_2_act = QuantAct(args_a=args_a)
-        # Linear(in_features=3072, out_features=768, bias=True)
 
         self.dropout_2 = orgModule.get_submodule("4")
         # Dropout(p=0.0, inplace=False)
 
     def forward(self, x, s_x):
 
+        # [1]
         x, s_x = self.linear_1(x, s_x)
         x, s_x = self.linear_1_act(x, s_x)
+
+        # [2]
         x, s_x = self.gelu(x, s_x)
         x, s_x = self.gelu_act(x, s_x)
+
         x = self.dropout_1(x)
+
+        # [3]
         x, s_x = self.linear_2(x, s_x)
         x, s_x = self.linear_2_act(x, s_x)
+
         x = self.dropout_2(x)
+
         return x, s_x
 
 
@@ -88,11 +93,11 @@ class QuantMSA(nn.Module):
         self.qk_mm = QuantMatMul()
         self.qk_act = QuantAct(args_a=args_a)
 
-        # [3] Softmax()
+        # [3] Softmax(16bit) -> return INT8
         self.softmax = IntSoftMax(args_softmax=args_softmax)
         self.softmax_act = QuantAct(args_a=args_a)
 
-        # [4] Softmaxed @ V
+        # [4] Softmaxed @ V (INT8 GEMM -> return INT32 -> return INT8)
         self.attnout_mm = QuantMatMul()
         self.attnout_act = QuantAct(args_a=args_a)
 
@@ -126,26 +131,23 @@ class QuantMSA(nn.Module):
         k = qkv[1].view(bsz, src_len, self.num_heads, self.head_dim).transpose(1, 2)
         v = qkv[2].view(bsz, src_len, self.num_heads, self.head_dim).transpose(1, 2)
 
-        """ [2] INT GEMM -> return INT32 """
+        """ [2] INT GEMM -> Accumulated by INT32 -> return INT8 """
 
         qk, s_qk = self.qk_mm(q, s_qkv, k.transpose(-2, -1), s_qkv)
-        qk /= math.sqrt(q.size(-1))
-        s_qk /= math.sqrt(q.size(-1))
+        qk /= math.sqrt(q.size(-1))  # divide by 8 when head_dim == 64
+        s_qk /= math.sqrt(q.size(-1))  # divide by 8 when head_dim == 64
         qk, s_qk = self.qk_act(qk, s_qk)
         ## >> torch.Size([128, 12, 197, 197])
 
-        """ [3] INT32 -> return log softmax INT8 """
-
-        # qk is INT8 [-128, 127]
+        """ [3] INT8 -> return log softmax INT16 -> return INT8 (UINT7) """
         attn_map, s_amap = self.softmax(qk, s_qk, dim=-1)
         attn_map, s_amap = self.softmax_act(attn_map, s_amap)
-        # attn_map is UINT7 [0, 127] == INT8
         ## >> torch.Size([128, 12, 197, 197])
 
         """ [4] INT GEMM -> return INT32 -> return INT8 """
 
         attn_output, s_aout = self.attnout_mm(attn_map, s_amap, v, s_qkv)
-        attn_output, s_aout = self.attnout_act(attn_output, s_aout)  # with s_qk
+        attn_output, s_aout = self.attnout_act(attn_output, s_aout)
         ## >> torch.Size([128, 12, 197, 64])
 
         attn_output = (
