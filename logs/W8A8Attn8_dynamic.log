@@ -2,6 +2,8 @@ cls_token_act = 16 bit
 idAdd_act = 16 bit
 activation of softmax UINT8
 
+dynamic activation quantization with bit width 8
+
 - main_args params:
     - arch: ViT_B_16
     - batch_size: 128
