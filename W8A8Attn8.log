@@ -33,21 +33,7 @@ Int Activation 8
 Int Activation 8
 Int Activation 8
 IntSoftMax 16
-Int Activation 8
-Int Activation 8
-Int Activation 8
-Int Activation 16 for idAdd
-Int Activation 8
-Int Activation 8
-IntGELU bit: 8
-Int Activation 8
-Int Activation 8
-Int Activation 16 for idAdd
-Int Activation 8
-Int Activation 8
-Int Activation 8
-IntSoftMax 16
-Int Activation 8
+Int Activation Unsigned 8 for softmax_act
 Int Activation 8
 Int Activation 8
 Int Activation 16 for idAdd
@@ -61,21 +47,7 @@ Int Activation 8
 Int Activation 8
 Int Activation 8
 IntSoftMax 16
-Int Activation 8
-Int Activation 8
-Int Activation 8
-Int Activation 16 for idAdd
-Int Activation 8
-Int Activation 8
-IntGELU bit: 8
-Int Activation 8
-Int Activation 8
-Int Activation 16 for idAdd
-Int Activation 8
-Int Activation 8
-Int Activation 8
-IntSoftMax 16
-Int Activation 8
+Int Activation Unsigned 8 for softmax_act
 Int Activation 8
 Int Activation 8
 Int Activation 16 for idAdd
@@ -89,21 +61,7 @@ Int Activation 8
 Int Activation 8
 Int Activation 8
 IntSoftMax 16
-Int Activation 8
-Int Activation 8
-Int Activation 8
-Int Activation 16 for idAdd
-Int Activation 8
-Int Activation 8
-IntGELU bit: 8
-Int Activation 8
-Int Activation 8
-Int Activation 16 for idAdd
-Int Activation 8
-Int Activation 8
-Int Activation 8
-IntSoftMax 16
-Int Activation 8
+Int Activation Unsigned 8 for softmax_act
 Int Activation 8
 Int Activation 8
 Int Activation 16 for idAdd
@@ -117,21 +75,7 @@ Int Activation 8
 Int Activation 8
 Int Activation 8
 IntSoftMax 16
-Int Activation 8
-Int Activation 8
-Int Activation 8
-Int Activation 16 for idAdd
-Int Activation 8
-Int Activation 8
-IntGELU bit: 8
-Int Activation 8
-Int Activation 8
-Int Activation 16 for idAdd
-Int Activation 8
-Int Activation 8
-Int Activation 8
-IntSoftMax 16
-Int Activation 8
+Int Activation Unsigned 8 for softmax_act
 Int Activation 8
 Int Activation 8
 Int Activation 16 for idAdd
@@ -145,21 +89,7 @@ Int Activation 8
 Int Activation 8
 Int Activation 8
 IntSoftMax 16
-Int Activation 8
-Int Activation 8
-Int Activation 8
-Int Activation 16 for idAdd
-Int Activation 8
-Int Activation 8
-IntGELU bit: 8
-Int Activation 8
-Int Activation 8
-Int Activation 16 for idAdd
-Int Activation 8
-Int Activation 8
-Int Activation 8
-IntSoftMax 16
-Int Activation 8
+Int Activation Unsigned 8 for softmax_act
 Int Activation 8
 Int Activation 8
 Int Activation 16 for idAdd
@@ -173,7 +103,7 @@ Int Activation 8
 Int Activation 8
 Int Activation 8
 IntSoftMax 16
-Int Activation 8
+Int Activation Unsigned 8 for softmax_act
 Int Activation 8
 Int Activation 8
 Int Activation 16 for idAdd
@@ -187,7 +117,77 @@ Int Activation 8
 Int Activation 8
 Int Activation 8
 IntSoftMax 16
+Int Activation Unsigned 8 for softmax_act
 Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+IntGELU bit: 8
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+Int Activation 8
+IntSoftMax 16
+Int Activation Unsigned 8 for softmax_act
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+IntGELU bit: 8
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+Int Activation 8
+IntSoftMax 16
+Int Activation Unsigned 8 for softmax_act
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+IntGELU bit: 8
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+Int Activation 8
+IntSoftMax 16
+Int Activation Unsigned 8 for softmax_act
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+IntGELU bit: 8
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+Int Activation 8
+IntSoftMax 16
+Int Activation Unsigned 8 for softmax_act
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+IntGELU bit: 8
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+Int Activation 8
+IntSoftMax 16
+Int Activation Unsigned 8 for softmax_act
 Int Activation 8
 Int Activation 8
 Int Activation 16 for idAdd

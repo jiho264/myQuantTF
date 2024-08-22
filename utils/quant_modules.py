@@ -40,7 +40,7 @@ class QuantAct(nn.Module):
         elif which == "softmax_act":
             self.bit_width = 9
             # UINT8
-            print(f"Int Activation {self.bit_width} for {which}")
+            print(f"Int Activation Unsigned {self.bit_width-1} for {which}")
         else:
             self.bit_width = args_a.get("bit_width", 8)
             print(f"Int Activation {self.bit_width}")
