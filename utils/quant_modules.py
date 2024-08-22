@@ -45,48 +45,46 @@ class QuantAct(nn.Module):
             self.bit_width = args_a.get("bit_width", 8)
             print(f"Int Activation {self.bit_width}")
 
-    # def _quantize(self, x_hat, s_x):
+    def _quantize(self, x_hat, s_x):
+        return (
+            (x_hat / s_x)
+            .round()
+            .clamp(
+                -(2 ** (self.bit_width - 1)),
+                2 ** (self.bit_width - 1) - 1,
+            )
+        )
 
     def forward(self, x_hat, s_x=None, id_hat=None, s_id=None):
         with torch.no_grad():
             x_out = x_hat if id_hat == None else id_hat + x_hat
-
             s_out = x_out.abs().max() / (2 ** (self.bit_width - 1) - 1)
+
+        """
+        [ ] Turn to INT Division ( b * 2^ -c )
+        
+        x_int = x_hat / s_x
+        out_int = x_int * (s_x / s_out)
+        
+        id_int = id_hat / s_id
+        out_int == id_int * (s_id / s_out)
+        
+        이렇게 계산하기 때문에, s_x와 s_id는 약분되어서 사라짐.
+        다만 quantize 함수를 이용해서 구현할 수도 있음. 
+        동일하게 return은 INT이며, 반올림과정에서 사소한 오차 있을 수 있음.
+        실제 int inference에서는 m*2**-c를 곱하는 식으로 나눠야하기 때문에 이 부분은 추후 수정 필요함.
+        
+        """
 
         if s_x == None:
             # input quantization
-            out_int = (
-                (x_hat / s_out)
-                .round()
-                .clamp(
-                    -(2 ** (self.bit_width - 1)),
-                    2 ** (self.bit_width - 1) - 1,
-                )
-            )
+            out_int = self._quantize(x_hat, s_out)
         else:
-            x_int = (x_hat / s_x).round()
-            new_scaler = s_x / s_out
-            out_int = (
-                (x_int * new_scaler)
-                .round()
-                .clamp(
-                    -(2 ** (self.bit_width - 1)),
-                    2 ** (self.bit_width - 1) - 1,
-                )
-            )
+            x_int = self._quantize(x_hat, s_out)
+            out_int = x_int
 
             if id_hat is not None:
-                id_int = (id_hat / s_id).round()
-                new_scaler = s_id / s_out
-                id_int = (
-                    (id_int * new_scaler)
-                    .round()
-                    .clamp(
-                        -(2 ** (self.bit_width - 1)),
-                        2 ** (self.bit_width - 1) - 1,
-                    )
-                )
-
+                id_int = self._quantize(id_hat, s_out)
                 out_int += id_int
 
         out_hat = out_int * s_out.view(-1)
