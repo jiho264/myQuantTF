@@ -31,7 +31,10 @@ class QuantAct(nn.Module):
             args_a.get("per_channel", True) == False
         ), "only per-tensor quantization is supported for Activation Quantization"
 
-        if which in ["cls_token", "idAdd"]:
+        if which == "cls_token":
+            self.bit_width = 16
+            print(f"Int Activation {self.bit_width} for {which}")
+        elif which == "idAdd":
             self.bit_width = 16
             print(f"Int Activation {self.bit_width} for {which}")
         else:

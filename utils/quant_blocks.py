@@ -74,6 +74,7 @@ class QuantMSA(nn.Module):
         self.embed_dim = orgModule.embed_dim
         self.num_heads = orgModule.num_heads
         self.head_dim = orgModule.head_dim
+        self.d_k = self.head_dim**0.5
 
         # make in_proj module
         tmp_in_proj = nn.Linear(
@@ -132,10 +133,9 @@ class QuantMSA(nn.Module):
         v = qkv[2].view(bsz, src_len, self.num_heads, self.head_dim).transpose(1, 2)
 
         """ [2] INT GEMM -> Accumulated by INT32 -> return INT8 """
-
         qk, s_qk = self.qk_mm(q, s_qkv, k.transpose(-2, -1), s_qkv)
-        qk /= math.sqrt(q.size(-1))  # divide by 8 when head_dim == 64
-        s_qk /= math.sqrt(q.size(-1))  # divide by 8 when head_dim == 64
+        qk /= self.d_k  # divide by 8 when head_dim == 64
+        s_qk /= self.d_k  # divide by 8 when head_dim == 64
         qk, s_qk = self.qk_act(qk, s_qk)
         ## >> torch.Size([128, 12, 197, 197])
 

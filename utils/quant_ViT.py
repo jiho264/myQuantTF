@@ -119,12 +119,6 @@ class QuantViT(nn.Module):
         args_gelu: dict = {},
     ):
         super().__init__()
-        print(f"Weight quantization parameter : {args_w}")
-        print(f"Activation quantization parameter : {args_a}")
-        print(f"Softmax quantization parameter : {args_softmax}")
-        print(f"LayerNorm quantization parameter : {args_ln}")
-        print(f"GELU quantization parameter : {args_gelu}")
-
         self.patch_size = orgViT.patch_size
         self.image_size = orgViT.image_size
         self.hidden_dim = orgViT.hidden_dim

@@ -80,15 +80,6 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         "batch_size": 128,
         "num_samples": 1024,
     }
-    print(main_args)
-
-    if main_args["arch"] == "ViT_B_16":
-        model = vision_transformer.vit_b_16(
-            weights=vision_transformer.ViT_B_16_Weights.IMAGENET1K_V1
-        )
-    else:
-        raise NotImplementedError
-    model.eval().to("cuda")
 
     args_w = {"scheme": "AbsMaxQuantizer", "bit_width": 8, "per_channel": True}
     # args_w.update({"scheme": "AdaRoundQuantizer"})
@@ -105,6 +96,21 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     args_softmax = {"bit_width": 16}
     args_ln = {"bit_width": 8}
 
+    argses = [main_args, args_w, args_a, args_softmax, args_ln, args_gelu]
+    names = ["main_args", "weight", "activation", "softmax", "layer_norm", "gelu"]
+    for name, args in zip(names, argses):
+        print(f"\n- {name} params:")
+        for k, v in args.items():
+            print(f"    - {k}: {v}")
+
+    if main_args["arch"] == "ViT_B_16":
+        model = vision_transformer.vit_b_16(
+            weights=vision_transformer.ViT_B_16_Weights.IMAGENET1K_V1
+        )
+    else:
+        raise NotImplementedError
+
+    model.eval().to("cuda")
     model = QuantViT(model, args_w, args_a, args_softmax, args_ln, args_gelu)
 
     model.eval().to("cuda")
@@ -121,8 +127,8 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     #     run_AdaRound(model, train_loader)
 
     """ evaluation """
-    # _top1, _ = evaluate(model, test_loader, len(test_loader), "cuda")
-    _top1, _ = evaluate(model, test_loader, 1, "cuda")
+    _top1, _ = evaluate(model, test_loader, len(test_loader), "cuda")
+    # _top1, _ = evaluate(model, test_loader, 1, "cuda")
     print(
         f"\n    Quantized model Evaluation accuracy on 50000 images, {_top1.avg:2.3f}%"
     )
