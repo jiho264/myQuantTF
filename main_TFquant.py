@@ -120,7 +120,7 @@ def _adaround_for_a_module(model, module, cali_data, batch_size, lr, n_iter):
 
 
 def run_AdaRound(
-    model, train_loader, scheme, num_samples=1024, batch_size=32, lr=0.01, n_iter=1000
+    model, train_loader, scheme, num_samples=1024, batch_size=32, lr=0.01, n_iter=5000
 ):
     model.eval()
 
@@ -226,7 +226,7 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         for k, v in args.items():
             print(f"    - {k}: {v}")
     print(f"\n- Identity addition : INT16 (The input of each LayerNorm)")
-    print(f"\n- Activation of Softmax(Q@K/d_K) (attn_map) : UINT8")
+    print(f"\n- Activation of Softmax(Q@K/d_K) (attn_map) : UINT8\n")
 
     if main_args["arch"] == "ViT_B_16":
         model = vision_transformer.vit_b_16(
