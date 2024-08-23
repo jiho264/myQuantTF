@@ -8,6 +8,34 @@ from typing import Optional, Tuple
 from torch.autograd import Function
 
 
+class floor_ste(Function):
+    """
+    Straight-through Estimator(STE) for torch.floor()
+    """
+
+    @staticmethod
+    def forward(ctx, x):
+        return torch.floor(x)
+
+    @staticmethod
+    def backward(ctx, grad_output):
+        return grad_output.clone()
+
+
+class round_ste(Function):
+    """
+    Straight-through Estimator(STE) for torch.round()
+    """
+
+    @staticmethod
+    def forward(ctx, x):
+        return torch.round(x)
+
+    @staticmethod
+    def backward(ctx, grad_output):
+        return grad_output.clone()
+
+
 class QuantMatMul(nn.Module):
     """
     Class to quantize weights of given matmul layer
@@ -18,10 +46,12 @@ class QuantMatMul(nn.Module):
 
     def forward(self, A, pre_act_scaling_factor_A, B, pre_act_scaling_factor_B):
         # print(pre_act_scaling_factor_A, pre_act_scaling_factor_B)
-        if pre_act_scaling_factor_B == None:
-            return A @ B, None
-        A_int = A / pre_act_scaling_factor_A
-        B_int = B / pre_act_scaling_factor_B
+        if pre_act_scaling_factor_B == 0:
+            return A @ B, 0
+        A_int = round_ste.apply(A / pre_act_scaling_factor_A)
+        B_int = round_ste.apply(B / pre_act_scaling_factor_B)
+        # assert -128 <= A_int.min() and A_int.max() <= 127
+        # assert -128 <= B_int.min() and B_int.max() <= 127
         act_scaling_factor = pre_act_scaling_factor_A * pre_act_scaling_factor_B
         return (A_int @ B_int) * act_scaling_factor, act_scaling_factor
 
@@ -56,11 +86,11 @@ class QuantAct(nn.Module):
         self.running_stat = args_a.get("batches")
         self.min_val = torch.zeros(1)
         self.max_val = torch.zeros(1)
-        self.S_OUT = None
+        self.s_out = None
         self.momentum = args_a.get("momentum", 0.95)
 
     def _quantize(self, x_hat, s_x):
-        x_int = (x_hat / s_x).round()
+        x_int = round_ste.apply(x_hat / s_x)
         x_int_clamp = x_int.clamp(
             -(2 ** (self.bit_width - 1)),
             2 ** (self.bit_width - 1) - 1,
@@ -106,26 +136,24 @@ class QuantAct(nn.Module):
                         self.min_val = cur_min
                         self.max_val = cur_max
                     else:
-                        self.min_val = (
-                            self.min_val * self.momentum
-                            + cur_min * (1 - self.momentum)
+                        self.min_val = self.min_val * self.momentum + cur_min * (
+                            1 - self.momentum
                         )
-                        self.max_val = (
-                            self.max_val * self.momentum
-                            + cur_max * (1 - self.momentum)
+                        self.max_val = self.max_val * self.momentum + cur_max * (
+                            1 - self.momentum
                         )
                     self.max_val = self.max_val.max()
                     self.min_val = self.min_val.min()
 
                     self.running_stat -= 1
                     if self.running_stat == 0:
-                        self.S_OUT = self._compute_scaler(self.min_val, self.max_val)
+                        self.s_out = self._compute_scaler(self.min_val, self.max_val)
                         # print(f"Calibration done: {self.S_OUT:.4f}")
 
-            if self.S_OUT == None:
+            if self.s_out == None:
                 s_out = self._compute_scaler(self.min_val, self.max_val)
             else:
-                s_out = self.S_OUT
+                s_out = self.s_out
 
             out_int = self._quantize(x_hat, s_out)
 
@@ -137,7 +165,7 @@ class QuantAct(nn.Module):
         else:
 
             x_out = x_hat if id_hat == None else id_hat + x_hat
-            return x_out, s_x
+            return x_out, 0  # when org inference
 
 
 class QuantLinearWithWeight(nn.Module):
@@ -175,19 +203,20 @@ class QuantLinearWithWeight(nn.Module):
             args_w.get("per_channel", False) == True
         ), "only per-channel quantization is supported for Weight Quantization"
 
-        s_w = self.W_FP32.view(self.W_FP32.size(0), -1).abs().max(dim=1).values / (
-            2 ** (self.bit_width - 1) - 1
-        )
+        with torch.no_grad():
+            s_w = self.W_FP32.view(self.W_FP32.size(0), -1).abs().max(dim=1).values / (
+                2 ** (self.bit_width - 1) - 1
+            )
 
-        _n_ch = len(self.W_FP32.size())
-        self.S_W = s_w.view(-1, *([1] * (_n_ch - 1)))
+            _n_ch = len(self.W_FP32.size())
+            self.S_W = s_w.view(-1, *([1] * (_n_ch - 1)))
 
-        self.W_INT8 = (
-            (self.W_FP32.clone().detach() / self.S_W)
-            .round()
-            .clamp(-(2 ** (self.bit_width - 1)), 2 ** (self.bit_width - 1) - 1)
-        )
-        self.B_INT8 = (self.B_FP32.clone().detach() / self.S_W.squeeze()).round()
+            self.W_INT8 = (
+                (self.W_FP32.clone().detach() / self.S_W)
+                .round()
+                .clamp(-(2 ** (self.bit_width - 1)), 2 ** (self.bit_width - 1) - 1)
+            )
+            self.B_INT8 = (self.B_FP32.clone().detach() / self.S_W.squeeze()).round()
 
         """ Activation quantizer """
         if args_a is not None:
@@ -197,20 +226,84 @@ class QuantLinearWithWeight(nn.Module):
         else:
             self.act_quant = lambda a, b: (a, b)
 
+        """ AdaRound """
+        self.adaround_scheme = args_w.get("AdaRound", False)
+        if self.adaround_scheme:
+            self.zeta = 1.1  # fixed param for function h()
+            self.gamma = -0.1  # fixed pamam for function h()
+            self.lamda = 1  # lambda. fixed param for regularization function f()
+
+            self.rouning_value = None
+
+            # [1] init the v value. (h(v) == rounding value)
+            self._v = None
+            self._init_v()
+
+    def _init_v(self) -> Tensor:
+        # [1-1] compute the residual == initial h(v)
+        with torch.no_grad():
+            _x_q_floor = (
+                (self.W_FP32 / self.S_W)
+                .floor()
+                .clamp(-(2 ** (self.bit_width - 1)), 2 ** (self.bit_width - 1) - 1)
+            )
+
+            _residual = self.W_INT8 - _x_q_floor
+
+            assert torch.all(
+                (_residual == 0) | (_residual == 1)
+            ), "The residual must be {0, 1}."
+
+            # [1-2] compute the v value using inverse h() function
+            self._v = -torch.log(
+                (self.zeta - self.gamma) / (_residual - self.gamma) - 1
+            )  # h^-1
+            assert (_residual - self._h()).abs().sum() == 0
+
+            print("    Initiated the V")
+
+    def _h(self) -> Tensor:
+        # Rectified_sigmoid (strached sigmoid function)
+        return torch.clamp(
+            self._v.sigmoid() * (self.zeta - self.gamma) + self.gamma, 0, 1
+        )
+
+    def f_reg(self, beta=2.0) -> Tensor:
+        # _regularization_term for determining the v
+        return (1 - (2 * self._h() - 1).abs().pow(beta)).sum()
+
+    def _get_w_int8(self) -> Tensor:
+        with torch.no_grad():
+            if self.rouning_value == None:
+                # return FP
+                return (self.W_INT8 + self._h()).clamp(
+                    -(2 ** (self.bit_width - 1)), 2 ** (self.bit_width - 1) - 1
+                )
+
+            else:
+                return (self.W_INT8 + self.rouning_value).clamp(
+                    -(2 ** (self.bit_width - 1)), 2 ** (self.bit_width - 1) - 1
+                )
+
+    def setRoundingValues(self):
+        with torch.no_grad():
+            FIXED_ROUNDING_VALUE = self._h().clone().detach()
+            self.rouning_value = FIXED_ROUNDING_VALUE
+            print("    Set the rounding value")
+            assert torch.all(
+                (self.rouning_value == 0) | (self.rouning_value == 1)
+            ), "The rounding value have to be {0, 1}."
+
     def forward(self, x_hat, s_x):
         if self.do_quant:
+            """weight quantization only (ex. W8A32..)"""
             if s_x == None:
-                # >> weight quant only
                 return (
                     self.fwd_func(
                         x_hat, self.W_INT8 * self.S_W, self.B_FP32, **self.fwd_kwargs
                     ),
                     s_x,
                 )
-            """Verify INT 8 GEMM"""
-            x_test_int = (x_hat / s_x).round().clamp(-128, 127)
-            # the x_hat is the INT8 or UINT8 value represent by FP32 domain.
-            assert torch.eq(x_test_int * s_x, x_hat).all()
 
             s_a = self.S_W * s_x
             b_int32 = (self.B_INT8 / s_x).round()
@@ -223,44 +316,31 @@ class QuantLinearWithWeight(nn.Module):
                 s_a = s_a.view(1, -1)
 
             x_int = (x_hat / s_x).round()
+            """ Verify INT 8 GEMM """
+            with torch.no_grad():
+                assert (
+                    -128 - 1e-6 <= x_int.min() and x_int.max() <= 127 + 1e-6
+                ), f"{x_int.min()} {x_int.max()}"
 
-            a_int32 = self.fwd_func(x_int, self.W_INT8, b_int32, **self.fwd_kwargs)
+            if self.adaround_scheme:
+                """if using AdaRound"""
+                # usually using 4bit quantization
+                w_adaround_int4 = self._get_w_int8()
+                a_int32 = self.fwd_func(
+                    x_int, w_adaround_int4, b_int32, **self.fwd_kwargs
+                )
+            else:
+                a_int32 = self.fwd_func(x_int, self.W_INT8, b_int32, **self.fwd_kwargs)
+
             a_hat = a_int32 * s_a
 
             return self.act_quant(a_hat, s_a)
         else:
+            """No quantization"""
             return (
                 self.fwd_func(x_hat, self.W_FP32, self.B_FP32, **self.fwd_kwargs),
                 s_x,
             )
-
-
-class floor_ste(Function):
-    """
-    Straight-through Estimator(STE) for torch.floor()
-    """
-
-    @staticmethod
-    def forward(ctx, x):
-        return torch.floor(x)
-
-    @staticmethod
-    def backward(ctx, grad_output):
-        return grad_output.clone()
-
-
-class round_ste(Function):
-    """
-    Straight-through Estimator(STE) for torch.round()
-    """
-
-    @staticmethod
-    def forward(ctx, x):
-        return torch.round(x)
-
-    @staticmethod
-    def backward(ctx, grad_output):
-        return grad_output.clone()
 
 
 class IntGELU(nn.Module):
@@ -373,8 +453,8 @@ class IntSoftMax(nn.Module):
             return self.int_forward(input, s_pre)
         else:
             # print("FP Softmax")
-            """ 
-            The result of softmax's range is [0, 1], 
+            """
+            The result of softmax's range is [0, 1],
             So we can return 1/127 for INT8 quantization.
             """
             return F.softmax(input, dim=dim), s_pre

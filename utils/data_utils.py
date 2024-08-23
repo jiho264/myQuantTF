@@ -205,33 +205,20 @@ class GetLayerInpOut:
         input : (x_hat, s_x)
         output : (x_hat, s_x)
         """
-        # print("Input shape: ", len(self.data_saver.input_store))
-        # print(
-        #     self.data_saver.input_store[0].shape, self.data_saver.input_store[0].dtype
-        # )
-        # print(
-        #     self.data_saver.input_store[1].shape, self.data_saver.input_store[1].dtype
-        # )
-        # print("Output shape: ", len(self.data_saver.output_store))
-        # print(
-        #     self.data_saver.output_store[0].shape, self.data_saver.output_store[0].dtype
-        # )
-        # print(
-        #     self.data_saver.output_store[1].shape, self.data_saver.output_store[1].dtype
-        # )
 
         for _tensor in [self.data_saver.input_store, self.data_saver.output_store]:
             if isinstance(_tensor, tuple):
                 for t in _tensor:
-                    t.detach_()
+                    if isinstance(t, torch.Tensor):
+                        t = t.detach()
             else:
-                _tensor.detach_()
+                if isinstance(t, torch.Tensor):
+                    tensor = tensor.detach()
 
-        #         return (
-        #             self.data_saver.input_store.detach(),  # Tuple of (x_hat, s_x)
-        #             self.data_saver.output_store.detach(),  # Tuple of (x_hat, s_x)
-        #         )
-        return (self.data_saver.input_store, self.data_saver.output_store)
+        return (
+            self.data_saver.input_store,  # Tuple of (x_hat, s_x)
+            self.data_saver.output_store,  # Tuple of (x_hat, s_x)
+        )
 
 
 def save_inp_oup_data(
@@ -267,7 +254,10 @@ def save_inp_oup_data(
     cached_inps_x_hat = torch.cat([x[0][0] for x in cached_batches])
     cached_inps_s_x = torch.tensor([x[0][1] for x in cached_batches])
     cached_outs_x_hat = torch.cat([x[1][0] for x in cached_batches])
-    cached_outs_s_x = torch.tensor([x[1][1] for x in cached_batches])
+    try:
+        cached_outs_s_x = torch.tensor([x[1][1] for x in cached_batches])
+    except:
+        cached_outs_s_x = None
 
     torch.cuda.empty_cache()
 
@@ -278,10 +268,7 @@ def save_inp_oup_data(
             cached_outs_x_hat,
             cached_outs_s_x,
         ]:
-            if isinstance(_tensor, tuple):
-                for t in _tensor:
-                    t.cpu()
-            else:
-                _tensor.cpu()
-    print(f"Data saved : {cached_inps_x_hat.shape}, {cached_outs_x_hat.shape}")
+            if isinstance(_tensor, torch.Tensor):
+                _tensor = _tensor.cpu()
+
     return (cached_inps_x_hat, cached_inps_s_x, cached_outs_x_hat, cached_outs_s_x)

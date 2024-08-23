@@ -171,9 +171,9 @@ class QuantViT(nn.Module):
         self.vit_int_ln = for_int_ln
         self.vit_int_gelu = for_int_gelu
         self.vit_int_softmax = for_int_softmax
-        print(
-            f"Quant mode set to: {self.vit_w_quant}, {self.vit_a_quant}, {self.vit_int_ln}, {self.vit_int_gelu}, {self.vit_int_softmax}"
-        )
+        # print(
+        #     f"Quant mode set to: {self.vit_w_quant}, {self.vit_a_quant}, {self.vit_int_ln}, {self.vit_int_gelu}, {self.vit_int_softmax}"
+        # )
 
     def _confirm_quant_mode(self):
         for name, module in self.named_modules():
