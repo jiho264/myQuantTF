@@ -1,21 +1,30 @@
 import torch, time, argparse
 import torch.nn as nn
 
-from utils.data_utils import save_inp_oup_data, _get_train_samples, GetDataset, evaluate
+from utils.data_utils import save_inp_oup_data, get_train_samples, GetDataset, evaluate
 from utils.quant_ViT import QuantViT
+from utils.quant_modules import QuantLinearWithWeight, QuantAct
+from utils.quant_blocks import QuantMLP, QuantMSA
 import torchvision.models.vision_transformer as vision_transformer
 
 
-# def _computeAdaRoundValues(model, layer, cali_data, batch_size, lr, n_iter):
+# def _adaround_for_a_module(model, module, cali_data, batch_size, lr, n_iter):
 #     model.eval()
+
 #     # [1] get {Origin FP output(A_fp_lth), Quantized input and output(X_q_lth, A_q_lth)}
-#     A_fp_lth = layer.weightQuantizer.Quantizer.fp_outputs
-#     X_q_lth, _ = save_inp_oup_data(model, layer, cali_data)
+#     # model.set_quant_mode(False)
+#     ORG_FP_INPUT, _, ORG_FP_OUTPUT, _ = save_inp_oup_data(
+#         model, module, cali_data, batch_size
+#     )
 
 #     # [2] Define the optimizer and loss function
-#     optimizer_w = torch.optim.Adam([layer.weightQuantizer.Quantizer._v], lr=lr)
+#     for name, sub_module in model.named_modules():
+#         if isinstance(sub_module, QuantAct):
+#             print(name)
+#     exit()
+#     optimizer_w = torch.optim.Adam([module.weightQuantizer.Quantizer._v], lr=lr)
 
-#     print(optimizer_w, n_iter, layer.weightQuantizer.Quantizer._v.shape)
+#     print(optimizer_w, n_iter, module.weightQuantizer.Quantizer._v.shape)
 
 #     model.train()
 
@@ -26,12 +35,12 @@ import torchvision.models.vision_transformer as vision_transformer
 #         optimizer_w.zero_grad()
 
 #         """ Layer reconstruction loss"""
-#         _tmp_A_q_lth = layer.forward(X_q_lth[idx])
+#         _tmp_A_q_lth = module.forward(X_q_lth[idx])
 #         _mse = (A_fp_lth[idx] - _tmp_A_q_lth).abs().pow(2).mean()
-#         _beta = layer.weightQuantizer.Quantizer._decayed_beta(i, n_iter)
-#         _reg_loss = layer.weightQuantizer.Quantizer.f_reg(beta=_beta)
+#         _beta = module.weightQuantizer.Quantizer._decayed_beta(i, n_iter)
+#         _reg_loss = module.weightQuantizer.Quantizer.f_reg(beta=_beta)
 
-#         loss = _mse + layer.weightQuantizer.Quantizer.lamda * _reg_loss
+#         loss = _mse + module.weightQuantizer.Quantizer.lamda * _reg_loss
 
 #         loss.backward()
 #         optimizer_w.step()
@@ -46,31 +55,61 @@ import torchvision.models.vision_transformer as vision_transformer
 #             )
 #             break
 
-#     del layer.weightQuantizer.Quantizer.fp_outputs
 #     del X_q_lth, A_fp_lth
-
-#     layer.weightQuantizer.Quantizer.setRoundingValues()
+#     torch.cuda.empty_cache()
+#     module.weightQuantizer.Quantizer.setRoundingValues()
 #     return None
 
 
 # def run_AdaRound(
-#     model, train_loader, num_samples=1024, batch_size=32, lr=0.01, n_iter=25000
+#     model, train_loader, scheme, num_samples=1024, batch_size=32, lr=0.01, n_iter=25000
 # ):
-
 #     model.eval()
 
-#     cali_data = _get_train_samples(train_loader, num_samples)
+#     assert scheme in ["PerLayer", "PerBlock", "PerEncoder"]
+#     total_module_cnt = 0
+#     if scheme == "PerLayer":
+#         for name, module in model.named_modules():
+#             if isinstance(module, QuantLinearWithWeight):
+#                 total_module_cnt += 1
+#                 print(name)
+#     elif scheme == "PerBlock":
+#         for name, module in model.named_modules():
+#             if isinstance(module, QuantLinearWithWeight) and name in [
+#                 "conv_proj",
+#                 "heads.0",
+#             ]:
+#                 total_module_cnt += 1
+#                 print(name)
+#             elif isinstance(module, QuantMLP) or isinstance(module, QuantMSA):
+#                 total_module_cnt += 1
+#                 print(name)
 
-#     for name, module in model.named_modules():
-#         if isinstance(module, QuantLinearLayer):
-#             model.vit_w_quant = False
-#             _, FP_OUTPUT = save_inp_oup_data(model, module, cali_data)
-#             model.vit_w_quant = True
-#             module.weightQuantizer.Quantizer.fp_outputs = FP_OUTPUT
-#             print(name)
-#             print("   FP_OUTPUT shape", FP_OUTPUT.shape)
-#             _computeAdaRoundValues(model, module, cali_data, batch_size, lr, n_iter)
-#             torch.cuda.empty_cache()
+#     cali_data = get_train_samples(train_loader, num_samples)
+
+#     module_num_cnt = 0
+#     if scheme == "PerLayer":
+#         for name, module in model.named_modules():
+#             if isinstance(module, QuantLinearWithWeight):
+#                 module_num_cnt += 1
+#                 print(f"[{module_num_cnt}/{total_module_cnt}] {name}")
+#                 _adaround_for_a_module(model, module, cali_data, batch_size, lr, n_iter)
+
+#     elif scheme == "PerBlock":
+#         for name, module in model.named_modules():
+#             if isinstance(module, QuantLinearWithWeight) and name in [
+#                 "conv_proj",
+#                 "heads.0",
+#             ]:
+#                 module_num_cnt += 1
+#                 print(f"[{module_num_cnt}/{total_module_cnt}] {name}")
+#                 _adaround_for_a_module(model, module, cali_data, batch_size, lr, n_iter)
+#             elif isinstance(module, QuantMLP) or isinstance(module, QuantMSA):
+#                 module_num_cnt += 1
+#                 print(f"[{module_num_cnt}/{total_module_cnt}] {name}")
+#                 _adaround_for_a_module(model, module, cali_data, batch_size, lr, n_iter)
+
+#     print(module_num_cnt)
 #     return None
 
 
@@ -81,8 +120,9 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         "num_samples": 1024,
     }
 
-    args_w = {"scheme": "AbsMaxQuantizer", "bit_width": 8, "per_channel": True}
-    # args_w.update({"scheme": "AdaRoundQuantizer"})
+    # args_w = {"scheme": "AbsMaxQuantizer", "bit_width": 8, "per_channel": True}
+    # # args_w.update({"AdaRound": "PerBlock"})
+
     args_a = {
         "scheme": "MovAvgAbsMaxQuantizer",
         "bit_width": 8,
@@ -93,7 +133,9 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     }
     args_gelu = {"bit_width": 8}
     args_softmax = {"bit_width": 16}
-    args_ln = {"bit_width": 8}
+    args_ln = {
+        "bit_width": 8
+    }  # FIXME layer norm bit width is no matter. have to change another setting method
 
     calib_len = args_a.get("batches", 16)
 
@@ -103,6 +145,10 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         print(f"\n- {name} params:")
         for k, v in args.items():
             print(f"    - {k}: {v}")
+    print(f"\n- Identity addition : INT16 (The input of each LayerNorm)")
+    print(
+        f"\n- Activation of Softmax(Q@K/d_K) (attn_map) : UINT8 == INT9 without negative values"
+    )
 
     if main_args["arch"] == "ViT_B_16":
         model = vision_transformer.vit_b_16(
@@ -120,17 +166,18 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     train_loader, test_loader = GetDataset(batch_size=_batch_size)
 
     """ 여기 지우고 돌리면 dynamic act quantization """
-    # if args_a != {}:
-    #     """ calibration for activation """
-    #     _, _ = evaluate(model, test_loader, calib_len, "cuda")
-    #     print("Activation calibration is done.")
+    if args_a != {}:
+        """ calibration for activation """
+        _, _ = evaluate(model, test_loader, calib_len, "cuda")
+        print("Activation calibration is done.")
 
-    # if args_w.get("scheme") == "AdaRoundQuantizer":
-    #     run_AdaRound(model, train_loader)
+    # if args_w.get("AdaRound", None):
+    #     run_AdaRound(model, train_loader, args_w.get("AdaRound", None))
+    #     print(f"AdaRound for {args_w.get("AdaRound")} weights is done.")
 
     """ evaluation """
-    # _top1, _ = evaluate(model, test_loader, len(test_loader), "cuda")
-    _top1, _ = evaluate(model, test_loader, 1, "cuda")
+    _top1, _ = evaluate(model, test_loader, len(test_loader), "cuda")
+    # _top1, _ = evaluate(model, test_loader, 32, "cuda")
     print(
         f"\n    Quantized model Evaluation accuracy on 50000 images, {_top1.avg:2.3f}%"
     )

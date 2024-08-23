@@ -165,6 +165,16 @@ class DataSaverHook:
             raise StopForwardException
 
 
+def get_train_samples(train_loader, num_samples):
+    # calibration data loader code in AdaRound
+    train_data = []
+    for batch in train_loader:
+        train_data.append(batch[0])
+        if len(train_data) * batch[0].size(0) >= num_samples:
+            break
+    return torch.cat(train_data, dim=0)[:num_samples]
+
+
 class GetLayerInpOut:
     def __init__(
         self,
@@ -191,20 +201,37 @@ class GetLayerInpOut:
         handle.remove()
         self.model.train()
 
-        return (
-            self.data_saver.input_store[0].detach(),
-            self.data_saver.output_store.detach(),
-        )
+        """
+        input : (x_hat, s_x)
+        output : (x_hat, s_x)
+        """
+        # print("Input shape: ", len(self.data_saver.input_store))
+        # print(
+        #     self.data_saver.input_store[0].shape, self.data_saver.input_store[0].dtype
+        # )
+        # print(
+        #     self.data_saver.input_store[1].shape, self.data_saver.input_store[1].dtype
+        # )
+        # print("Output shape: ", len(self.data_saver.output_store))
+        # print(
+        #     self.data_saver.output_store[0].shape, self.data_saver.output_store[0].dtype
+        # )
+        # print(
+        #     self.data_saver.output_store[1].shape, self.data_saver.output_store[1].dtype
+        # )
 
+        for _tensor in [self.data_saver.input_store, self.data_saver.output_store]:
+            if isinstance(_tensor, tuple):
+                for t in _tensor:
+                    t.detach_()
+            else:
+                _tensor.detach_()
 
-def _get_train_samples(train_loader, num_samples):
-    # calibration data loader code in AdaRound
-    train_data = []
-    for batch in train_loader:
-        train_data.append(batch[0])
-        if len(train_data) * batch[0].size(0) >= num_samples:
-            break
-    return torch.cat(train_data, dim=0)[:num_samples]
+        #         return (
+        #             self.data_saver.input_store.detach(),  # Tuple of (x_hat, s_x)
+        #             self.data_saver.output_store.detach(),  # Tuple of (x_hat, s_x)
+        #         )
+        return (self.data_saver.input_store, self.data_saver.output_store)
 
 
 def save_inp_oup_data(
@@ -212,7 +239,7 @@ def save_inp_oup_data(
     layer,
     cali_data: torch.Tensor,
     batch_size: int = 128,
-    keep_gpu: bool = True,
+    keep_gpu: bool = False,
 ):
     """
     Save input data and output data of a particular layer/block over calibration dataset.
@@ -233,12 +260,28 @@ def save_inp_oup_data(
 
     for i in range(int(cali_data.size(0) / batch_size)):
         cur_inp, cur_out = get_inp_out(cali_data[i * batch_size : (i + 1) * batch_size])
-        cached_batches.append((cur_inp.cpu(), cur_out.cpu()))
+        # if you lack VRAM, I am so sorry.
+        # plz use the smaller batch size.
+        cached_batches.append((cur_inp, cur_out))
 
-    cached_inps = torch.cat([x[0] for x in cached_batches])
-    cached_outs = torch.cat([x[1] for x in cached_batches])
+    cached_inps_x_hat = torch.cat([x[0][0] for x in cached_batches])
+    cached_inps_s_x = torch.tensor([x[0][1] for x in cached_batches])
+    cached_outs_x_hat = torch.cat([x[1][0] for x in cached_batches])
+    cached_outs_s_x = torch.tensor([x[1][1] for x in cached_batches])
+
     torch.cuda.empty_cache()
-    if keep_gpu:
-        cached_inps = cached_inps.to(device)
-        cached_outs = cached_outs.to(device)
-    return cached_inps, cached_outs
+
+    if keep_gpu is False:
+        for _tensor in [
+            cached_inps_x_hat,
+            cached_inps_s_x,
+            cached_outs_x_hat,
+            cached_outs_s_x,
+        ]:
+            if isinstance(_tensor, tuple):
+                for t in _tensor:
+                    t.cpu()
+            else:
+                _tensor.cpu()
+    print(f"Data saved : {cached_inps_x_hat.shape}, {cached_outs_x_hat.shape}")
+    return (cached_inps_x_hat, cached_inps_s_x, cached_outs_x_hat, cached_outs_s_x)

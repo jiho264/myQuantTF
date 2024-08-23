@@ -134,7 +134,9 @@ class QuantMSA(nn.Module):
             q_hat_int8, s_qkv, k_hat_int8.transpose(-2, -1), s_qkv
         )
         qk_hat_int32 /= self.d_k  # divide by 8 when head_dim == 64
-        s_qk /= self.d_k  # divide by 8 when head_dim == 64
+        s_qk = (
+            s_qk / self.d_k if s_qk is not None else s_qk
+        )  # divide by 8 when head_dim == 64
         qk_hat_int8, s_qk = self.qk_act(qk_hat_int32, s_qk)
         ## >> torch.Size([128, 12, 197, 197])
 

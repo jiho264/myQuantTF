@@ -165,7 +165,17 @@ class QuantViT(nn.Module):
         self.vit_int_gelu = False if args_gelu == {} else True
         self.vit_int_softmax = False if args_softmax == {} else True
 
-    def _quant_switch(self):
+    def set_quant_mode(self, for_w, for_a, for_int_ln, for_int_gelu, for_int_softmax):
+        self.vit_w_quant = for_w
+        self.vit_a_quant = for_a
+        self.vit_int_ln = for_int_ln
+        self.vit_int_gelu = for_int_gelu
+        self.vit_int_softmax = for_int_softmax
+        print(
+            f"Quant mode set to: {self.vit_w_quant}, {self.vit_a_quant}, {self.vit_int_ln}, {self.vit_int_gelu}, {self.vit_int_softmax}"
+        )
+
+    def _confirm_quant_mode(self):
         for name, module in self.named_modules():
             if isinstance(module, QuantLinearWithWeight):
                 module.do_quant = self.vit_w_quant
@@ -206,7 +216,7 @@ class QuantViT(nn.Module):
         return x_hat_int8, s_x
 
     def forward(self, input: torch.Tensor):
-        self._quant_switch()
+        self._confirm_quant_mode()
         # QuantAct : 149
         # QuantLinearWithWeight : 50
         # IntLayerNorm : 25
