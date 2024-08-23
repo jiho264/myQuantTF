@@ -107,12 +107,12 @@ class QuantAct(nn.Module):
                         self.max_val = cur_max
                     else:
                         self.min_val = (
-                            self.min_val * self.act_range_momentum
-                            + cur_min * (1 - self.act_range_momentum)
+                            self.min_val * self.momentum
+                            + cur_min * (1 - self.momentum)
                         )
                         self.max_val = (
-                            self.max_val * self.act_range_momentum
-                            + cur_max * (1 - self.act_range_momentum)
+                            self.max_val * self.momentum
+                            + cur_max * (1 - self.momentum)
                         )
                     self.max_val = self.max_val.max()
                     self.min_val = self.min_val.min()

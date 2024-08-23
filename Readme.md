@@ -11,13 +11,17 @@
 - torch base : 81.072%
 - my quantization implementation for torch ViT-B model 
 
-| Case | W    | A    | SoftMax | GELU  | LN    | IdAdd | Acc @ 1 |
-| ---- | ---- | ---- | ------- | ----- | ----- | ----- | ------- |
-| Base | FP   | FP   | FP      | FP    | FP    | FP    | 81.068% |
-| W8   | INT8 | FP   | FP      | FP    | FP    | FP    | 81.074% |
-| A8   | FP   | INT8 | FP      | FP    | FP    | FP    | 78.994% |
-| W8A8 | INT8 | INT8 | FP      | FP    | FP    | FP    | 78.474% |
-| W8A8 | INT8 | INT8 | I-ViT   | I-ViT | I-ViT | INT16 | 75.890% |
+| [W]    | [A]    | W   | A   | SoftMax | GELU  | LN    | IdAdd | Acc @ 1 |
+| ------ | ------ | --- | --- | ------- | ----- | ----- | ----- | ------- |
+| Base   | Base   | 32  | 32  | FP      | FP    | FP    | FP    | 81.068% |
+| [W]Abs | -      | 8   | 32  | FP      | FP    | FP    | FP    | 81.074% |
+| -      | [A]Mov | 32  | 8   | FP      | FP    | FP    | FP    | 78.994% |
+| [W]Abs | [A]Mov | 8   | 8   | FP      | FP    | FP    | FP    | 78.474% |
+| [W]Abs | -      | 4   | 32  | FP      | FP    | FP    | FP    | 79.794% |
+| [W]Abs | [A]Mov | 4   | 8   | FP      | FP    | FP    | FP    | 76.874% |
+| -      | [A]Mov | 32  | 8   | I-ViT   | I-ViT | I-ViT | 16    | 75.890% |
+| [W]Abs | [A]Mov | 8   | 8   | I-ViT   | I-ViT | I-ViT | 16    | 77.054% |
+| [W]Abs | [A]Mov | 4   | 8   | I-ViT   | I-ViT | I-ViT | 16    | 72.964% |
 
 - Weight Quantizer : Absolute Max Quantization
 - Activation Quantizer : Moving Average Absolute Max Quantization (momentum 0.95, 2048 images)
