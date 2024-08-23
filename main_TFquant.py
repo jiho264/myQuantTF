@@ -119,17 +119,18 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     _batch_size = main_args["batch_size"]
     train_loader, test_loader = GetDataset(batch_size=_batch_size)
 
-    if args_a != {}:
-        """ calibration for activation """
-        _, _ = evaluate(model, test_loader, calib_len, "cuda")
-        print("Activation calibration is done.")
+    """ 여기 지우고 돌리면 dynamic act quantization """
+    # if args_a != {}:
+    #     """ calibration for activation """
+    #     _, _ = evaluate(model, test_loader, calib_len, "cuda")
+    #     print("Activation calibration is done.")
 
     # if args_w.get("scheme") == "AdaRoundQuantizer":
     #     run_AdaRound(model, train_loader)
 
     """ evaluation """
-    _top1, _ = evaluate(model, test_loader, len(test_loader), "cuda")
-    # _top1, _ = evaluate(model, test_loader, 1, "cuda")
+    # _top1, _ = evaluate(model, test_loader, len(test_loader), "cuda")
+    _top1, _ = evaluate(model, test_loader, 1, "cuda")
     print(
         f"\n    Quantized model Evaluation accuracy on 50000 images, {_top1.avg:2.3f}%"
     )

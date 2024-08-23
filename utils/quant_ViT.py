@@ -53,17 +53,17 @@ class QuantEncoderBlock(nn.Module):
         # [2-3] ID Addition
         self.idAdd_2 = QuantAct(args_a=kwargs["args_a"], which="idAdd")
 
-    def forward(self, x, s_x):
+    def forward(self, x_hat, s_x):
         torch._assert(
-            x.dim() == 3,
-            f"Expected (batch_size, seq_length, hidden_dim) got {x.shape}",
+            x_hat.dim() == 3,
+            f"Expected (batch_size, seq_length, hidden_dim) got {x_hat.shape}",
         )
 
-        x1, s_x1 = self.ln_1(x, s_x)
+        x1, s_x1 = self.ln_1(x_hat, s_x)
         x1, s_x1 = self.ln_1_act(x1, s_x1)
         x1, s_x1 = self.self_attention(x1, s_x1)
         x1 = self.dropout(x1)
-        x1, s_x1 = self.idAdd_1(x1, s_x1, x, s_x)
+        x1, s_x1 = self.idAdd_1(x1, s_x1, x_hat, s_x)
 
         x2, s_x2 = self.ln_2(x1, s_x1)
         x2, s_x2 = self.ln_2_act(x2, s_x2)
@@ -79,7 +79,7 @@ class QuantEncoder(nn.Module):
         self.pos_embedding = orgModule.pos_embedding
         self.pos_embedding_act = QuantAct(args_a=kwargs["args_a"])
 
-        self.cls_token_act = QuantAct(args_a=kwargs["args_a"], which="cls_token")
+        self.idAdd_pos_cls_x = QuantAct(args_a=kwargs["args_a"], which="idAdd")
 
         self.dropout = orgModule.dropout
         self.layers = nn.ModuleList()
@@ -88,24 +88,26 @@ class QuantEncoder(nn.Module):
             self.layers.append(QuantEncoderBlock(orgModule=orgEncoderBlock, **kwargs))
         self.ln = IntLayerNorm(orgModule.ln, args_ln=kwargs["args_ln"])
 
-    def forward(self, x, s_x):
+    def forward(self, x_hat, s_x):
         torch._assert(
-            x.dim() == 3,
-            f"Expected (batch_size, seq_length, hidden_dim) got {x.shape}",
+            x_hat.dim() == 3,
+            f"Expected (batch_size, seq_length, hidden_dim) got {x_hat.shape}",
         )
 
         pos, s_pos = self.pos_embedding_act(self.pos_embedding)
 
-        x, s_x = self.cls_token_act(x, s_x, pos, s_pos)
+        x_hat, s_x = self.idAdd_pos_cls_x(x_hat, s_x, pos, s_pos)
+        # This x_hat is not INT8.
+        # Represent by higher bit such as INT16
 
-        x = self.dropout(x)
+        x_hat = self.dropout(x_hat)
 
         for layer in self.layers:
-            x, s_x = layer(x, s_x)
+            x_hat, s_x = layer(x_hat, s_x)
 
-        x, s_x = self.ln(x, s_x)
+        x_hat, s_x = self.ln(x_hat, s_x)
 
-        return x, s_x
+        return x_hat, s_x
 
 
 class QuantViT(nn.Module):
@@ -129,9 +131,8 @@ class QuantViT(nn.Module):
         self.input_act = QuantAct(args_a=args_a)
 
         self.conv_proj = QuantLinearWithWeight(
-            orgModule=orgViT.conv_proj, args_w=args_w
+            orgModule=orgViT.conv_proj, args_w=args_w, args_a=args_a
         )
-        self.conv_proj_act = QuantAct(args_a=args_a)
 
         self.encoder = QuantEncoder(
             orgModule=orgViT.encoder,
@@ -177,8 +178,8 @@ class QuantViT(nn.Module):
             elif isinstance(module, IntSoftMax):
                 module.do_quant = self.vit_int_softmax
 
-    def _process_input(self, x, s_x):
-        n, c, h, w = x.shape
+    def _process_input(self, x_hat_int8, s_x):
+        n, c, h, w = x_hat_int8.shape
         p = self.patch_size
         torch._assert(
             h == self.image_size,
@@ -192,44 +193,49 @@ class QuantViT(nn.Module):
         n_w = w // p
 
         # (n, c, h, w) -> (n, hidden_dim, n_h, n_w)
-        x, s_x = self.conv_proj(x, s_x)
-        x, s_x = self.conv_proj_act(x, s_x)
+        x_hat_int8, s_x = self.conv_proj(x_hat_int8, s_x)
         # (n, hidden_dim, n_h, n_w) -> (n, hidden_dim, (n_h * n_w))
-        x = x.reshape(n, self.hidden_dim, n_h * n_w)
+        x_hat_int8 = x_hat_int8.reshape(n, self.hidden_dim, n_h * n_w)
 
         # (n, hidden_dim, (n_h * n_w)) -> (n, (n_h * n_w), hidden_dim)
         # The self attention layer expects inputs in the format (N, S, E)
         # where S is the source sequence length, N is the batch size, E is the
         # embedding dimension
-        x = x.permute(0, 2, 1)
+        x_hat_int8 = x_hat_int8.permute(0, 2, 1)
 
-        return x, s_x
+        return x_hat_int8, s_x
 
-    def forward(self, x: torch.Tensor):
+    def forward(self, input: torch.Tensor):
         self._quant_switch()
+        # QuantAct : 149
+        # QuantLinearWithWeight : 50
+        # IntLayerNorm : 25
+        # IntSoftMax : 12
+        # QuantMatMul : 24
+        # IntGELU : 12
 
         """ [stem] """
         # Reshape and permute the input tensor
-        x, s_x = self.input_act(x)
-        x, s_x = self._process_input(x, s_x)
-        n = x.shape[0]
+        x_hat_int8, s_x = self.input_act(input)
+        x_hat_int8, s_x = self._process_input(x_hat_int8, s_x)
+        n = x_hat_int8.shape[0]
 
         # Expand the class token to the full batch
         batch_class_token = self.class_token.expand(n, -1, -1)
-        x = torch.cat([batch_class_token, x], dim=1)
+        x_hat_int8 = torch.cat([batch_class_token, x_hat_int8], dim=1)
 
         """ [encoder blocks] """
-        x, s_x = self.encoder(x, s_x)
+        x_hat_int8, s_x = self.encoder(x_hat_int8, s_x)
 
         # Classifier "token" as used by standard language architectures
-        x = x[:, 0]
-        x, s_x = self.encoder_ln_act(x, s_x)
+        x_hat_int8 = x_hat_int8[:, 0]
+        x_hat_int8, s_x = self.encoder_ln_act(x_hat_int8, s_x)
 
         """ [heads] """
         for layer in self.heads:
-            x, s_x = layer(x, s_x)
+            x_hat_int8, s_x = layer(x_hat_int8, s_x)
 
-        return x
+        return x_hat_int8
 
 
 """

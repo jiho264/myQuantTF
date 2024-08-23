@@ -34,12 +34,9 @@ class QuantAct(nn.Module):
             args_a.get("per_channel", True) == False
         ), "only per-tensor quantization is supported for Activation Quantization"
 
-        if which == "cls_token":
+        if which == "idAdd":
             self.bit_width = 16
-            print(f"Int Activation {self.bit_width} for {which}")
-        elif which == "idAdd":
-            self.bit_width = 16
-            print(f"Int Activation {self.bit_width} for {which}")
+            print(f"Int Activation {self.bit_width} for {which} for identity add")
         elif which == "softmax_act":
             self.bit_width = 9
             # UINT8
@@ -129,7 +126,7 @@ class QuantAct(nn.Module):
 
 
 class QuantLinearWithWeight(nn.Module):
-    def __init__(self, orgModule, args_w):
+    def __init__(self, orgModule, args_w, args_a=None):
         super().__init__()
         self.do_quant = False
         self.bit_width = args_w.get("bit_width", 8)
@@ -172,8 +169,25 @@ class QuantLinearWithWeight(nn.Module):
         )
         self.B_INT8 = (bias_fp32.clone().detach() / self.S_W.squeeze()).round()
 
+        """ Activation quantizer """
+        if args_a is not None:
+            # all weighted layer without head !!
+            # the head's output is not needed to be quantized
+            self.act_quant = QuantAct(args_a=args_a)
+        else:
+            self.act_quant = lambda x, s_x: (x, s_x)
+
     def forward(self, x_hat, s_x):
-        # # 여기 x의 bit repr는 이전 layer에서 몇으로 줄였느냐에 따라 다름
+        """Verify INT 8 GEMM"""
+        if x_hat.min() > 0:
+            # softmax's output
+            print("softmax)")
+            x_test_int = (x_hat / s_x).round().clamp(0, 255)
+        else:
+            # others
+            x_test_int = (x_hat / s_x).round().clamp(-128, 127)
+        # the x_hat is the INT8 or UINT8 value represent by FP32 domain.
+        assert torch.eq(x_test_int * s_x, x_hat).all()
 
         s_a = self.S_W * s_x
         b_int32 = (self.B_INT8 / s_x).round()
@@ -190,7 +204,8 @@ class QuantLinearWithWeight(nn.Module):
         a_int32 = self.fwd_func(x_int, self.W_INT8, b_int32, **self.fwd_kwargs)
         a_hat = a_int32 * s_a
 
-        return a_hat, s_a
+        return self.act_quant(a_hat, s_a)
+        # return a_hat, s_a
 
 
 class floor_ste(Function):
