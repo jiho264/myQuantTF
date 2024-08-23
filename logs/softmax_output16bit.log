@@ -1,0 +1,198 @@
+cls_token_act = 16 bit
+idAdd_act = 16 bit
+activation of softmax UINT8
+
+without output of softmax quantization.
+the Attn@V is s16 @ s8 (u15 @ s8) -> [0, 32767] @ [-128, 127]
+>> org version
+
+- main_args params:
+    - arch: ViT_B_16
+    - batch_size: 128
+    - num_samples: 1024
+
+- weight params:
+    - scheme: AbsMaxQuantizer
+    - bit_width: 8
+    - per_channel: True
+
+- activation params:
+    - scheme: MovAvgAbsMaxQuantizer
+    - bit_width: 8
+    - per_channel: False
+    - momentum: 0.95
+    - batches: 16
+
+- softmax params:
+    - bit_width: 16
+
+- layer_norm params:
+    - bit_width: 8
+
+- gelu params:
+    - bit_width: 8
+Int Activation 8
+Int Activation 8
+Int Activation 8
+Int Activation 16 for cls_token
+Int Activation 8
+Int Activation 8
+Int Activation 8
+IntSoftMax 16
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+IntGELU bit: 8
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+Int Activation 8
+IntSoftMax 16
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+IntGELU bit: 8
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+Int Activation 8
+IntSoftMax 16
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+IntGELU bit: 8
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+Int Activation 8
+IntSoftMax 16
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+IntGELU bit: 8
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+Int Activation 8
+IntSoftMax 16
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+IntGELU bit: 8
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+Int Activation 8
+IntSoftMax 16
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+IntGELU bit: 8
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+Int Activation 8
+IntSoftMax 16
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+IntGELU bit: 8
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+Int Activation 8
+IntSoftMax 16
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+IntGELU bit: 8
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+Int Activation 8
+IntSoftMax 16
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+IntGELU bit: 8
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+Int Activation 8
+IntSoftMax 16
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+IntGELU bit: 8
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+Int Activation 8
+IntSoftMax 16
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+IntGELU bit: 8
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+Int Activation 8
+IntSoftMax 16
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Int Activation 8
+IntGELU bit: 8
+Int Activation 8
+Int Activation 8
+Int Activation 16 for idAdd
+Int Activation 8
+Activation calibration is done.
+
+    Quantized model Evaluation accuracy on 50000 images, 77.412%
+Total time: 443.61 sec
