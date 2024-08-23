@@ -11,23 +11,24 @@
 - torch base : 81.072%
 - my quantization implementation for torch ViT-B model 
 
-| [W]         | [A]    | W   | A   | SoftMax | GELU  | LN    | IdAdd | Acc @ 1 |
-| ----------- | ------ | --- | --- | ------- | ----- | ----- | ----- | ------- |
-| Base        | Base   | 32  | 32  | FP      | FP    | FP    | FP    | 81.068% |
-| [W]Abs      | -      | 8   | 32  | FP      | FP    | FP    | FP    | 81.074% |
-| -           | [A]Mov | 32  | 8   | FP      | FP    | FP    | FP    | 78.994% |
-| [W]Abs      | [A]Mov | 8   | 8   | FP      | FP    | FP    | FP    | 78.474% |
-| [W]Abs      | -      | 4   | 32  | FP      | FP    | FP    | FP    | 79.794% |
-| [W]Abs      | [A]Mov | 4   | 8   | FP      | FP    | FP    | FP    | 76.874% |
-| -           | [A]Mov | 32  | 8   | I-ViT   | I-ViT | I-ViT | 16    | 75.890% |
-| [W]Abs      | [A]Mov | 8   | 8   | I-ViT   | I-ViT | I-ViT | 16    | 77.054% |
-| [W]AdaRound | [A]Mov | 8   | 8   | I-ViT   | I-ViT | I-ViT | 16    |         |
-| [W]Abs      | [A]Mov | 4   | 8   | I-ViT   | I-ViT | I-ViT | 16    | 72.964% |
-| [W]AdaRound | [A]Mov | 4   | 8   | I-ViT   | I-ViT | I-ViT | 16    |         |
+| [W]         | [A]    | W   | A   | SoftMax | GELU  | LN    | IdAdd | Acc @ 1    |
+| ----------- | ------ | --- | --- | ------- | ----- | ----- | ----- | ---------- |
+| Base        | Base   | 32  | 32  | FP      | FP    | FP    | FP    | 81.068%    |
+| [W]Abs      | -      | 8   | 32  | FP      | FP    | FP    | FP    | 81.074%    |
+| [W]Abs      | -      | 4   | 32  | FP      | FP    | FP    | FP    | 79.794%    |
+| -           | [A]Mov | 32  | 8   | FP      | FP    | FP    | FP    | 78.994% ㄴ |
+| [W]Abs      | [A]Mov | 8   | 8   | FP      | FP    | FP    | FP    | 78.474% ㄴ |
+| [W]Abs      | [A]Mov | 4   | 8   | FP      | FP    | FP    | FP    | 76.874% ㄴ |
+| [W]Abs      | [A]Mov | 8   | 8   | I-ViT   | I-ViT | I-ViT | 16    | 77.054% ㄴ |
+| [W]AdaRound | [A]Mov | 8   | 8   | I-ViT   | I-ViT | I-ViT | 16    |            |
+| [W]Abs      | [A]Mov | 4   | 8   | I-ViT   | I-ViT | I-ViT | 16    | 72.964% ㄴ |
+| [W]AdaRound | [A]Mov | 4   | 8   | I-ViT   | I-ViT | I-ViT | 16    |            |
 
 - Weight Quantizer : Absolute Max Quantization
 - Activation Quantizer : Moving Average Absolute Max Quantization (momentum 0.95, 2048 images)
 - Softmax : Calculated by INT16, quantized by UINT8
+
+- [ ] 위에있는 acc들 MM에 round딩 verify 안들어가있는 결과임. 업데이트 필요함.
 
 
 

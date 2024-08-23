@@ -125,6 +125,7 @@ def run_AdaRound(
     model.eval()
 
     assert scheme in ["PerLayer", "PerBlock", "PerEncoder", "PerModel"]
+
     total_module_cnt = 0
     if scheme == "PerLayer":
         for name, module in model.named_modules():
@@ -178,6 +179,7 @@ def run_AdaRound(
                 "conv_proj",
                 "heads.0",
             ]:
+                # [ ] input act, output of encoder's LN act 감안 안 되어있음.
                 module_num_cnt += 1
                 print(f"[{module_num_cnt}/{total_module_cnt}] {name}")
                 _adaround_for_a_module(model, module, cali_data, batch_size, lr, n_iter)
@@ -186,8 +188,10 @@ def run_AdaRound(
                 print(f"[{module_num_cnt}/{total_module_cnt}] {name}")
                 _adaround_for_a_module(model, module, cali_data, batch_size, lr, n_iter)
     elif scheme == "PerModel":
-        print(f"[1/1] Whole model")
-        _adaround_for_a_module(model, model, cali_data, batch_size, lr, n_iter)
+        # [ ] implement PerModel adaround
+        raise NotImplementedError
+        # print(f"[1/1] Whole model")
+        # _adaround_for_a_module(model, model, cali_data, batch_size, lr, n_iter)
 
     print(module_num_cnt)
     return None
@@ -201,7 +205,7 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     }
 
     args_w = {"scheme": "AbsMaxQuantizer", "bit_width": 8, "per_channel": True}
-    args_w.update({"AdaRound": "PerEncoder"})
+    # args_w.update({"AdaRound": "PerEncoder"})
 
     args_a = {
         "scheme": "MovAvgAbsMaxQuantizer",
@@ -211,11 +215,11 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         "momentum": 0.95,
         "batches": 16,
     }
-    args_gelu = {"bit_width": 8}
-    args_softmax = {"bit_width": 16}
-    args_ln = {
-        "bit_width": 8
-    }  # FIXME layer norm bit width is no matter. have to change another setting method
+    # args_gelu = {"bit_width": 8}
+    # args_softmax = {"bit_width": 16}
+    # args_ln = {
+    #     "bit_width": 8
+    # }  # FIXME layer norm bit width is no matter. have to change another setting method
 
     calib_len = args_a.get("batches", 16)
 
@@ -223,10 +227,14 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     names = ["main_args", "weight", "activation", "softmax", "layer_norm", "gelu"]
     for name, args in zip(names, argses):
         print(f"\n- {name} params:")
+
         for k, v in args.items():
             print(f"    - {k}: {v}")
-    print(f"\n- Identity addition : INT16 (The input of each LayerNorm)")
-    print(f"\n- Activation of Softmax(Q@K/d_K) (attn_map) : UINT8\n")
+
+        if name == "softmax":
+            print(f"\n- Activation of Softmax(Q@K/d_K) (attn_map) : UINT8\n")
+        elif name == "layer_norm":
+            print(f"\n- Identity addition : INT16 (The input of each LayerNorm)")
 
     if main_args["arch"] == "ViT_B_16":
         model = vision_transformer.vit_b_16(

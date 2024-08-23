@@ -48,10 +48,22 @@ class QuantMatMul(nn.Module):
         # print(pre_act_scaling_factor_A, pre_act_scaling_factor_B)
         if pre_act_scaling_factor_B == 0:
             return A @ B, 0
+
+        """ Verify INT 8 GEMM """
         A_int = round_ste.apply(A / pre_act_scaling_factor_A)
-        B_int = round_ste.apply(B / pre_act_scaling_factor_B)
-        # assert -128 <= A_int.min() and A_int.max() <= 127
-        # assert -128 <= B_int.min() and B_int.max() <= 127
+        if A_int.min() >= 0:
+            # for Softmax @ V (u8s8)
+            assert (
+                0 <= A_int.min() and A_int.max() <= 255
+            ), f"{A_int.min()} {A_int.max()}"
+        else:
+            # for Q @ K (s8s8)
+            assert (
+                -128 <= A_int.min() and A_int.max() <= 127
+            ), f"{A_int.min()} {A_int.max()}"
+
+        B_int = round_ste.apply(B / pre_act_scaling_factor_B).clamp(-128, 127)
+
         act_scaling_factor = pre_act_scaling_factor_A * pre_act_scaling_factor_B
         return (A_int @ B_int) * act_scaling_factor, act_scaling_factor
 
@@ -123,7 +135,7 @@ class QuantAct(nn.Module):
 
             with torch.no_grad():
                 x_out = x_hat if id_hat == None else id_hat + x_hat
-                # s_out = x_out.abs().max() / (2 ** (self.bit_width - 1) - 1)
+
                 if self.running_stat > 0:
                     if len(x_out.shape) == 4:
                         x_out = x_out.permute(0, 2, 3, 1)
@@ -148,7 +160,6 @@ class QuantAct(nn.Module):
                     self.running_stat -= 1
                     if self.running_stat == 0:
                         self.s_out = self._compute_scaler(self.min_val, self.max_val)
-                        # print(f"Calibration done: {self.S_OUT:.4f}")
 
             if self.s_out == None:
                 s_out = self._compute_scaler(self.min_val, self.max_val)
@@ -295,16 +306,16 @@ class QuantLinearWithWeight(nn.Module):
             ), "The rounding value have to be {0, 1}."
 
     def forward(self, x_hat, s_x):
-        if self.do_quant:
+        if self.do_quant and s_x == 0:
             """weight quantization only (ex. W8A32..)"""
-            if s_x == None:
-                return (
-                    self.fwd_func(
-                        x_hat, self.W_INT8 * self.S_W, self.B_FP32, **self.fwd_kwargs
-                    ),
-                    s_x,
-                )
-
+            return (
+                self.fwd_func(
+                    x_hat, self.W_INT8 * self.S_W, self.B_FP32, **self.fwd_kwargs
+                ),
+                s_x,
+            )
+        elif self.do_quant:
+            """weight and activation quantization (ex. W8A8..)"""
             s_a = self.S_W * s_x
             b_int32 = (self.B_INT8 / s_x).round()
 
@@ -317,10 +328,9 @@ class QuantLinearWithWeight(nn.Module):
 
             x_int = (x_hat / s_x).round()
             """ Verify INT 8 GEMM """
-            with torch.no_grad():
-                assert (
-                    -128 - 1e-6 <= x_int.min() and x_int.max() <= 127 + 1e-6
-                ), f"{x_int.min()} {x_int.max()}"
+            assert (
+                -128 <= x_int.min() and x_int.max() <= 127
+            ), f"{x_int.min()} {x_int.max()}"
 
             if self.adaround_scheme:
                 """if using AdaRound"""
