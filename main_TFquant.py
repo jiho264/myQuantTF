@@ -204,8 +204,8 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         "num_samples": 1024,
     }
 
-    args_w = {"scheme": "AbsMaxQuantizer", "bit_width": 4, "per_channel": True}
-    args_w.update({"AdaRound": "PerBlock"})
+    args_w = {"scheme": "AbsMaxQuantizer", "bit_width": 8, "per_channel": True}
+    # args_w.update({"AdaRound": "PerBlock"})
 
     args_a = {
         "scheme": "MovAvgAbsMaxQuantizer",
