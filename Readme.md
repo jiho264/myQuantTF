@@ -11,17 +11,18 @@
 - torch base : 81.072%
 - my quantization implementation for torch ViT-B model 
 
-| [W]         | [A]    | W   | A   | SoftMax | GELU  | LN    | IdAdd | Acc @ 1 |
-| ----------- | ------ | --- | --- | ------- | ----- | ----- | ----- | ------- |
-| Base        | Base   | 32  | 32  | FP      | FP    | FP    | FP    | 81.068% |
-| [W]Abs      | -      | 8   | 32  | FP      | FP    | FP    | FP    | 81.074% |
-| [W]Abs      | -      | 4   | 32  | FP      | FP    | FP    | FP    | 79.794% |
-| [W]Abs      | [A]Mov | 8   | 8   | FP      | FP    | FP    | FP    | 78.406% |
-| [W]Abs      | [A]Mov | 4   | 8   | FP      | FP    | FP    | FP    | 76.894% |
-| [W]Abs      | [A]Mov | 8   | 8   | I-ViT   | I-ViT | I-ViT | 16    | 77.064% |
-| [W]AdaRound | [A]Mov | 8   | 8   | I-ViT   | I-ViT | I-ViT | 16    |         |
-| [W]Abs      | [A]Mov | 4   | 8   | I-ViT   | I-ViT | I-ViT | 16    | 72.964% |
-| [W]AdaRound | [A]Mov | 4   | 8   | I-ViT   | I-ViT | I-ViT | 16    |         |
+| [W]         | [A]        | W   | A   | SoftMax | GELU  | LN    | IdAdd | Acc @ 1 |
+| ----------- | ---------- | --- | --- | ------- | ----- | ----- | ----- | ------- |
+| Base        | Base       | 32  | 32  | FP      | FP    | FP    | FP    | 81.068% |
+| [W]Abs      | -          | 8   | 32  | FP      | FP    | FP    | FP    | 81.074% |
+| [W]Abs      | -          | 4   | 32  | FP      | FP    | FP    | FP    | 79.794% |
+| [W]Abs      | [A]Mov     | 8   | 8   | FP      | FP    | FP    | FP    | 78.406% |
+| [W]Abs      | [A]Mov     | 4   | 8   | FP      | FP    | FP    | FP    | 76.894% |
+| [W]Abs      | [A]Mov     | 8   | 8   | I-ViT   | I-ViT | I-ViT | 16    | 77.064% |
+| [W]AdaRound | [A]Mov     | 8   | 8   | I-ViT   | I-ViT | I-ViT | 16    |         |
+| [W]Abs      | [A]Mov     | 4   | 8   | I-ViT   | I-ViT | I-ViT | 16    | 72.964% |
+| [W]AdaRound | [A]Mov     | 4   | 8   | I-ViT   | I-ViT | I-ViT | 16    | 72.964% |
+| [W]AdaRound | [A]Mov+LSQ | 4   | 8   | I-ViT   | I-ViT | I-ViT | 16    |         |
 
 - Weight Quantizer : Absolute Max Quantization
 - Activation Quantizer : Moving Average Absolute Max Quantization (momentum 0.95, 2048 images)

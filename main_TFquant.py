@@ -49,11 +49,11 @@ def _adaround_for_a_module(model, module, cali_data, batch_size, lr, n_iter):
     parameters_s_a = []
     for name, sub_module in module.named_modules():
         if isinstance(sub_module, QuantLinearWithWeight):
-            parameters_v.append(nn.Parameter(sub_module._v, requires_grad=True))
+            parameters_v.append(sub_module._v)
             print(f"    V   : {name}, {sub_module._v.shape}")
-        if isinstance(sub_module, QuantAct):
-            parameters_s_a.append(nn.Parameter(sub_module.s_out, requires_grad=True))
-            print(f"    s_a : {name}, {sub_module.s_out.shape}")
+        # if isinstance(sub_module, QuantAct):
+        #     parameters_s_a.append(sub_module.s_out)
+        #     print(f"    s_a : {name}, {sub_module.s_out.shape}")
 
     if parameters_v != []:
         optimizer_w = torch.optim.Adam(parameters_v, lr=1e-4)
@@ -87,7 +87,6 @@ def _adaround_for_a_module(model, module, cali_data, batch_size, lr, n_iter):
         for name, sub_module in module.named_modules():
             if isinstance(sub_module, QuantLinearWithWeight):
                 _reg_loss = sub_module.f_reg(beta=_beta)
-                print(_reg_loss)
                 if _reg_loss_sum is None:
                     _reg_loss_sum = sub_module.lamda * _reg_loss
                 else:
@@ -121,7 +120,7 @@ def _adaround_for_a_module(model, module, cali_data, batch_size, lr, n_iter):
 
 
 def run_AdaRound(
-    model, train_loader, scheme, num_samples=1024, batch_size=32, lr=0.01, n_iter=1000
+    model, train_loader, scheme, num_samples=1024, batch_size=32, lr=0.01, n_iter=10000
 ):
     model.eval()
 
@@ -196,13 +195,14 @@ def run_AdaRound(
 
 
 def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_gelu={}):
+    """PREPARE"""
     main_args = {
         "arch": "ViT_B_16",
         "batch_size": 128,
         "num_samples": 1024,
     }
 
-    args_w = {"scheme": "AbsMaxQuantizer", "bit_width": 8, "per_channel": True}
+    args_w = {"scheme": "AbsMaxQuantizer", "bit_width": 4, "per_channel": True}
     args_w.update({"AdaRound": "PerLayer"})
 
     args_a = {
@@ -211,8 +211,8 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         "per_channel": False,
         # below values are default in the class
         "momentum": 0.95,
-        # "batches": 16,
-        "batches": 4,
+        "batches": 16,
+        # "batches": 4,
     }
     args_gelu = {"bit_width": 8}
     args_softmax = {"bit_width": 16}
@@ -231,10 +231,12 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
             print(f"    - {k}: {v}")
 
         if name == "softmax":
-            print(f"\n- Activation of Softmax(Q@K/d_K) (attn_map) : UINT8\n")
-        elif name == "layer_norm":
-            print(f"\n- Identity addition : INT16 (The input of each LayerNorm)")
+            print(f"    - Activation of Softmax(Q@K/d_K) (attn_map) : UINT8")
+        elif name == "activation":
+            print(f"    - Identity addition : INT16 (The input of each LayerNorm)")
+    print("")
 
+    """ Quantization """
     if main_args["arch"] == "ViT_B_16":
         model = vision_transformer.vit_b_16(
             weights=vision_transformer.ViT_B_16_Weights.IMAGENET1K_V1
