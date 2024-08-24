@@ -31,10 +31,10 @@ def _adaround_for_a_module(model, module, cali_data, batch_size, lr, n_iter):
 
     # [1] get {Origin FP output(A_fp_lth), Quantized input and output(X_q_lth, A_q_lth)}
     model.set_quant_mode(False, False, False, False, False)
-    INPUT_FP, _, OUTPUT_FP, _ = save_inp_oup_data(model, module, cali_data, batch_size)
+    _, _, OUTPUT_FP, _ = save_inp_oup_data(model, module, cali_data, batch_size)
     model.set_quant_mode(True, True, True, True, True)
-    _, s_x_input, _, _ = save_inp_oup_data(model, module, cali_data, batch_size)
-    print(f" INPUT_FP : {INPUT_FP.shape}")
+    INPUT_INT, s_x_input, _, _ = save_inp_oup_data(model, module, cali_data, batch_size)
+    print(f" INPUT_FP : {INPUT_INT.shape}")
     print(f" OUTPUT_FP : {OUTPUT_FP.shape}")
     S_X_INPUT = s_x_input[0].to("cuda")
     assert (s_x_input.mean() - S_X_INPUT) < 1e-6, s_x_input
@@ -66,7 +66,7 @@ def _adaround_for_a_module(model, module, cali_data, batch_size, lr, n_iter):
     with torch.set_grad_enabled(True):
         for i in range(1, n_iter + 1):
 
-            idx = torch.randperm(INPUT_FP.size(0))[:batch_size]
+            idx = torch.randperm(INPUT_INT.size(0))[:batch_size]
 
             if parameters_v:
                 optimizer_w.zero_grad()
@@ -76,7 +76,7 @@ def _adaround_for_a_module(model, module, cali_data, batch_size, lr, n_iter):
             """ Layer reconstruction loss"""
 
             batch_input_fp = (
-                INPUT_FP[idx].clone().detach().to("cuda").requires_grad_(True)
+                INPUT_INT[idx].clone().detach().to("cuda").requires_grad_(True)
             )
             batch_output_fp = (
                 OUTPUT_FP[idx].clone().detach().to("cuda").requires_grad_(True)
@@ -120,7 +120,7 @@ def _adaround_for_a_module(model, module, cali_data, batch_size, lr, n_iter):
 
 
 def run_AdaRound(
-    model, train_loader, scheme, num_samples=1024, batch_size=32, lr=0.01, n_iter=5000
+    model, train_loader, scheme, num_samples=1024, batch_size=32, lr=0.01, n_iter=25000
 ):
     model.eval()
 
@@ -204,8 +204,8 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         "num_samples": 1024,
     }
 
-    args_w = {"scheme": "AbsMaxQuantizer", "bit_width": 8, "per_channel": True}
-    # args_w.update({"AdaRound": "PerEncoder"})
+    args_w = {"scheme": "AbsMaxQuantizer", "bit_width": 4, "per_channel": True}
+    args_w.update({"AdaRound": "PerBlock"})
 
     args_a = {
         "scheme": "MovAvgAbsMaxQuantizer",
@@ -215,11 +215,11 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         "momentum": 0.95,
         "batches": 16,
     }
-    # args_gelu = {"bit_width": 8}
-    # args_softmax = {"bit_width": 16}
-    # args_ln = {
-    #     "bit_width": 8
-    # }  # FIXME layer norm bit width is no matter. have to change another setting method
+    args_gelu = {"bit_width": 8}
+    args_softmax = {"bit_width": 16}
+    args_ln = {
+        "bit_width": 8
+    }  # FIXME layer norm bit width is no matter. have to change another setting method
 
     calib_len = args_a.get("batches", 16)
 
