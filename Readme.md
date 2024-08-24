@@ -18,8 +18,9 @@
 | [W]Abs             | [A]Mov     | 8   | 8   | I-ViT   | I-ViT | I-ViT | 16    | 77.064% |
 | [W]Abs             | [A]Mov     | 4   | 8   | I-ViT   | I-ViT | I-ViT | 16    | 72.964% |
 | [W]AdaRound(Layer) | [A]Mov     | 4   | 8   | I-ViT   | I-ViT | I-ViT | 16    | 72.964% |
-| [W]AdaRound(Block) | [A]Mov     | 4   | 8   | I-ViT   | I-ViT | I-ViT | 16    |         |
-| [W]AdaRound(Layer) | [A]Mov+LSQ | 4   | 8   | I-ViT   | I-ViT | I-ViT | 16    |         |
+| [W]AdaRound(Layer) | [A]Mov+LSQ | 4   | 8   | I-ViT   | I-ViT | I-ViT | 16    | 73.044% |
+- LSQ에 맨앞, 맨뒤 act quantizer 못했음.
+
 
 - Weight Quantizer : Absolute Max Quantization
 - Activation Quantizer : Moving Average Absolute Max Quantization (momentum 0.95, 2048 images)

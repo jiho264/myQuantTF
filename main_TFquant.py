@@ -43,9 +43,9 @@ def _adaround_for_a_module(model, module, cali_data, batch_size, lr, n_iter):
         if isinstance(sub_module, QuantLinearWithWeight):
             parameters_v.append(sub_module._v)
             print(f"    V   : {name}, {sub_module._v.shape}")
-        # if isinstance(sub_module, QuantAct):
+        # elif isinstance(sub_module, QuantAct):
         #     parameters_s_a.append(sub_module.s_out)
-        #     print(f"    s_a : {name}, {sub_module.s_out.shape}")
+        #     print(f"    s_a : {name}, {sub_module.s_out.shape}, {sub_module.s_out}")
 
     if parameters_v != []:
         optimizer_w = torch.optim.Adam(parameters_v, lr=1e-4)
@@ -93,13 +93,13 @@ def _adaround_for_a_module(model, module, cali_data, batch_size, lr, n_iter):
         if parameters_s_a:
             optimizer_s_a.step()
 
-        if i % 1000 == 0 or i == 1:
+        if i % 1000 == 0 or i == 1 or _beta == 20:
             print(
-                f"Iter {i:5d} | Total loss: {loss_sum:.4f} (MSE:{_mse:.4f}, Reg:{_reg_loss_sum:.4f}) beta={_beta:.2f}\n"
+                f"Iter {i:5d} | Total loss: {loss_sum:.4f} (MSE:{_mse:.4f}, Reg:{_reg_loss_sum:.4f}) beta={_beta:.2f}"
             )
         if _beta > 0 and _reg_loss < 0.00001:
             print(
-                f"Iter {i:5d} | Total loss: {loss_sum:.4f} (MSE:{_mse:.4f}, Reg:{_reg_loss_sum:.4f}) beta={_beta:.2f}\n    Early stopped\n"
+                f"Iter {i:5d} | Total loss: {loss_sum:.4f} (MSE:{_mse:.4f}, Reg:{_reg_loss_sum:.4f}) beta={_beta:.2f}\n    Early stopped"
             )
             break
 
@@ -107,12 +107,14 @@ def _adaround_for_a_module(model, module, cali_data, batch_size, lr, n_iter):
     for name, sub_module in module.named_modules():
         if isinstance(sub_module, QuantLinearWithWeight):
             sub_module.setRoundingValues()
+        elif isinstance(sub_module, QuantAct):
+            print(f"    s_a : {name}, {sub_module.s_out.shape}, {sub_module.s_out}")
     print("")
     return None
 
 
 def run_AdaRound(
-    model, train_loader, scheme, num_samples=1024, batch_size=32, lr=0.01, n_iter=25000
+    model, train_loader, scheme, num_samples=1024, batch_size=32, lr=0.01, n_iter=10000
 ):
     model.eval()
 
@@ -182,7 +184,6 @@ def run_AdaRound(
         # print(f"[1/1] Whole model")
         # _adaround_for_a_module(model, model, cali_data, batch_size, lr, n_iter)
 
-    print(module_num_cnt)
     return None
 
 
@@ -195,7 +196,7 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     }
 
     args_w = {"scheme": "AbsMaxQuantizer", "bit_width": 4, "per_channel": True}
-    args_w.update({"AdaRound": "PerBlock"})
+    args_w.update({"AdaRound": "PerLayer"})
 
     args_a = {
         "scheme": "MovAvgAbsMaxQuantizer",
