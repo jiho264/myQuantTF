@@ -28,7 +28,7 @@
 - AdaRound : [PerLayer, PerBlock (MSA, MLP), PerEncoder, PerModel]
   - Batch : 32
   - Calib set for adaround : 1024 non-labeled images from same domain with training set.
-  - LR for rounding value : 1e-4
+  - LR for rounding value : 1e-2
   - LR for LSQ : 4e-5
   - length of Iteration : 25k for W4
   - Do early stopping when the regularization loss is small than 1e-5.
@@ -43,6 +43,7 @@
 
 # Idea
 - Weight에 AdaRound를 적용하기. Symmetric scheme에 기반하는데, 라운딩 벨류가 반 올림을 결정해준다고하면, INT GEMM 수식에 v는 영향을 주지 않음. -> 좋으면 좋았지 악영향이 있을 수가 없음. 
+  - LR of V 1e-3 ~ 1e-4로 하면 처음에 너무 안 튀어올라서, reg term 계산하고 바로 사그라든 뒤 원래 residual과 같은 값으로 계산됨. 1e-2로 변경하고 실험 중. 수 천 iter에 걸쳐 학습되는 양상을 보임.
 - 모든 Activation scaler는 Symmetric scheme에 기반하는데, 모델의 prediction이 최대한 덜 달라지게하는 step size를 선정해야함.
 - 모든 Quantization에서 Symmetric scheme을 이용해야 하는 이유 : zeropoint있으면 INT로 변환시 INT8 범위에서 표현 못 할 수도 있음.
 - INT GELU, INT SOftmax, INT LayerNorm 등을 적용하여 완전한 INT연산만 이루어지도록 하기
