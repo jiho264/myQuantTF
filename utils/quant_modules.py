@@ -253,28 +253,30 @@ class QuantLinearWithWeight(nn.Module):
     def _init_v(self) -> Tensor:
         # [1-1] compute the residual == initial h(v)
         with torch.no_grad():
-            _x_q_floor = (
+            self.W_INT_FLOOR = (
                 (self.W_FP32 / self.S_W)
                 .floor()
                 .clamp(-(2 ** (self.bit_width - 1)), 2 ** (self.bit_width - 1) - 1)
             )
 
-            _residual = self.W_INT8 - _x_q_floor
+            _residual = self.W_INT8 - self.W_INT_FLOOR
 
             assert torch.all(
                 (_residual == 0) | (_residual == 1)
             ), "The residual must be {0, 1}."
 
             # [1-2] compute the v value using inverse h() function
-            self._v = -torch.log(
+            _v = -torch.log(
                 (self.zeta - self.gamma) / (_residual - self.gamma) - 1
             )  # h^-1
+            self._v = nn.Parameter(_v, requires_grad=True)
             assert (_residual - self._h()).abs().sum() == 0
 
             print("    Initiated the V")
 
     def _h(self) -> Tensor:
         # Rectified_sigmoid (strached sigmoid function)
+
         return torch.clamp(
             self._v.sigmoid() * (self.zeta - self.gamma) + self.gamma, 0, 1
         )
@@ -284,17 +286,16 @@ class QuantLinearWithWeight(nn.Module):
         return (1 - (2 * self._h() - 1).abs().pow(beta)).sum()
 
     def _get_w_int8(self) -> Tensor:
-        with torch.no_grad():
-            if self.rouning_value == None:
-                # return FP
-                return (self.W_INT8 + self._h()).clamp(
-                    -(2 ** (self.bit_width - 1)), 2 ** (self.bit_width - 1) - 1
-                )
+        if self.rouning_value == None:
+            # return FP
+            return (self.W_INT_FLOOR + self._h()).clamp(
+                -(2 ** (self.bit_width - 1)), 2 ** (self.bit_width - 1) - 1
+            )
 
-            else:
-                return (self.W_INT8 + self.rouning_value).clamp(
-                    -(2 ** (self.bit_width - 1)), 2 ** (self.bit_width - 1) - 1
-                )
+        else:
+            return (self.W_INT_FLOOR + self.rouning_value).clamp(
+                -(2 ** (self.bit_width - 1)), 2 ** (self.bit_width - 1) - 1
+            )
 
     def setRoundingValues(self):
         with torch.no_grad():
@@ -335,9 +336,8 @@ class QuantLinearWithWeight(nn.Module):
             if self.adaround_scheme:
                 """if using AdaRound"""
                 # usually using 4bit quantization
-                w_adaround_int4 = self._get_w_int8()
                 a_int32 = self.fwd_func(
-                    x_int, w_adaround_int4, b_int32, **self.fwd_kwargs
+                    x_int, self._get_w_int8(), b_int32, **self.fwd_kwargs
                 )
             else:
                 a_int32 = self.fwd_func(x_int, self.W_INT8, b_int32, **self.fwd_kwargs)
