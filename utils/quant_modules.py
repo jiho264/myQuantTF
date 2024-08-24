@@ -159,7 +159,8 @@ class QuantAct(nn.Module):
 
                     self.running_stat -= 1
                     if self.running_stat == 0:
-                        self.s_out = self._compute_scaler(self.min_val, self.max_val)
+                        s_out = self._compute_scaler(self.min_val, self.max_val)
+                        self.s_out = nn.Parameter(s_out, requires_grad=True)
 
             if self.s_out == None:
                 s_out = self._compute_scaler(self.min_val, self.max_val)
@@ -271,7 +272,7 @@ class QuantLinearWithWeight(nn.Module):
             )  # h^-1
             self._v = nn.Parameter(_v, requires_grad=True)
             assert (_residual - self._h()).abs().sum() == 0
-
+            self.residual = _residual
             print("    Initiated the V")
 
     def _h(self) -> Tensor:
@@ -300,11 +301,15 @@ class QuantLinearWithWeight(nn.Module):
     def setRoundingValues(self):
         with torch.no_grad():
             FIXED_ROUNDING_VALUE = self._h().clone().detach()
+            assert torch.all(
+                (FIXED_ROUNDING_VALUE == 0) | (FIXED_ROUNDING_VALUE == 1)
+            ), "The rounding value have to be {0, 1}."
+
             self.rouning_value = FIXED_ROUNDING_VALUE
             print("    Set the rounding value")
-            assert torch.all(
-                (self.rouning_value == 0) | (self.rouning_value == 1)
-            ), "The rounding value have to be {0, 1}."
+
+            if torch.equal(self.residual, self._h()):
+                print("    - The rounding value is same with the residual.")
 
     def forward(self, x_hat, s_x):
         if self.do_quant and s_x == 0:

@@ -8,7 +8,7 @@ from utils.quant_blocks import QuantMLP, QuantMSA
 import torchvision.models.vision_transformer as vision_transformer
 
 
-def _decayed_beta(i, n_iter, _warmup=0.2):
+def _decayed_beta(i, n_iter, _warmup=0.05):
     if i < n_iter * _warmup:
         return torch.tensor(0.0)
     else:
@@ -16,14 +16,6 @@ def _decayed_beta(i, n_iter, _warmup=0.2):
         decay = (i - n_iter * _warmup) / (n_iter * (1 - _warmup))
         _beta = 18 - decay * 18 + 2
         return _beta
-
-
-"""
-이거 input quant하는 8비트 스케일러도 학습시켜야함
-근데 지금은 빠져있음
-LSQ논문에서 어떻게 제시했는지 알아야 논문에 적을 수 있을듯
-
-"""
 
 
 def _adaround_for_a_module(model, module, cali_data, batch_size, lr, n_iter):
@@ -34,8 +26,8 @@ def _adaround_for_a_module(model, module, cali_data, batch_size, lr, n_iter):
     _, _, OUTPUT_FP, _ = save_inp_oup_data(model, module, cali_data, batch_size)
     model.set_quant_mode(True, True, True, True, True)
     INPUT_HAT, s_x_input, _, _ = save_inp_oup_data(model, module, cali_data, batch_size)
-    print(f" INPUT_FP : {INPUT_HAT.shape}")
-    print(f" OUTPUT_FP : {OUTPUT_FP.shape}")
+    print(f"    INPUT_FP : {INPUT_HAT.shape}")
+    print(f"    OUTPUT_FP : {OUTPUT_FP.shape}")
     S_X_INPUT = s_x_input[0].to("cuda")
     assert (s_x_input.mean() - S_X_INPUT) < 1e-6, s_x_input
     assert S_X_INPUT.dim() == 0
@@ -51,12 +43,12 @@ def _adaround_for_a_module(model, module, cali_data, batch_size, lr, n_iter):
         if isinstance(sub_module, QuantLinearWithWeight):
             parameters_v.append(sub_module._v)
             print(f"    V   : {name}, {sub_module._v.shape}")
-        # if isinstance(sub_module, QuantAct):
+        # elif isinstance(sub_module, QuantAct):
         #     parameters_s_a.append(sub_module.s_out)
-        #     print(f"    s_a : {name}, {sub_module.s_out.shape}")
+        #     print(f"    s_a : {name}, {sub_module.s_out.shape}, {sub_module.s_out}")
 
     if parameters_v != []:
-        optimizer_w = torch.optim.Adam(parameters_v, lr=1e-4)
+        optimizer_w = torch.optim.Adam(parameters_v, lr=1e-2)
         print(optimizer_w, n_iter)
     if parameters_s_a != []:
         optimizer_s_a = torch.optim.Adam(parameters_s_a, lr=4e-5)
@@ -80,7 +72,7 @@ def _adaround_for_a_module(model, module, cali_data, batch_size, lr, n_iter):
         out_hat, _ = module.forward(batch_input_fp, S_X_INPUT)
         _mse = (batch_output_fp - out_hat).abs().pow(2).mean()  # MSE
 
-        loss_sum = _mse
+        loss_sum = _mse.clone()
 
         _beta = _decayed_beta(i, n_iter)
         _reg_loss_sum = None
@@ -101,13 +93,13 @@ def _adaround_for_a_module(model, module, cali_data, batch_size, lr, n_iter):
         if parameters_s_a:
             optimizer_s_a.step()
 
-        if i % 1000 == 0 or i == 1:
+        if i % 1000 == 0 or i == 1 or _beta == 20:
             print(
-                f"Iter {i:5d} | Total loss: {loss_sum:.4f} (MSE:{_mse:.4f}, Reg:{_reg_loss_sum:.4f}) beta={_beta:.2f}\n"
+                f"Iter {i:5d} | Total loss: {loss_sum:.4f} (MSE:{_mse:.4f}, Reg:{_reg_loss_sum:.4f}) beta={_beta:.2f}"
             )
         if _beta > 0 and _reg_loss < 0.00001:
             print(
-                f"Iter {i:5d} | Total loss: {loss_sum:.4f} (MSE:{_mse:.4f}, Reg:{_reg_loss_sum:.4f}) beta={_beta:.2f}\n    Early stopped\n"
+                f"Iter {i:5d} | Total loss: {loss_sum:.4f} (MSE:{_mse:.4f}, Reg:{_reg_loss_sum:.4f}) beta={_beta:.2f}\n    Early stopped"
             )
             break
 
@@ -115,6 +107,8 @@ def _adaround_for_a_module(model, module, cali_data, batch_size, lr, n_iter):
     for name, sub_module in module.named_modules():
         if isinstance(sub_module, QuantLinearWithWeight):
             sub_module.setRoundingValues()
+        elif isinstance(sub_module, QuantAct):
+            print(f"    s_a : {name}, {sub_module.s_out.shape}, {sub_module.s_out}")
     print("")
     return None
 
@@ -190,7 +184,6 @@ def run_AdaRound(
         # print(f"[1/1] Whole model")
         # _adaround_for_a_module(model, model, cali_data, batch_size, lr, n_iter)
 
-    print(module_num_cnt)
     return None
 
 
