@@ -8,7 +8,7 @@ from utils.quant_blocks import QuantMLP, QuantMSA
 import torchvision.models.vision_transformer as vision_transformer
 
 
-def _decayed_beta(i, n_iter, _warmup=0.2):
+def _decayed_beta(i, n_iter, _warmup=0.05):
     if i < n_iter * _warmup:
         return torch.tensor(0.0)
     else:
@@ -48,7 +48,7 @@ def _adaround_for_a_module(model, module, cali_data, batch_size, lr, n_iter):
         #     print(f"    s_a : {name}, {sub_module.s_out.shape}, {sub_module.s_out}")
 
     if parameters_v != []:
-        optimizer_w = torch.optim.Adam(parameters_v, lr=1e-4)
+        optimizer_w = torch.optim.Adam(parameters_v, lr=1e-2)
         print(optimizer_w, n_iter)
     if parameters_s_a != []:
         optimizer_s_a = torch.optim.Adam(parameters_s_a, lr=4e-5)
@@ -72,7 +72,7 @@ def _adaround_for_a_module(model, module, cali_data, batch_size, lr, n_iter):
         out_hat, _ = module.forward(batch_input_fp, S_X_INPUT)
         _mse = (batch_output_fp - out_hat).abs().pow(2).mean()  # MSE
 
-        loss_sum = _mse
+        loss_sum = _mse.clone()
 
         _beta = _decayed_beta(i, n_iter)
         _reg_loss_sum = None
