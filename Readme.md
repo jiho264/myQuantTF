@@ -17,8 +17,8 @@
 | [W]Abs             | [A]Mov     | 4   | 8   | FP      | FP    | FP    | FP    | 76.894% |
 | [W]Abs             | [A]Mov     | 8   | 8   | I-ViT   | I-ViT | I-ViT | 16    | 77.064% |
 | [W]Abs             | [A]Mov     | 4   | 8   | I-ViT   | I-ViT | I-ViT | 16    | 72.964% |
-| [W]AdaRound(Layer) | [A]Mov     | 4   | 8   | I-ViT   | I-ViT | I-ViT | 16    | 72.964% |
-| [W]AdaRound(Layer) | [A]Mov+LSQ | 4   | 8   | I-ViT   | I-ViT | I-ViT | 16    | 73.044% |
+| [W]AdaRound(Layer) | [A]Mov     | 4   | 8   | I-ViT   | I-ViT | I-ViT | 16    | 79.134% |
+| [W]AdaRound(Layer) | [A]Mov+LSQ | 4   | 8   | I-ViT   | I-ViT | I-ViT | 16    |         |
 - LSQ에 맨앞, 맨뒤 act quantizer 못했음.
 
 
@@ -30,7 +30,7 @@
   - Calib set for adaround : 1024 non-labeled images from same domain with training set.
   - LR for rounding value : 1e-2
   - LR for LSQ : 4e-5
-  - length of Iteration : 25k for W4
+  - length of Iteration : 10k
   - Do early stopping when the regularization loss is small than 1e-5.
 - LSQ : Learn stepsize quantization for activation.
   - Esser, Steven K., et al. "Learned step size quantization." ICLR 2020.
