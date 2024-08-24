@@ -18,14 +18,6 @@ def _decayed_beta(i, n_iter, _warmup=0.2):
         return _beta
 
 
-"""
-이거 input quant하는 8비트 스케일러도 학습시켜야함
-근데 지금은 빠져있음
-LSQ논문에서 어떻게 제시했는지 알아야 논문에 적을 수 있을듯
-
-"""
-
-
 def _adaround_for_a_module(model, module, cali_data, batch_size, lr, n_iter):
     model.eval()
 
@@ -34,8 +26,8 @@ def _adaround_for_a_module(model, module, cali_data, batch_size, lr, n_iter):
     _, _, OUTPUT_FP, _ = save_inp_oup_data(model, module, cali_data, batch_size)
     model.set_quant_mode(True, True, True, True, True)
     INPUT_HAT, s_x_input, _, _ = save_inp_oup_data(model, module, cali_data, batch_size)
-    print(f" INPUT_FP : {INPUT_HAT.shape}")
-    print(f" OUTPUT_FP : {OUTPUT_FP.shape}")
+    print(f"    INPUT_FP : {INPUT_HAT.shape}")
+    print(f"    OUTPUT_FP : {OUTPUT_FP.shape}")
     S_X_INPUT = s_x_input[0].to("cuda")
     assert (s_x_input.mean() - S_X_INPUT) < 1e-6, s_x_input
     assert S_X_INPUT.dim() == 0
@@ -120,7 +112,7 @@ def _adaround_for_a_module(model, module, cali_data, batch_size, lr, n_iter):
 
 
 def run_AdaRound(
-    model, train_loader, scheme, num_samples=1024, batch_size=32, lr=0.01, n_iter=10000
+    model, train_loader, scheme, num_samples=1024, batch_size=32, lr=0.01, n_iter=25000
 ):
     model.eval()
 
@@ -203,7 +195,7 @@ def main(main_args={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     }
 
     args_w = {"scheme": "AbsMaxQuantizer", "bit_width": 4, "per_channel": True}
-    args_w.update({"AdaRound": "PerLayer"})
+    args_w.update({"AdaRound": "PerBlock"})
 
     args_a = {
         "scheme": "MovAvgAbsMaxQuantizer",
