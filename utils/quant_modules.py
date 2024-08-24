@@ -413,6 +413,10 @@ class IntGELU(nn.Module):
 
     def forward(self, input, s_pre):
         if self.do_quant:
+            """ Verify under INT8 input """
+            with torch.no_grad():
+                _test_input_int = (input / s_pre).round()
+                assert -128 <= _test_input_int.min() and _test_input_int.max() <= 127
             return self.int_forward(input, s_pre)
         else:
             # print("FP GELU")
@@ -465,13 +469,13 @@ class IntSoftMax(nn.Module):
 
     def forward(self, input, s_pre, dim: int = -1):
         if self.do_quant:
+            """ Verify under INT8 input """
+            with torch.no_grad():
+                _test_input_int = (input / s_pre).round()
+                assert -128 <= _test_input_int.min() and _test_input_int.max() <= 127
             return self.int_forward(input, s_pre)
         else:
             # print("FP Softmax")
-            """
-            The result of softmax's range is [0, 1],
-            So we can return 1/127 for INT8 quantization.
-            """
             return F.softmax(input, dim=dim), s_pre
 
 

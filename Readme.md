@@ -8,23 +8,24 @@
 - torch base : 81.072%
 - my quantization implementation for torch ViT-B model 
 
-| [W]                | [A]        | W   | A   | SoftMax | GELU  | LN    | IdAdd | Acc @ 1 |
-| ------------------ | ---------- | --- | --- | ------- | ----- | ----- | ----- | ------- |
-| Base               | Base       | 32  | 32  | FP      | FP    | FP    | FP    | 81.068% |
-| [W]Abs             | -          | 8   | 32  | FP      | FP    | FP    | FP    | 81.074% |
-| [W]Abs             | -          | 4   | 32  | FP      | FP    | FP    | FP    | 79.794% |
-| [W]Abs             | [A]Mov     | 8   | 8   | FP      | FP    | FP    | FP    | 78.406% |
-| [W]Abs             | [A]Mov     | 4   | 8   | FP      | FP    | FP    | FP    | 76.894% |
-| [W]Abs             | [A]Mov     | 8   | 8   | I-ViT   | I-ViT | I-ViT | 16    | 77.064% |
-| [W]Abs             | [A]Mov     | 4   | 8   | I-ViT   | I-ViT | I-ViT | 16    | 72.964% |
-| [W]AdaRound(Layer) | [A]Mov     | 4   | 8   | I-ViT   | I-ViT | I-ViT | 16    | 79.134% |
-| [W]AdaRound(Layer) | [A]Mov+LSQ | 4   | 8   | I-ViT   | I-ViT | I-ViT | 16    |         |
+| [W]                | [A]    | W   | A   | SoftMax | GELU  | LN    | IdAdd | Acc @ 1 |
+| ------------------ | ------ | --- | --- | ------- | ----- | ----- | ----- | ------- |
+| Base               | Base   | 32  | 32  | FP      | FP    | FP    | FP    | 81.068% |
+| [W]Abs             | -      | 8   | 32  | FP      | FP    | FP    | FP    | 81.074% |
+| [W]Abs             | -      | 4   | 32  | FP      | FP    | FP    | FP    | 79.794% |
+| [W]Abs             | [A]Mov | 8   | 8   | FP      | FP    | FP    | FP    | 78.406% |
+| [W]Abs             | [A]Mov | 4   | 8   | FP      | FP    | FP    | FP    | 76.894% |
+| [W]Abs             | [A]Mov | 8   | 8   | I-ViT   | I-ViT | I-ViT | 16    | 77.064% |
+| [W]Abs             | [A]Mov | 4   | 8   | I-ViT   | I-ViT | I-ViT | 16    | 72.964% |
+| [W]AdaRound(Layer) | [A]Mov | 4   | 8   | I-ViT   | I-ViT | I-ViT | 16    | 79.134% |
+| [W]AdaRound(Block) | [A]Mov | 4   | 8   | I-ViT   | I-ViT | I-ViT | 16    | 77.180% |
 - LSQ에 맨앞, 맨뒤 act quantizer 못했음.
 
 
 - Weight Quantizer : Absolute Max Quantization
 - Activation Quantizer : Moving Average Absolute Max Quantization (momentum 0.95, 2048 images)
-- Softmax : Calculated by INT16, quantized by UINT8
+- Softmax : INT8 input -> calculate with INT16 -> requantize to UINT8
+- LayerNorm : INT16 input -> calulate with INT16 -> requantize to INT8
 - AdaRound : [PerLayer, PerBlock (MSA, MLP), PerEncoder, PerModel]
   - Batch : 32
   - Calib set for adaround : 1024 non-labeled images from same domain with training set.
