@@ -1,10 +1,3 @@
-cls_token_act = 16 bit
-idAdd_act = 16 bit
-activation of softmax UINT8
-
-without output of softmax quantization.
-the Attn@V is s16 @ s8 (u15 @ s8) -> [0, 32767] @ [-128, 127]
->> org version
 
 - main_args params:
     - arch: ViT_B_16
@@ -26,173 +19,191 @@ the Attn@V is s16 @ s8 (u15 @ s8) -> [0, 32767] @ [-128, 127]
 - softmax params:
     - bit_width: 16
 
+- Activation of Softmax(Q@K/d_K) (attn_map) : UINT8
+
+
 - layer_norm params:
     - bit_width: 8
+
+- Identity addition : INT16 (The input of each LayerNorm)
 
 - gelu params:
     - bit_width: 8
 Int Activation 8
 Int Activation 8
 Int Activation 8
-Int Activation 16 for cls_token
+Int Activation 16 for idAdd for identity add
 Int Activation 8
 Int Activation 8
 Int Activation 8
 IntSoftMax 16
+Int Activation Unsigned 8 for softmax_act
 Int Activation 8
 Int Activation 8
-Int Activation 16 for idAdd
+Int Activation 16 for idAdd for identity add
 Int Activation 8
 Int Activation 8
 IntGELU bit: 8
 Int Activation 8
 Int Activation 8
-Int Activation 16 for idAdd
+Int Activation 16 for idAdd for identity add
 Int Activation 8
 Int Activation 8
 Int Activation 8
 IntSoftMax 16
+Int Activation Unsigned 8 for softmax_act
 Int Activation 8
 Int Activation 8
-Int Activation 16 for idAdd
+Int Activation 16 for idAdd for identity add
 Int Activation 8
 Int Activation 8
 IntGELU bit: 8
 Int Activation 8
 Int Activation 8
-Int Activation 16 for idAdd
+Int Activation 16 for idAdd for identity add
 Int Activation 8
 Int Activation 8
 Int Activation 8
 IntSoftMax 16
+Int Activation Unsigned 8 for softmax_act
 Int Activation 8
 Int Activation 8
-Int Activation 16 for idAdd
+Int Activation 16 for idAdd for identity add
 Int Activation 8
 Int Activation 8
 IntGELU bit: 8
 Int Activation 8
 Int Activation 8
-Int Activation 16 for idAdd
+Int Activation 16 for idAdd for identity add
 Int Activation 8
 Int Activation 8
 Int Activation 8
 IntSoftMax 16
+Int Activation Unsigned 8 for softmax_act
 Int Activation 8
 Int Activation 8
-Int Activation 16 for idAdd
+Int Activation 16 for idAdd for identity add
 Int Activation 8
 Int Activation 8
 IntGELU bit: 8
 Int Activation 8
 Int Activation 8
-Int Activation 16 for idAdd
+Int Activation 16 for idAdd for identity add
 Int Activation 8
 Int Activation 8
 Int Activation 8
 IntSoftMax 16
+Int Activation Unsigned 8 for softmax_act
 Int Activation 8
 Int Activation 8
-Int Activation 16 for idAdd
+Int Activation 16 for idAdd for identity add
 Int Activation 8
 Int Activation 8
 IntGELU bit: 8
 Int Activation 8
 Int Activation 8
-Int Activation 16 for idAdd
+Int Activation 16 for idAdd for identity add
 Int Activation 8
 Int Activation 8
 Int Activation 8
 IntSoftMax 16
+Int Activation Unsigned 8 for softmax_act
 Int Activation 8
 Int Activation 8
-Int Activation 16 for idAdd
+Int Activation 16 for idAdd for identity add
 Int Activation 8
 Int Activation 8
 IntGELU bit: 8
 Int Activation 8
 Int Activation 8
-Int Activation 16 for idAdd
+Int Activation 16 for idAdd for identity add
 Int Activation 8
 Int Activation 8
 Int Activation 8
 IntSoftMax 16
+Int Activation Unsigned 8 for softmax_act
 Int Activation 8
 Int Activation 8
-Int Activation 16 for idAdd
+Int Activation 16 for idAdd for identity add
 Int Activation 8
 Int Activation 8
 IntGELU bit: 8
 Int Activation 8
 Int Activation 8
-Int Activation 16 for idAdd
+Int Activation 16 for idAdd for identity add
 Int Activation 8
 Int Activation 8
 Int Activation 8
 IntSoftMax 16
+Int Activation Unsigned 8 for softmax_act
 Int Activation 8
 Int Activation 8
-Int Activation 16 for idAdd
+Int Activation 16 for idAdd for identity add
 Int Activation 8
 Int Activation 8
 IntGELU bit: 8
 Int Activation 8
 Int Activation 8
-Int Activation 16 for idAdd
+Int Activation 16 for idAdd for identity add
 Int Activation 8
 Int Activation 8
 Int Activation 8
 IntSoftMax 16
+Int Activation Unsigned 8 for softmax_act
 Int Activation 8
 Int Activation 8
-Int Activation 16 for idAdd
+Int Activation 16 for idAdd for identity add
 Int Activation 8
 Int Activation 8
 IntGELU bit: 8
 Int Activation 8
 Int Activation 8
-Int Activation 16 for idAdd
+Int Activation 16 for idAdd for identity add
 Int Activation 8
 Int Activation 8
 Int Activation 8
 IntSoftMax 16
+Int Activation Unsigned 8 for softmax_act
 Int Activation 8
 Int Activation 8
-Int Activation 16 for idAdd
+Int Activation 16 for idAdd for identity add
 Int Activation 8
 Int Activation 8
 IntGELU bit: 8
 Int Activation 8
 Int Activation 8
-Int Activation 16 for idAdd
+Int Activation 16 for idAdd for identity add
 Int Activation 8
 Int Activation 8
 Int Activation 8
 IntSoftMax 16
+Int Activation Unsigned 8 for softmax_act
 Int Activation 8
 Int Activation 8
-Int Activation 16 for idAdd
+Int Activation 16 for idAdd for identity add
 Int Activation 8
 Int Activation 8
 IntGELU bit: 8
 Int Activation 8
 Int Activation 8
-Int Activation 16 for idAdd
+Int Activation 16 for idAdd for identity add
 Int Activation 8
 Int Activation 8
 Int Activation 8
 IntSoftMax 16
+Int Activation Unsigned 8 for softmax_act
 Int Activation 8
 Int Activation 8
-Int Activation 16 for idAdd
+Int Activation 16 for idAdd for identity add
 Int Activation 8
 Int Activation 8
 IntGELU bit: 8
 Int Activation 8
 Int Activation 8
-Int Activation 16 for idAdd
+Int Activation 16 for idAdd for identity add
 Int Activation 8
 Activation calibration is done.
 
-    Quantized model Evaluation accuracy on 50000 images, 77.412%
-Total time: 443.61 sec
+
+    Quantized model Evaluation accuracy on 50000 images, 77.064%
+Total time: 992.88 sec
