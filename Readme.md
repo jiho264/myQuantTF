@@ -21,6 +21,8 @@
 | [W]AdaRound(Block) | [A]Mov | 4   | 8   | I-ViT   | I-ViT | I-ViT | 16    | 77.180% |
 - LSQ에 맨앞, 맨뒤 act quantizer 못했음.
 
+seed 고정 안 돼있었는데 왜 항상 동일 정확도나왔는진 잘 모르겟음
+메번 데이터로더 달랐는데 지금까지 moving avg act quantizer가 모든 s_a 동일하게 구하고있었음.
 
 - Weight Quantizer : Absolute Max Quantization
 - Activation Quantizer : Moving Average Absolute Max Quantization (momentum 0.95, 2048 images)
