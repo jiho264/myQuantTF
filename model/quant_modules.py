@@ -323,7 +323,7 @@ class QuantLinearWithWeight(nn.Module):
         elif self.do_quant:
             """weight and activation quantization (ex. W8A8..)"""
             s_a = self.S_W * s_x
-            b_int32 = (self.B_INT8 / s_x).round()
+            b_int32 = round_ste.apply(self.B_INT8 / s_x)
 
             if self.fwd_func == F.conv2d:
                 s_x = s_x.view(1, -1, 1, 1)
@@ -332,7 +332,7 @@ class QuantLinearWithWeight(nn.Module):
             elif self.fwd_func == F.linear:
                 s_a = s_a.view(1, -1)
 
-            x_int = (x_hat / s_x).round()
+            x_int = round_ste.apply(x_hat / s_x)
             """ Verify INT 8 GEMM """
             assert (
                 -128 <= x_int.min() and x_int.max() <= 127
