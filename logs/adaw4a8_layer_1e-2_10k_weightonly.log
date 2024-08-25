@@ -270,15 +270,13 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0031 (MSE:0.0031, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 119754.2500 (MSE:0.0005, Reg:119754.2500) beta=20.00
-Iter  1000 | Total loss: 3.5910 (MSE:0.0030, Reg:3.5880) beta=19.05
-Iter  2000 | Total loss: 1.0035 (MSE:0.0035, Reg:1.0000) beta=17.16
-Iter  3000 | Total loss: 1.0032 (MSE:0.0032, Reg:1.0000) beta=15.26
-Iter  4000 | Total loss: 1.0027 (MSE:0.0027, Reg:1.0000) beta=13.37
-Iter  5000 | Total loss: 1.0032 (MSE:0.0032, Reg:1.0000) beta=11.47
-Iter  6000 | Total loss: 1.0031 (MSE:0.0031, Reg:1.0000) beta=9.58
-Iter  6405 | Total loss: 0.0029 (MSE:0.0029, Reg:0.0000) beta=8.81
+Iter     1 | Total loss: 0.0033 (MSE:0.0033, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 119101.3672 (MSE:0.0005, Reg:119101.3672) beta=20.00
+Iter  1000 | Total loss: 16.0032 (MSE:0.0032, Reg:16.0000) beta=19.05
+Iter  2000 | Total loss: 7.0030 (MSE:0.0030, Reg:7.0000) beta=17.16
+Iter  3000 | Total loss: 5.9877 (MSE:0.0032, Reg:5.9844) beta=15.26
+Iter  4000 | Total loss: 2.0037 (MSE:0.0037, Reg:2.0000) beta=13.37
+Iter  4906 | Total loss: 0.0030 (MSE:0.0030, Reg:0.0000) beta=11.65
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -301,17 +299,17 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0099 (MSE:0.0099, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 258953.8438 (MSE:0.0021, Reg:258953.8438) beta=20.00
-Iter  1000 | Total loss: 18625.0996 (MSE:0.0021, Reg:18625.0977) beta=19.05
-Iter  2000 | Total loss: 8237.6992 (MSE:0.0023, Reg:8237.6973) beta=17.16
-Iter  3000 | Total loss: 4913.8481 (MSE:0.0023, Reg:4913.8457) beta=15.26
-Iter  4000 | Total loss: 3090.8464 (MSE:0.0022, Reg:3090.8442) beta=13.37
-Iter  5000 | Total loss: 1657.7578 (MSE:0.0028, Reg:1657.7550) beta=11.47
-Iter  6000 | Total loss: 656.2729 (MSE:0.0023, Reg:656.2706) beta=9.58
-Iter  7000 | Total loss: 173.1125 (MSE:0.0024, Reg:173.1101) beta=7.68
-Iter  8000 | Total loss: 9.8131 (MSE:0.0022, Reg:9.8109) beta=5.79
-Iter  8574 | Total loss: 0.0025 (MSE:0.0025, Reg:0.0000) beta=4.70
+Iter     1 | Total loss: 0.0109 (MSE:0.0109, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 259165.7188 (MSE:0.0023, Reg:259165.7188) beta=20.00
+Iter  1000 | Total loss: 18580.5020 (MSE:0.0024, Reg:18580.5000) beta=19.05
+Iter  2000 | Total loss: 8297.9756 (MSE:0.0022, Reg:8297.9736) beta=17.16
+Iter  3000 | Total loss: 4888.5576 (MSE:0.0021, Reg:4888.5557) beta=15.26
+Iter  4000 | Total loss: 2983.8943 (MSE:0.0023, Reg:2983.8921) beta=13.37
+Iter  5000 | Total loss: 1578.2844 (MSE:0.0027, Reg:1578.2817) beta=11.47
+Iter  6000 | Total loss: 728.3537 (MSE:0.0022, Reg:728.3514) beta=9.58
+Iter  7000 | Total loss: 175.3537 (MSE:0.0023, Reg:175.3514) beta=7.68
+Iter  8000 | Total loss: 8.8292 (MSE:0.0026, Reg:8.8266) beta=5.79
+Iter  8548 | Total loss: 0.0026 (MSE:0.0026, Reg:0.0000) beta=4.75
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -335,15 +333,15 @@ Parameter Group 0
     weight_decay: 0
 ) 10000
 Iter     1 | Total loss: 0.0002 (MSE:0.0002, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 51294.7852 (MSE:0.0001, Reg:51294.7852) beta=20.00
-Iter  1000 | Total loss: 196.5084 (MSE:0.0001, Reg:196.5083) beta=19.05
-Iter  2000 | Total loss: 92.9999 (MSE:0.0001, Reg:92.9997) beta=17.16
-Iter  3000 | Total loss: 51.0001 (MSE:0.0001, Reg:51.0000) beta=15.26
-Iter  4000 | Total loss: 28.9920 (MSE:0.0001, Reg:28.9919) beta=13.37
-Iter  5000 | Total loss: 12.6241 (MSE:0.0001, Reg:12.6240) beta=11.47
-Iter  6000 | Total loss: 8.0001 (MSE:0.0001, Reg:8.0000) beta=9.58
-Iter  7000 | Total loss: 3.0001 (MSE:0.0001, Reg:3.0000) beta=7.68
-Iter  7368 | Total loss: 0.0001 (MSE:0.0001, Reg:0.0000) beta=6.99
+Iter   500 | Total loss: 50016.1094 (MSE:0.0001, Reg:50016.1094) beta=20.00
+Iter  1000 | Total loss: 181.0363 (MSE:0.0001, Reg:181.0362) beta=19.05
+Iter  2000 | Total loss: 68.9944 (MSE:0.0001, Reg:68.9943) beta=17.16
+Iter  3000 | Total loss: 28.0001 (MSE:0.0001, Reg:28.0000) beta=15.26
+Iter  4000 | Total loss: 19.0001 (MSE:0.0001, Reg:19.0000) beta=13.37
+Iter  5000 | Total loss: 8.0001 (MSE:0.0001, Reg:8.0000) beta=11.47
+Iter  6000 | Total loss: 4.0001 (MSE:0.0001, Reg:4.0000) beta=9.58
+Iter  7000 | Total loss: 1.0001 (MSE:0.0001, Reg:1.0000) beta=7.68
+Iter  7400 | Total loss: 0.0001 (MSE:0.0001, Reg:0.0000) beta=6.93
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -366,16 +364,17 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0256 (MSE:0.0256, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 429743.8438 (MSE:0.0067, Reg:429743.8438) beta=20.00
-Iter  1000 | Total loss: 14755.4492 (MSE:0.0067, Reg:14755.4424) beta=19.05
-Iter  2000 | Total loss: 6898.0996 (MSE:0.0070, Reg:6898.0928) beta=17.16
-Iter  3000 | Total loss: 4639.3740 (MSE:0.0069, Reg:4639.3672) beta=15.26
-Iter  4000 | Total loss: 3014.1033 (MSE:0.0068, Reg:3014.0964) beta=13.37
-Iter  5000 | Total loss: 1933.4209 (MSE:0.0070, Reg:1933.4138) beta=11.47
-Iter  6000 | Total loss: 744.6448 (MSE:0.0076, Reg:744.6372) beta=9.58
-Iter  7000 | Total loss: 115.8996 (MSE:0.0072, Reg:115.8924) beta=7.68
-Iter  7973 | Total loss: 0.0072 (MSE:0.0072, Reg:0.0000) beta=5.84
+Iter     1 | Total loss: 0.0279 (MSE:0.0279, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 425035.4375 (MSE:0.0064, Reg:425035.4375) beta=20.00
+Iter  1000 | Total loss: 15097.2471 (MSE:0.0067, Reg:15097.2402) beta=19.05
+Iter  2000 | Total loss: 7254.8076 (MSE:0.0074, Reg:7254.8003) beta=17.16
+Iter  3000 | Total loss: 5031.1807 (MSE:0.0070, Reg:5031.1738) beta=15.26
+Iter  4000 | Total loss: 3470.8604 (MSE:0.0069, Reg:3470.8535) beta=13.37
+Iter  5000 | Total loss: 2007.7109 (MSE:0.0078, Reg:2007.7031) beta=11.47
+Iter  6000 | Total loss: 926.2044 (MSE:0.0066, Reg:926.1978) beta=9.58
+Iter  7000 | Total loss: 239.8837 (MSE:0.0071, Reg:239.8767) beta=7.68
+Iter  8000 | Total loss: 10.9462 (MSE:0.0071, Reg:10.9390) beta=5.79
+Iter  8274 | Total loss: 0.0071 (MSE:0.0071, Reg:0.0000) beta=5.27
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -398,17 +397,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0042 (MSE:0.0042, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 441887.8750 (MSE:0.0021, Reg:441887.8750) beta=20.00
-Iter  1000 | Total loss: 5344.9551 (MSE:0.0024, Reg:5344.9526) beta=19.05
-Iter  2000 | Total loss: 2395.4819 (MSE:0.0024, Reg:2395.4795) beta=17.16
-Iter  3000 | Total loss: 1563.7148 (MSE:0.0027, Reg:1563.7122) beta=15.26
-Iter  4000 | Total loss: 1026.6757 (MSE:0.0026, Reg:1026.6731) beta=13.37
-Iter  5000 | Total loss: 593.6644 (MSE:0.0026, Reg:593.6618) beta=11.47
-Iter  6000 | Total loss: 287.0106 (MSE:0.0025, Reg:287.0081) beta=9.58
-Iter  7000 | Total loss: 46.9505 (MSE:0.0025, Reg:46.9479) beta=7.68
-Iter  8000 | Total loss: 1.0027 (MSE:0.0027, Reg:1.0000) beta=5.79
-Iter  8044 | Total loss: 0.0025 (MSE:0.0025, Reg:0.0000) beta=5.71
+Iter     1 | Total loss: 0.0040 (MSE:0.0040, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 418414.8750 (MSE:0.0020, Reg:418414.8750) beta=20.00
+Iter  1000 | Total loss: 5139.8804 (MSE:0.0025, Reg:5139.8779) beta=19.05
+Iter  2000 | Total loss: 2315.7642 (MSE:0.0024, Reg:2315.7617) beta=17.16
+Iter  3000 | Total loss: 1568.6469 (MSE:0.0026, Reg:1568.6443) beta=15.26
+Iter  4000 | Total loss: 1037.8785 (MSE:0.0026, Reg:1037.8759) beta=13.37
+Iter  5000 | Total loss: 583.6442 (MSE:0.0026, Reg:583.6416) beta=11.47
+Iter  6000 | Total loss: 260.6917 (MSE:0.0024, Reg:260.6892) beta=9.58
+Iter  7000 | Total loss: 46.7805 (MSE:0.0025, Reg:46.7780) beta=7.68
+Iter  7776 | Total loss: 0.0023 (MSE:0.0023, Reg:0.0000) beta=6.21
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -431,17 +429,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0079 (MSE:0.0079, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 354327.5625 (MSE:0.0081, Reg:354327.5625) beta=20.00
-Iter  1000 | Total loss: 16697.1406 (MSE:0.0047, Reg:16697.1367) beta=19.05
-Iter  2000 | Total loss: 6917.3574 (MSE:0.0044, Reg:6917.3530) beta=17.16
-Iter  3000 | Total loss: 4289.8174 (MSE:0.0048, Reg:4289.8125) beta=15.26
-Iter  4000 | Total loss: 2805.2002 (MSE:0.0047, Reg:2805.1956) beta=13.37
-Iter  5000 | Total loss: 1646.3711 (MSE:0.0048, Reg:1646.3662) beta=11.47
-Iter  6000 | Total loss: 757.3333 (MSE:0.0050, Reg:757.3283) beta=9.58
-Iter  7000 | Total loss: 147.7374 (MSE:0.0049, Reg:147.7324) beta=7.68
-Iter  8000 | Total loss: 2.9978 (MSE:0.0047, Reg:2.9931) beta=5.79
-Iter  8106 | Total loss: 0.0050 (MSE:0.0050, Reg:0.0000) beta=5.59
+Iter     1 | Total loss: 0.0076 (MSE:0.0076, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 355522.0000 (MSE:0.0045, Reg:355522.0000) beta=20.00
+Iter  1000 | Total loss: 16352.2246 (MSE:0.0051, Reg:16352.2197) beta=19.05
+Iter  2000 | Total loss: 6726.1353 (MSE:0.0050, Reg:6726.1304) beta=17.16
+Iter  3000 | Total loss: 4390.0239 (MSE:0.0046, Reg:4390.0195) beta=15.26
+Iter  4000 | Total loss: 2862.2681 (MSE:0.0045, Reg:2862.2637) beta=13.37
+Iter  5000 | Total loss: 1622.7654 (MSE:0.0043, Reg:1622.7611) beta=11.47
+Iter  6000 | Total loss: 685.7731 (MSE:0.0046, Reg:685.7686) beta=9.58
+Iter  7000 | Total loss: 176.8817 (MSE:0.0048, Reg:176.8769) beta=7.68
+Iter  7939 | Total loss: 0.0048 (MSE:0.0048, Reg:0.0000) beta=5.91
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -465,14 +462,14 @@ Parameter Group 0
     weight_decay: 0
 ) 10000
 Iter     1 | Total loss: 0.0004 (MSE:0.0004, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 66345.5781 (MSE:0.0003, Reg:66345.5781) beta=20.00
-Iter  1000 | Total loss: 146.9772 (MSE:0.0003, Reg:146.9770) beta=19.05
-Iter  2000 | Total loss: 43.9089 (MSE:0.0002, Reg:43.9086) beta=17.16
-Iter  3000 | Total loss: 22.0003 (MSE:0.0003, Reg:22.0000) beta=15.26
+Iter   500 | Total loss: 71479.9688 (MSE:0.0003, Reg:71479.9688) beta=20.00
+Iter  1000 | Total loss: 111.5258 (MSE:0.0003, Reg:111.5255) beta=19.05
+Iter  2000 | Total loss: 24.7630 (MSE:0.0003, Reg:24.7627) beta=17.16
+Iter  3000 | Total loss: 17.0003 (MSE:0.0003, Reg:17.0000) beta=15.26
 Iter  4000 | Total loss: 10.0003 (MSE:0.0003, Reg:10.0000) beta=13.37
-Iter  5000 | Total loss: 5.9998 (MSE:0.0003, Reg:5.9995) beta=11.47
-Iter  6000 | Total loss: 2.0003 (MSE:0.0003, Reg:2.0000) beta=9.58
-Iter  6325 | Total loss: 0.0003 (MSE:0.0003, Reg:0.0000) beta=8.96
+Iter  5000 | Total loss: 6.0003 (MSE:0.0003, Reg:6.0000) beta=11.47
+Iter  6000 | Total loss: 1.0003 (MSE:0.0003, Reg:1.0000) beta=9.58
+Iter  6623 | Total loss: 0.0003 (MSE:0.0003, Reg:0.0000) beta=8.40
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -495,16 +492,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0577 (MSE:0.0577, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 778375.5000 (MSE:0.0164, Reg:778375.5000) beta=20.00
-Iter  1000 | Total loss: 39007.9805 (MSE:0.0201, Reg:39007.9609) beta=19.05
-Iter  2000 | Total loss: 15901.4756 (MSE:0.0213, Reg:15901.4541) beta=17.16
-Iter  3000 | Total loss: 10320.4863 (MSE:0.0199, Reg:10320.4668) beta=15.26
-Iter  4000 | Total loss: 6576.6841 (MSE:0.0202, Reg:6576.6641) beta=13.37
-Iter  5000 | Total loss: 3575.4746 (MSE:0.0204, Reg:3575.4541) beta=11.47
-Iter  6000 | Total loss: 1436.2469 (MSE:0.0200, Reg:1436.2269) beta=9.58
-Iter  7000 | Total loss: 287.4764 (MSE:0.0205, Reg:287.4559) beta=7.68
-Iter  7829 | Total loss: 0.0200 (MSE:0.0200, Reg:0.0000) beta=6.11
+Iter     1 | Total loss: 0.0568 (MSE:0.0568, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 767255.1250 (MSE:0.0177, Reg:767255.1250) beta=20.00
+Iter  1000 | Total loss: 39968.4648 (MSE:0.0201, Reg:39968.4453) beta=19.05
+Iter  2000 | Total loss: 16258.1709 (MSE:0.0206, Reg:16258.1504) beta=17.16
+Iter  3000 | Total loss: 10250.0215 (MSE:0.0206, Reg:10250.0010) beta=15.26
+Iter  4000 | Total loss: 6500.9062 (MSE:0.0186, Reg:6500.8877) beta=13.37
+Iter  5000 | Total loss: 3621.0176 (MSE:0.0192, Reg:3620.9985) beta=11.47
+Iter  6000 | Total loss: 1522.0006 (MSE:0.0190, Reg:1521.9816) beta=9.58
+Iter  7000 | Total loss: 207.8140 (MSE:0.0195, Reg:207.7945) beta=7.68
+Iter  7898 | Total loss: 0.0203 (MSE:0.0203, Reg:0.0000) beta=5.98
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -528,14 +525,15 @@ Parameter Group 0
     weight_decay: 0
 ) 10000
 Iter     1 | Total loss: 0.0034 (MSE:0.0034, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 356408.3750 (MSE:0.0023, Reg:356408.3750) beta=20.00
-Iter  1000 | Total loss: 422.2944 (MSE:0.0029, Reg:422.2914) beta=19.05
-Iter  2000 | Total loss: 169.0029 (MSE:0.0029, Reg:169.0000) beta=17.16
-Iter  3000 | Total loss: 100.5691 (MSE:0.0029, Reg:100.5662) beta=15.26
-Iter  4000 | Total loss: 62.5177 (MSE:0.0030, Reg:62.5147) beta=13.37
-Iter  5000 | Total loss: 42.0031 (MSE:0.0031, Reg:42.0000) beta=11.47
-Iter  6000 | Total loss: 15.0031 (MSE:0.0031, Reg:15.0000) beta=9.58
-Iter  6962 | Total loss: 0.0029 (MSE:0.0029, Reg:0.0000) beta=7.76
+Iter   500 | Total loss: 356692.0625 (MSE:0.0021, Reg:356692.0625) beta=20.00
+Iter  1000 | Total loss: 540.1077 (MSE:0.0029, Reg:540.1049) beta=19.05
+Iter  2000 | Total loss: 210.0027 (MSE:0.0030, Reg:209.9997) beta=17.16
+Iter  3000 | Total loss: 124.9972 (MSE:0.0028, Reg:124.9943) beta=15.26
+Iter  4000 | Total loss: 77.0039 (MSE:0.0039, Reg:77.0000) beta=13.37
+Iter  5000 | Total loss: 41.0030 (MSE:0.0030, Reg:41.0000) beta=11.47
+Iter  6000 | Total loss: 11.9199 (MSE:0.0031, Reg:11.9168) beta=9.58
+Iter  7000 | Total loss: 3.0031 (MSE:0.0031, Reg:3.0000) beta=7.68
+Iter  7438 | Total loss: 0.0031 (MSE:0.0031, Reg:0.0000) beta=6.85
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -558,17 +556,17 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0214 (MSE:0.0214, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 444687.2500 (MSE:0.0133, Reg:444687.2500) beta=20.00
-Iter  1000 | Total loss: 30242.9668 (MSE:0.0132, Reg:30242.9531) beta=19.05
-Iter  2000 | Total loss: 11535.3389 (MSE:0.0142, Reg:11535.3242) beta=17.16
-Iter  3000 | Total loss: 6986.3174 (MSE:0.0135, Reg:6986.3037) beta=15.26
-Iter  4000 | Total loss: 4479.2583 (MSE:0.0132, Reg:4479.2451) beta=13.37
-Iter  5000 | Total loss: 2520.8733 (MSE:0.0148, Reg:2520.8584) beta=11.47
-Iter  6000 | Total loss: 1099.2916 (MSE:0.0142, Reg:1099.2775) beta=9.58
-Iter  7000 | Total loss: 213.1572 (MSE:0.0130, Reg:213.1441) beta=7.68
-Iter  8000 | Total loss: 1.0131 (MSE:0.0131, Reg:1.0000) beta=5.79
-Iter  8173 | Total loss: 0.0137 (MSE:0.0137, Reg:0.0000) beta=5.46
+Iter     1 | Total loss: 0.0219 (MSE:0.0219, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 446376.6250 (MSE:0.0210, Reg:446376.5938) beta=20.00
+Iter  1000 | Total loss: 30494.7129 (MSE:0.0126, Reg:30494.7012) beta=19.05
+Iter  2000 | Total loss: 11591.8203 (MSE:0.0135, Reg:11591.8066) beta=17.16
+Iter  3000 | Total loss: 6880.7852 (MSE:0.0127, Reg:6880.7725) beta=15.26
+Iter  4000 | Total loss: 4314.3452 (MSE:0.0123, Reg:4314.3330) beta=13.37
+Iter  5000 | Total loss: 2471.1123 (MSE:0.0127, Reg:2471.0996) beta=11.47
+Iter  6000 | Total loss: 1055.6145 (MSE:0.0142, Reg:1055.6002) beta=9.58
+Iter  7000 | Total loss: 181.9030 (MSE:0.0131, Reg:181.8899) beta=7.68
+Iter  8000 | Total loss: 3.0144 (MSE:0.0144, Reg:3.0000) beta=5.79
+Iter  8084 | Total loss: 0.0197 (MSE:0.0197, Reg:0.0000) beta=5.63
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -592,15 +590,15 @@ Parameter Group 0
     weight_decay: 0
 ) 10000
 Iter     1 | Total loss: 0.0012 (MSE:0.0012, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 102371.7812 (MSE:0.0009, Reg:102371.7812) beta=20.00
-Iter  1000 | Total loss: 370.0424 (MSE:0.0011, Reg:370.0413) beta=19.05
-Iter  2000 | Total loss: 147.8200 (MSE:0.0011, Reg:147.8189) beta=17.16
-Iter  3000 | Total loss: 99.0010 (MSE:0.0010, Reg:99.0000) beta=15.26
-Iter  4000 | Total loss: 71.0010 (MSE:0.0010, Reg:71.0000) beta=13.37
-Iter  5000 | Total loss: 42.7652 (MSE:0.0011, Reg:42.7641) beta=11.47
-Iter  6000 | Total loss: 19.9619 (MSE:0.0011, Reg:19.9608) beta=9.58
-Iter  7000 | Total loss: 8.0012 (MSE:0.0012, Reg:8.0000) beta=7.68
-Iter  7403 | Total loss: 0.0012 (MSE:0.0012, Reg:0.0000) beta=6.92
+Iter   500 | Total loss: 103046.8516 (MSE:0.0010, Reg:103046.8516) beta=20.00
+Iter  1000 | Total loss: 423.7682 (MSE:0.0011, Reg:423.7671) beta=19.05
+Iter  2000 | Total loss: 178.6918 (MSE:0.0013, Reg:178.6905) beta=17.16
+Iter  3000 | Total loss: 114.9922 (MSE:0.0011, Reg:114.9911) beta=15.26
+Iter  4000 | Total loss: 81.0011 (MSE:0.0011, Reg:81.0000) beta=13.37
+Iter  5000 | Total loss: 54.6741 (MSE:0.0014, Reg:54.6727) beta=11.47
+Iter  6000 | Total loss: 25.7513 (MSE:0.0011, Reg:25.7503) beta=9.58
+Iter  7000 | Total loss: 5.0002 (MSE:0.0012, Reg:4.9991) beta=7.68
+Iter  7391 | Total loss: 0.0012 (MSE:0.0012, Reg:0.0000) beta=6.94
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -623,16 +621,17 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0529 (MSE:0.0529, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 757463.7500 (MSE:0.0240, Reg:757463.7500) beta=20.00
-Iter  1000 | Total loss: 49425.6875 (MSE:0.0285, Reg:49425.6602) beta=19.05
-Iter  2000 | Total loss: 28842.7480 (MSE:0.0293, Reg:28842.7188) beta=17.16
-Iter  3000 | Total loss: 20664.7891 (MSE:0.0281, Reg:20664.7617) beta=15.26
-Iter  4000 | Total loss: 15535.7607 (MSE:0.0284, Reg:15535.7324) beta=13.37
-Iter  5000 | Total loss: 9523.4238 (MSE:0.0469, Reg:9523.3770) beta=11.47
-Iter  6000 | Total loss: 5239.6011 (MSE:0.0283, Reg:5239.5728) beta=9.58
-Iter  7000 | Total loss: 1943.8857 (MSE:0.0268, Reg:1943.8589) beta=7.68
-Iter  7985 | Total loss: 0.0267 (MSE:0.0267, Reg:0.0000) beta=5.82
+Iter     1 | Total loss: 0.0497 (MSE:0.0497, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 758793.5000 (MSE:0.0237, Reg:758793.5000) beta=20.00
+Iter  1000 | Total loss: 49780.6328 (MSE:0.0277, Reg:49780.6055) beta=19.05
+Iter  2000 | Total loss: 28395.6094 (MSE:0.0267, Reg:28395.5820) beta=17.16
+Iter  3000 | Total loss: 21189.6387 (MSE:0.0257, Reg:21189.6133) beta=15.26
+Iter  4000 | Total loss: 15391.8467 (MSE:0.0285, Reg:15391.8184) beta=13.37
+Iter  5000 | Total loss: 9886.3213 (MSE:0.0248, Reg:9886.2969) beta=11.47
+Iter  6000 | Total loss: 5325.9233 (MSE:0.0279, Reg:5325.8955) beta=9.58
+Iter  7000 | Total loss: 1782.0632 (MSE:0.0283, Reg:1782.0349) beta=7.68
+Iter  8000 | Total loss: 1.0255 (MSE:0.0255, Reg:1.0000) beta=5.79
+Iter  8178 | Total loss: 0.0283 (MSE:0.0283, Reg:0.0000) beta=5.45
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -655,16 +654,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0053 (MSE:0.0053, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 385993.6250 (MSE:0.0043, Reg:385993.6250) beta=20.00
-Iter  1000 | Total loss: 642.5689 (MSE:0.0055, Reg:642.5634) beta=19.05
-Iter  2000 | Total loss: 228.1832 (MSE:0.0055, Reg:228.1777) beta=17.16
-Iter  3000 | Total loss: 137.9736 (MSE:0.0054, Reg:137.9682) beta=15.26
-Iter  4000 | Total loss: 80.0050 (MSE:0.0051, Reg:80.0000) beta=13.37
-Iter  5000 | Total loss: 46.0050 (MSE:0.0050, Reg:46.0000) beta=11.47
-Iter  6000 | Total loss: 15.0051 (MSE:0.0051, Reg:15.0000) beta=9.58
-Iter  7000 | Total loss: 5.0051 (MSE:0.0053, Reg:4.9999) beta=7.68
-Iter  7346 | Total loss: 0.0053 (MSE:0.0053, Reg:0.0000) beta=7.03
+Iter     1 | Total loss: 0.0059 (MSE:0.0059, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 384964.6250 (MSE:0.0045, Reg:384964.6250) beta=20.00
+Iter  1000 | Total loss: 695.2188 (MSE:0.0057, Reg:695.2131) beta=19.05
+Iter  2000 | Total loss: 241.2854 (MSE:0.0053, Reg:241.2801) beta=17.16
+Iter  3000 | Total loss: 148.4223 (MSE:0.0052, Reg:148.4172) beta=15.26
+Iter  4000 | Total loss: 92.9403 (MSE:0.0049, Reg:92.9354) beta=13.37
+Iter  5000 | Total loss: 52.5232 (MSE:0.0053, Reg:52.5178) beta=11.47
+Iter  6000 | Total loss: 15.8780 (MSE:0.0050, Reg:15.8730) beta=9.58
+Iter  7000 | Total loss: 4.0052 (MSE:0.0052, Reg:4.0000) beta=7.68
+Iter  7356 | Total loss: 0.0051 (MSE:0.0051, Reg:0.0000) beta=7.01
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -687,16 +686,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0330 (MSE:0.0330, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 486836.0938 (MSE:0.0254, Reg:486836.0625) beta=20.00
-Iter  1000 | Total loss: 41164.6328 (MSE:0.0219, Reg:41164.6094) beta=19.05
-Iter  2000 | Total loss: 14917.8750 (MSE:0.0228, Reg:14917.8525) beta=17.16
-Iter  3000 | Total loss: 8430.2393 (MSE:0.0220, Reg:8430.2168) beta=15.26
-Iter  4000 | Total loss: 4937.4917 (MSE:0.0209, Reg:4937.4707) beta=13.37
-Iter  5000 | Total loss: 2646.7373 (MSE:0.0204, Reg:2646.7170) beta=11.47
-Iter  6000 | Total loss: 1069.0945 (MSE:0.0213, Reg:1069.0732) beta=9.58
-Iter  7000 | Total loss: 196.2515 (MSE:0.0198, Reg:196.2317) beta=7.68
-Iter  7868 | Total loss: 0.0197 (MSE:0.0197, Reg:0.0000) beta=6.04
+Iter     1 | Total loss: 0.0336 (MSE:0.0336, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 486058.8125 (MSE:0.0246, Reg:486058.7812) beta=20.00
+Iter  1000 | Total loss: 41496.9961 (MSE:0.0196, Reg:41496.9766) beta=19.05
+Iter  2000 | Total loss: 14866.7646 (MSE:0.0208, Reg:14866.7441) beta=17.16
+Iter  3000 | Total loss: 8385.4678 (MSE:0.0221, Reg:8385.4453) beta=15.26
+Iter  4000 | Total loss: 5004.0767 (MSE:0.0192, Reg:5004.0576) beta=13.37
+Iter  5000 | Total loss: 2670.7673 (MSE:0.0210, Reg:2670.7463) beta=11.47
+Iter  6000 | Total loss: 1077.0092 (MSE:0.0208, Reg:1076.9884) beta=9.58
+Iter  7000 | Total loss: 179.6433 (MSE:0.0202, Reg:179.6231) beta=7.68
+Iter  7864 | Total loss: 0.0208 (MSE:0.0208, Reg:0.0000) beta=6.05
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -719,15 +718,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0017 (MSE:0.0017, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 126780.5469 (MSE:0.0016, Reg:126780.5469) beta=20.00
-Iter  1000 | Total loss: 448.2885 (MSE:0.0015, Reg:448.2870) beta=19.05
-Iter  2000 | Total loss: 177.1153 (MSE:0.0016, Reg:177.1136) beta=17.16
-Iter  3000 | Total loss: 126.9730 (MSE:0.0016, Reg:126.9715) beta=15.26
-Iter  4000 | Total loss: 86.0020 (MSE:0.0020, Reg:86.0000) beta=13.37
-Iter  5000 | Total loss: 52.9990 (MSE:0.0016, Reg:52.9974) beta=11.47
-Iter  6000 | Total loss: 19.0016 (MSE:0.0016, Reg:19.0000) beta=9.58
-Iter  6877 | Total loss: 0.0016 (MSE:0.0016, Reg:0.0000) beta=7.92
+Iter     1 | Total loss: 0.0018 (MSE:0.0018, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 124883.2969 (MSE:0.0017, Reg:124883.2969) beta=20.00
+Iter  1000 | Total loss: 420.2603 (MSE:0.0018, Reg:420.2585) beta=19.05
+Iter  2000 | Total loss: 169.9687 (MSE:0.0016, Reg:169.9671) beta=17.16
+Iter  3000 | Total loss: 125.0016 (MSE:0.0016, Reg:125.0000) beta=15.26
+Iter  4000 | Total loss: 91.0017 (MSE:0.0017, Reg:91.0000) beta=13.37
+Iter  5000 | Total loss: 58.8209 (MSE:0.0021, Reg:58.8187) beta=11.47
+Iter  6000 | Total loss: 33.0012 (MSE:0.0017, Reg:32.9995) beta=9.58
+Iter  7000 | Total loss: 2.0017 (MSE:0.0017, Reg:2.0000) beta=7.68
+Iter  7337 | Total loss: 0.0019 (MSE:0.0019, Reg:0.0000) beta=7.05
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -750,16 +750,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0692 (MSE:0.0692, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 695276.5625 (MSE:0.0460, Reg:695276.5000) beta=20.00
-Iter  1000 | Total loss: 43370.1719 (MSE:0.0451, Reg:43370.1250) beta=19.05
-Iter  2000 | Total loss: 19266.2188 (MSE:0.0476, Reg:19266.1719) beta=17.16
-Iter  3000 | Total loss: 12408.2607 (MSE:0.0460, Reg:12408.2148) beta=15.26
-Iter  4000 | Total loss: 8038.5776 (MSE:0.0461, Reg:8038.5317) beta=13.37
-Iter  5000 | Total loss: 4378.2783 (MSE:0.0441, Reg:4378.2344) beta=11.47
-Iter  6000 | Total loss: 1619.9847 (MSE:0.0378, Reg:1619.9469) beta=9.58
-Iter  7000 | Total loss: 125.1015 (MSE:0.0428, Reg:125.0588) beta=7.68
-Iter  7631 | Total loss: 0.0436 (MSE:0.0436, Reg:0.0000) beta=6.49
+Iter     1 | Total loss: 0.0684 (MSE:0.0684, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 701957.3750 (MSE:0.0429, Reg:701957.3125) beta=20.00
+Iter  1000 | Total loss: 45045.3164 (MSE:0.0449, Reg:45045.2734) beta=19.05
+Iter  2000 | Total loss: 20119.8672 (MSE:0.0429, Reg:20119.8242) beta=17.16
+Iter  3000 | Total loss: 12998.4277 (MSE:0.0411, Reg:12998.3867) beta=15.26
+Iter  4000 | Total loss: 8488.0586 (MSE:0.0431, Reg:8488.0156) beta=13.37
+Iter  5000 | Total loss: 4579.2837 (MSE:0.0433, Reg:4579.2402) beta=11.47
+Iter  6000 | Total loss: 1650.5376 (MSE:0.0480, Reg:1650.4896) beta=9.58
+Iter  7000 | Total loss: 138.6874 (MSE:0.0429, Reg:138.6445) beta=7.68
+Iter  7628 | Total loss: 0.0408 (MSE:0.0408, Reg:0.0000) beta=6.49
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -782,16 +782,15 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0052 (MSE:0.0052, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 359487.0000 (MSE:0.0040, Reg:359487.0000) beta=20.00
-Iter  1000 | Total loss: 409.5426 (MSE:0.0044, Reg:409.5383) beta=19.05
-Iter  2000 | Total loss: 167.6445 (MSE:0.0048, Reg:167.6398) beta=17.16
-Iter  3000 | Total loss: 89.2811 (MSE:0.0044, Reg:89.2767) beta=15.26
-Iter  4000 | Total loss: 52.0041 (MSE:0.0041, Reg:52.0000) beta=13.37
-Iter  5000 | Total loss: 22.0043 (MSE:0.0043, Reg:22.0000) beta=11.47
-Iter  6000 | Total loss: 12.0011 (MSE:0.0041, Reg:11.9970) beta=9.58
-Iter  7000 | Total loss: 4.0040 (MSE:0.0040, Reg:4.0000) beta=7.68
-Iter  7624 | Total loss: 0.0047 (MSE:0.0047, Reg:0.0000) beta=6.50
+Iter     1 | Total loss: 0.0045 (MSE:0.0045, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 353202.8125 (MSE:0.0042, Reg:353202.8125) beta=20.00
+Iter  1000 | Total loss: 442.8550 (MSE:0.0048, Reg:442.8502) beta=19.05
+Iter  2000 | Total loss: 163.0043 (MSE:0.0044, Reg:162.9999) beta=17.16
+Iter  3000 | Total loss: 107.0046 (MSE:0.0046, Reg:107.0000) beta=15.26
+Iter  4000 | Total loss: 76.0040 (MSE:0.0040, Reg:76.0000) beta=13.37
+Iter  5000 | Total loss: 49.0333 (MSE:0.0043, Reg:49.0290) beta=11.47
+Iter  6000 | Total loss: 16.8963 (MSE:0.0044, Reg:16.8920) beta=9.58
+Iter  6829 | Total loss: 0.0049 (MSE:0.0049, Reg:0.0000) beta=8.01
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -814,16 +813,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0485 (MSE:0.0485, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 496971.1875 (MSE:0.0369, Reg:496971.1562) beta=20.00
-Iter  1000 | Total loss: 53540.4648 (MSE:0.0374, Reg:53540.4258) beta=19.05
-Iter  2000 | Total loss: 21762.2949 (MSE:0.0348, Reg:21762.2598) beta=17.16
-Iter  3000 | Total loss: 12849.6475 (MSE:0.0350, Reg:12849.6123) beta=15.26
-Iter  4000 | Total loss: 7677.6436 (MSE:0.0334, Reg:7677.6104) beta=13.37
-Iter  5000 | Total loss: 4037.9851 (MSE:0.0336, Reg:4037.9514) beta=11.47
-Iter  6000 | Total loss: 1525.9421 (MSE:0.0357, Reg:1525.9065) beta=9.58
-Iter  7000 | Total loss: 203.1895 (MSE:0.0364, Reg:203.1531) beta=7.68
-Iter  7747 | Total loss: 0.0402 (MSE:0.0402, Reg:0.0000) beta=6.27
+Iter     1 | Total loss: 0.0546 (MSE:0.0546, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 495267.5312 (MSE:0.0346, Reg:495267.5000) beta=20.00
+Iter  1000 | Total loss: 53537.8125 (MSE:0.0404, Reg:53537.7734) beta=19.05
+Iter  2000 | Total loss: 21818.7480 (MSE:0.0342, Reg:21818.7129) beta=17.16
+Iter  3000 | Total loss: 13049.9463 (MSE:0.0312, Reg:13049.9150) beta=15.26
+Iter  4000 | Total loss: 7684.6333 (MSE:0.0338, Reg:7684.5996) beta=13.37
+Iter  5000 | Total loss: 3987.3428 (MSE:0.0342, Reg:3987.3086) beta=11.47
+Iter  6000 | Total loss: 1511.2850 (MSE:0.0395, Reg:1511.2456) beta=9.58
+Iter  7000 | Total loss: 205.8819 (MSE:0.0353, Reg:205.8466) beta=7.68
+Iter  7880 | Total loss: 0.0345 (MSE:0.0345, Reg:0.0000) beta=6.02
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -847,14 +846,14 @@ Parameter Group 0
     weight_decay: 0
 ) 10000
 Iter     1 | Total loss: 0.0026 (MSE:0.0026, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 131806.7500 (MSE:0.0023, Reg:131806.7500) beta=20.00
-Iter  1000 | Total loss: 124.6707 (MSE:0.0024, Reg:124.6682) beta=19.05
-Iter  2000 | Total loss: 53.0018 (MSE:0.0023, Reg:52.9995) beta=17.16
-Iter  3000 | Total loss: 27.8398 (MSE:0.0024, Reg:27.8375) beta=15.26
-Iter  4000 | Total loss: 16.0023 (MSE:0.0023, Reg:16.0000) beta=13.37
-Iter  5000 | Total loss: 7.0024 (MSE:0.0024, Reg:7.0000) beta=11.47
-Iter  6000 | Total loss: 2.0023 (MSE:0.0023, Reg:2.0000) beta=9.58
-Iter  6222 | Total loss: 0.0025 (MSE:0.0025, Reg:0.0000) beta=9.16
+Iter   500 | Total loss: 128662.9531 (MSE:0.0024, Reg:128662.9531) beta=20.00
+Iter  1000 | Total loss: 141.0220 (MSE:0.0024, Reg:141.0196) beta=19.05
+Iter  2000 | Total loss: 54.9929 (MSE:0.0024, Reg:54.9905) beta=17.16
+Iter  3000 | Total loss: 33.0022 (MSE:0.0022, Reg:33.0000) beta=15.26
+Iter  4000 | Total loss: 18.0023 (MSE:0.0023, Reg:18.0000) beta=13.37
+Iter  5000 | Total loss: 9.7698 (MSE:0.0027, Reg:9.7671) beta=11.47
+Iter  6000 | Total loss: 5.0025 (MSE:0.0025, Reg:5.0000) beta=9.58
+Iter  6756 | Total loss: 0.0023 (MSE:0.0023, Reg:0.0000) beta=8.15
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -877,16 +876,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0686 (MSE:0.0686, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 636269.7500 (MSE:0.0533, Reg:636269.6875) beta=20.00
-Iter  1000 | Total loss: 48291.5781 (MSE:0.0513, Reg:48291.5273) beta=19.05
-Iter  2000 | Total loss: 22567.8086 (MSE:0.0494, Reg:22567.7598) beta=17.16
-Iter  3000 | Total loss: 14868.2998 (MSE:0.0526, Reg:14868.2471) beta=15.26
-Iter  4000 | Total loss: 9378.9004 (MSE:0.0567, Reg:9378.8438) beta=13.37
-Iter  5000 | Total loss: 5007.4292 (MSE:0.0657, Reg:5007.3638) beta=11.47
-Iter  6000 | Total loss: 1569.2938 (MSE:0.0508, Reg:1569.2430) beta=9.58
-Iter  7000 | Total loss: 77.9706 (MSE:0.0544, Reg:77.9162) beta=7.68
-Iter  7648 | Total loss: 0.0530 (MSE:0.0530, Reg:0.0000) beta=6.46
+Iter     1 | Total loss: 0.0705 (MSE:0.0705, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 643861.1250 (MSE:0.0463, Reg:643861.0625) beta=20.00
+Iter  1000 | Total loss: 48181.7852 (MSE:0.0533, Reg:48181.7305) beta=19.05
+Iter  2000 | Total loss: 22392.7266 (MSE:0.0546, Reg:22392.6719) beta=17.16
+Iter  3000 | Total loss: 14695.7314 (MSE:0.0552, Reg:14695.6758) beta=15.26
+Iter  4000 | Total loss: 9432.6406 (MSE:0.0513, Reg:9432.5898) beta=13.37
+Iter  5000 | Total loss: 5128.5781 (MSE:0.0473, Reg:5128.5308) beta=11.47
+Iter  6000 | Total loss: 1594.5394 (MSE:0.0554, Reg:1594.4840) beta=9.58
+Iter  7000 | Total loss: 108.9326 (MSE:0.0602, Reg:108.8724) beta=7.68
+Iter  7534 | Total loss: 0.0502 (MSE:0.0502, Reg:0.0000) beta=6.67
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -909,15 +908,15 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0065 (MSE:0.0065, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 415457.2188 (MSE:0.0058, Reg:415457.2188) beta=20.00
-Iter  1000 | Total loss: 197.3177 (MSE:0.0082, Reg:197.3094) beta=19.05
-Iter  2000 | Total loss: 75.0066 (MSE:0.0066, Reg:75.0000) beta=17.16
-Iter  3000 | Total loss: 51.0082 (MSE:0.0082, Reg:51.0000) beta=15.26
-Iter  4000 | Total loss: 39.0062 (MSE:0.0077, Reg:38.9985) beta=13.37
-Iter  5000 | Total loss: 23.9530 (MSE:0.0065, Reg:23.9465) beta=11.47
-Iter  6000 | Total loss: 7.0068 (MSE:0.0068, Reg:7.0000) beta=9.58
-Iter  6784 | Total loss: 0.0068 (MSE:0.0068, Reg:0.0000) beta=8.09
+Iter     1 | Total loss: 0.0086 (MSE:0.0086, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 411172.9375 (MSE:0.0061, Reg:411172.9375) beta=20.00
+Iter  1000 | Total loss: 235.7099 (MSE:0.0060, Reg:235.7040) beta=19.05
+Iter  2000 | Total loss: 91.0071 (MSE:0.0083, Reg:90.9989) beta=17.16
+Iter  3000 | Total loss: 56.7860 (MSE:0.0067, Reg:56.7794) beta=15.26
+Iter  4000 | Total loss: 29.0064 (MSE:0.0064, Reg:29.0000) beta=13.37
+Iter  5000 | Total loss: 16.9247 (MSE:0.0074, Reg:16.9173) beta=11.47
+Iter  6000 | Total loss: 8.6790 (MSE:0.0082, Reg:8.6708) beta=9.58
+Iter  6850 | Total loss: 0.0076 (MSE:0.0076, Reg:0.0000) beta=7.97
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -940,16 +939,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0479 (MSE:0.0479, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 511420.5938 (MSE:0.0328, Reg:511420.5625) beta=20.00
-Iter  1000 | Total loss: 52612.6367 (MSE:0.0321, Reg:52612.6055) beta=19.05
-Iter  2000 | Total loss: 22232.6309 (MSE:0.0354, Reg:22232.5957) beta=17.16
-Iter  3000 | Total loss: 13278.3418 (MSE:0.0390, Reg:13278.3027) beta=15.26
-Iter  4000 | Total loss: 7887.6069 (MSE:0.0345, Reg:7887.5723) beta=13.37
-Iter  5000 | Total loss: 3847.0583 (MSE:0.0393, Reg:3847.0190) beta=11.47
-Iter  6000 | Total loss: 1266.1581 (MSE:0.0391, Reg:1266.1189) beta=9.58
-Iter  7000 | Total loss: 117.2327 (MSE:0.0408, Reg:117.1919) beta=7.68
-Iter  7705 | Total loss: 0.0359 (MSE:0.0359, Reg:0.0000) beta=6.35
+Iter     1 | Total loss: 0.0541 (MSE:0.0541, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 517052.0312 (MSE:0.0365, Reg:517052.0000) beta=20.00
+Iter  1000 | Total loss: 53816.4414 (MSE:0.0352, Reg:53816.4062) beta=19.05
+Iter  2000 | Total loss: 22735.6191 (MSE:0.0416, Reg:22735.5781) beta=17.16
+Iter  3000 | Total loss: 13699.4541 (MSE:0.0401, Reg:13699.4141) beta=15.26
+Iter  4000 | Total loss: 8304.2402 (MSE:0.0394, Reg:8304.2012) beta=13.37
+Iter  5000 | Total loss: 4144.3604 (MSE:0.0357, Reg:4144.3247) beta=11.47
+Iter  6000 | Total loss: 1421.0227 (MSE:0.0342, Reg:1420.9885) beta=9.58
+Iter  7000 | Total loss: 132.2391 (MSE:0.0384, Reg:132.2007) beta=7.68
+Iter  7624 | Total loss: 0.0410 (MSE:0.0410, Reg:0.0000) beta=6.50
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -972,15 +971,15 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0031 (MSE:0.0031, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 151362.6562 (MSE:0.0029, Reg:151362.6562) beta=20.00
-Iter  1000 | Total loss: 485.3240 (MSE:0.0029, Reg:485.3210) beta=19.05
-Iter  2000 | Total loss: 163.4357 (MSE:0.0026, Reg:163.4331) beta=17.16
-Iter  3000 | Total loss: 82.0029 (MSE:0.0029, Reg:82.0000) beta=15.26
-Iter  4000 | Total loss: 43.9386 (MSE:0.0028, Reg:43.9358) beta=13.37
-Iter  5000 | Total loss: 13.0029 (MSE:0.0029, Reg:13.0000) beta=11.47
-Iter  6000 | Total loss: 4.0028 (MSE:0.0028, Reg:4.0000) beta=9.58
-Iter  6781 | Total loss: 0.0030 (MSE:0.0030, Reg:0.0000) beta=8.10
+Iter     1 | Total loss: 0.0030 (MSE:0.0030, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 151134.7500 (MSE:0.0027, Reg:151134.7500) beta=20.00
+Iter  1000 | Total loss: 612.9380 (MSE:0.0030, Reg:612.9350) beta=19.05
+Iter  2000 | Total loss: 172.1874 (MSE:0.0027, Reg:172.1846) beta=17.16
+Iter  3000 | Total loss: 95.0014 (MSE:0.0029, Reg:94.9985) beta=15.26
+Iter  4000 | Total loss: 57.0027 (MSE:0.0027, Reg:57.0000) beta=13.37
+Iter  5000 | Total loss: 20.0029 (MSE:0.0029, Reg:20.0000) beta=11.47
+Iter  6000 | Total loss: 6.3655 (MSE:0.0034, Reg:6.3621) beta=9.58
+Iter  6751 | Total loss: 0.0029 (MSE:0.0029, Reg:0.0000) beta=8.16
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -1003,16 +1002,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.1086 (MSE:0.1086, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 701792.6875 (MSE:0.0631, Reg:701792.6250) beta=20.00
-Iter  1000 | Total loss: 46450.9609 (MSE:0.0607, Reg:46450.8984) beta=19.05
-Iter  2000 | Total loss: 21198.4199 (MSE:0.0765, Reg:21198.3438) beta=17.16
-Iter  3000 | Total loss: 13539.1836 (MSE:0.0643, Reg:13539.1191) beta=15.26
-Iter  4000 | Total loss: 8383.2715 (MSE:0.0651, Reg:8383.2061) beta=13.37
-Iter  5000 | Total loss: 4181.8667 (MSE:0.0748, Reg:4181.7920) beta=11.47
-Iter  6000 | Total loss: 1279.3613 (MSE:0.0672, Reg:1279.2942) beta=9.58
-Iter  7000 | Total loss: 48.7632 (MSE:0.0645, Reg:48.6988) beta=7.68
-Iter  7638 | Total loss: 0.0670 (MSE:0.0670, Reg:0.0000) beta=6.48
+Iter     1 | Total loss: 0.1106 (MSE:0.1106, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 711298.1250 (MSE:0.0674, Reg:711298.0625) beta=20.00
+Iter  1000 | Total loss: 49092.5000 (MSE:0.0702, Reg:49092.4297) beta=19.05
+Iter  2000 | Total loss: 22380.8555 (MSE:0.0673, Reg:22380.7891) beta=17.16
+Iter  3000 | Total loss: 14249.3740 (MSE:0.0614, Reg:14249.3125) beta=15.26
+Iter  4000 | Total loss: 8874.8740 (MSE:0.0660, Reg:8874.8076) beta=13.37
+Iter  5000 | Total loss: 4632.8584 (MSE:0.0671, Reg:4632.7910) beta=11.47
+Iter  6000 | Total loss: 1407.2761 (MSE:0.0622, Reg:1407.2139) beta=9.58
+Iter  7000 | Total loss: 56.6930 (MSE:0.0652, Reg:56.6279) beta=7.68
+Iter  7461 | Total loss: 0.0722 (MSE:0.0722, Reg:0.0000) beta=6.81
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -1035,17 +1034,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0557 (MSE:0.0557, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 517297.3125 (MSE:0.0435, Reg:517297.2812) beta=20.00
-Iter  1000 | Total loss: 4585.8110 (MSE:0.0442, Reg:4585.7666) beta=19.05
-Iter  2000 | Total loss: 1735.7321 (MSE:0.0436, Reg:1735.6885) beta=17.16
-Iter  3000 | Total loss: 799.4742 (MSE:0.0526, Reg:799.4216) beta=15.26
-Iter  4000 | Total loss: 388.9523 (MSE:0.0396, Reg:388.9127) beta=13.37
-Iter  5000 | Total loss: 159.5040 (MSE:0.0448, Reg:159.4593) beta=11.47
-Iter  6000 | Total loss: 38.3002 (MSE:0.0436, Reg:38.2566) beta=9.58
-Iter  7000 | Total loss: 7.9873 (MSE:0.0468, Reg:7.9405) beta=7.68
-Iter  8000 | Total loss: 1.0406 (MSE:0.0406, Reg:1.0000) beta=5.79
-Iter  8039 | Total loss: 0.0462 (MSE:0.0462, Reg:0.0000) beta=5.72
+Iter     1 | Total loss: 0.0374 (MSE:0.0374, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 465439.2812 (MSE:0.0386, Reg:465439.2500) beta=20.00
+Iter  1000 | Total loss: 3755.6299 (MSE:0.0404, Reg:3755.5894) beta=19.05
+Iter  2000 | Total loss: 1332.3916 (MSE:0.0440, Reg:1332.3477) beta=17.16
+Iter  3000 | Total loss: 587.2563 (MSE:0.0490, Reg:587.2074) beta=15.26
+Iter  4000 | Total loss: 299.7708 (MSE:0.0414, Reg:299.7294) beta=13.37
+Iter  5000 | Total loss: 111.9832 (MSE:0.0379, Reg:111.9453) beta=11.47
+Iter  6000 | Total loss: 35.0532 (MSE:0.0532, Reg:35.0000) beta=9.58
+Iter  7000 | Total loss: 6.0443 (MSE:0.0443, Reg:6.0000) beta=7.68
+Iter  7417 | Total loss: 0.0549 (MSE:0.0549, Reg:0.0000) beta=6.89
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -1068,16 +1066,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0650 (MSE:0.0650, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 548138.8125 (MSE:0.0497, Reg:548138.7500) beta=20.00
-Iter  1000 | Total loss: 51779.8203 (MSE:0.0516, Reg:51779.7695) beta=19.05
-Iter  2000 | Total loss: 22510.7383 (MSE:0.0552, Reg:22510.6836) beta=17.16
-Iter  3000 | Total loss: 13811.6611 (MSE:0.0500, Reg:13811.6113) beta=15.26
-Iter  4000 | Total loss: 8194.1992 (MSE:0.0559, Reg:8194.1436) beta=13.37
-Iter  5000 | Total loss: 4116.6406 (MSE:0.0534, Reg:4116.5874) beta=11.47
-Iter  6000 | Total loss: 1315.0593 (MSE:0.0528, Reg:1315.0066) beta=9.58
-Iter  7000 | Total loss: 72.9638 (MSE:0.0504, Reg:72.9134) beta=7.68
-Iter  7569 | Total loss: 0.0556 (MSE:0.0556, Reg:0.0000) beta=6.61
+Iter     1 | Total loss: 0.0700 (MSE:0.0700, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 544418.1875 (MSE:0.0514, Reg:544418.1250) beta=20.00
+Iter  1000 | Total loss: 51494.6289 (MSE:0.0516, Reg:51494.5781) beta=19.05
+Iter  2000 | Total loss: 22451.7324 (MSE:0.0520, Reg:22451.6797) beta=17.16
+Iter  3000 | Total loss: 13804.0518 (MSE:0.0539, Reg:13803.9980) beta=15.26
+Iter  4000 | Total loss: 8272.1328 (MSE:0.0542, Reg:8272.0791) beta=13.37
+Iter  5000 | Total loss: 4234.6558 (MSE:0.0470, Reg:4234.6089) beta=11.47
+Iter  6000 | Total loss: 1287.2523 (MSE:0.0536, Reg:1287.1987) beta=9.58
+Iter  7000 | Total loss: 86.6142 (MSE:0.0490, Reg:86.5653) beta=7.68
+Iter  7908 | Total loss: 0.0536 (MSE:0.0536, Reg:0.0000) beta=5.96
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -1100,15 +1098,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0058 (MSE:0.0058, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 162886.5312 (MSE:0.0051, Reg:162886.5312) beta=20.00
-Iter  1000 | Total loss: 915.4276 (MSE:0.0051, Reg:915.4225) beta=19.05
-Iter  2000 | Total loss: 274.1297 (MSE:0.0048, Reg:274.1249) beta=17.16
-Iter  3000 | Total loss: 141.7446 (MSE:0.0050, Reg:141.7396) beta=15.26
-Iter  4000 | Total loss: 81.9622 (MSE:0.0048, Reg:81.9574) beta=13.37
-Iter  5000 | Total loss: 37.0047 (MSE:0.0047, Reg:37.0000) beta=11.47
-Iter  6000 | Total loss: 9.0049 (MSE:0.0049, Reg:9.0000) beta=9.58
-Iter  6906 | Total loss: 0.0045 (MSE:0.0045, Reg:0.0000) beta=7.86
+Iter     1 | Total loss: 0.0053 (MSE:0.0053, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 163857.5000 (MSE:0.0047, Reg:163857.5000) beta=20.00
+Iter  1000 | Total loss: 951.9853 (MSE:0.0050, Reg:951.9803) beta=19.05
+Iter  2000 | Total loss: 252.4742 (MSE:0.0048, Reg:252.4694) beta=17.16
+Iter  3000 | Total loss: 131.9813 (MSE:0.0049, Reg:131.9764) beta=15.26
+Iter  4000 | Total loss: 62.9384 (MSE:0.0049, Reg:62.9334) beta=13.37
+Iter  5000 | Total loss: 25.0049 (MSE:0.0049, Reg:25.0000) beta=11.47
+Iter  6000 | Total loss: 6.3147 (MSE:0.0050, Reg:6.3096) beta=9.58
+Iter  7000 | Total loss: 1.0047 (MSE:0.0047, Reg:1.0000) beta=7.68
+Iter  7048 | Total loss: 0.0047 (MSE:0.0047, Reg:0.0000) beta=7.59
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -1131,16 +1130,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.1088 (MSE:0.1088, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 730096.1875 (MSE:0.0772, Reg:730096.1250) beta=20.00
-Iter  1000 | Total loss: 38102.4180 (MSE:0.0745, Reg:38102.3438) beta=19.05
-Iter  2000 | Total loss: 16788.3301 (MSE:0.0755, Reg:16788.2539) beta=17.16
-Iter  3000 | Total loss: 10353.6133 (MSE:0.0714, Reg:10353.5420) beta=15.26
-Iter  4000 | Total loss: 6347.2188 (MSE:0.0713, Reg:6347.1475) beta=13.37
-Iter  5000 | Total loss: 3141.5730 (MSE:0.0758, Reg:3141.4971) beta=11.47
-Iter  6000 | Total loss: 885.3179 (MSE:0.0790, Reg:885.2389) beta=9.58
-Iter  7000 | Total loss: 29.6664 (MSE:0.0729, Reg:29.5935) beta=7.68
-Iter  7550 | Total loss: 0.0722 (MSE:0.0722, Reg:0.0000) beta=6.64
+Iter     1 | Total loss: 0.1112 (MSE:0.1112, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 732631.5000 (MSE:0.0824, Reg:732631.4375) beta=20.00
+Iter  1000 | Total loss: 38866.9102 (MSE:0.0754, Reg:38866.8359) beta=19.05
+Iter  2000 | Total loss: 17542.8184 (MSE:0.0835, Reg:17542.7344) beta=17.16
+Iter  3000 | Total loss: 10868.3965 (MSE:0.0701, Reg:10868.3262) beta=15.26
+Iter  4000 | Total loss: 6682.0640 (MSE:0.0733, Reg:6681.9907) beta=13.37
+Iter  5000 | Total loss: 3243.3872 (MSE:0.0740, Reg:3243.3132) beta=11.47
+Iter  6000 | Total loss: 933.8486 (MSE:0.0769, Reg:933.7717) beta=9.58
+Iter  7000 | Total loss: 19.2720 (MSE:0.0751, Reg:19.1969) beta=7.68
+Iter  7610 | Total loss: 0.0753 (MSE:0.0753, Reg:0.0000) beta=6.53
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -1163,15 +1162,15 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0098 (MSE:0.0098, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 388585.4375 (MSE:0.0080, Reg:388585.4375) beta=20.00
-Iter  1000 | Total loss: 211.7991 (MSE:0.0085, Reg:211.7906) beta=19.05
-Iter  2000 | Total loss: 81.9294 (MSE:0.0087, Reg:81.9207) beta=17.16
-Iter  3000 | Total loss: 62.4335 (MSE:0.0093, Reg:62.4242) beta=15.26
-Iter  4000 | Total loss: 39.0094 (MSE:0.0094, Reg:39.0000) beta=13.37
-Iter  5000 | Total loss: 23.0088 (MSE:0.0088, Reg:23.0000) beta=11.47
-Iter  6000 | Total loss: 9.0093 (MSE:0.0093, Reg:9.0000) beta=9.58
-Iter  6760 | Total loss: 0.0090 (MSE:0.0090, Reg:0.0000) beta=8.14
+Iter     1 | Total loss: 0.0094 (MSE:0.0094, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 390988.0000 (MSE:0.0080, Reg:390988.0000) beta=20.00
+Iter  1000 | Total loss: 197.0022 (MSE:0.0091, Reg:196.9931) beta=19.05
+Iter  2000 | Total loss: 86.5582 (MSE:0.0090, Reg:86.5492) beta=17.16
+Iter  3000 | Total loss: 60.0091 (MSE:0.0091, Reg:60.0000) beta=15.26
+Iter  4000 | Total loss: 44.0093 (MSE:0.0093, Reg:44.0000) beta=13.37
+Iter  5000 | Total loss: 28.0088 (MSE:0.0088, Reg:28.0000) beta=11.47
+Iter  6000 | Total loss: 12.5221 (MSE:0.0103, Reg:12.5118) beta=9.58
+Iter  6960 | Total loss: 0.0094 (MSE:0.0094, Reg:0.0000) beta=7.76
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -1194,16 +1193,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0687 (MSE:0.0687, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 598424.1250 (MSE:0.0523, Reg:598424.0625) beta=20.00
-Iter  1000 | Total loss: 50241.3516 (MSE:0.0546, Reg:50241.2969) beta=19.05
-Iter  2000 | Total loss: 21322.8496 (MSE:0.0519, Reg:21322.7969) beta=17.16
-Iter  3000 | Total loss: 12924.0928 (MSE:0.0499, Reg:12924.0430) beta=15.26
-Iter  4000 | Total loss: 7615.5659 (MSE:0.0492, Reg:7615.5166) beta=13.37
-Iter  5000 | Total loss: 3848.1277 (MSE:0.0464, Reg:3848.0813) beta=11.47
-Iter  6000 | Total loss: 1139.6704 (MSE:0.0496, Reg:1139.6208) beta=9.58
-Iter  7000 | Total loss: 53.3855 (MSE:0.0491, Reg:53.3364) beta=7.68
-Iter  7712 | Total loss: 0.0508 (MSE:0.0508, Reg:0.0000) beta=6.34
+Iter     1 | Total loss: 0.0612 (MSE:0.0612, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 601927.4375 (MSE:0.0490, Reg:601927.3750) beta=20.00
+Iter  1000 | Total loss: 49970.2227 (MSE:0.0515, Reg:49970.1719) beta=19.05
+Iter  2000 | Total loss: 21590.6934 (MSE:0.0536, Reg:21590.6406) beta=17.16
+Iter  3000 | Total loss: 13264.9375 (MSE:0.0485, Reg:13264.8887) beta=15.26
+Iter  4000 | Total loss: 8073.8164 (MSE:0.0461, Reg:8073.7705) beta=13.37
+Iter  5000 | Total loss: 3962.4624 (MSE:0.0491, Reg:3962.4133) beta=11.47
+Iter  6000 | Total loss: 1186.7974 (MSE:0.0468, Reg:1186.7506) beta=9.58
+Iter  7000 | Total loss: 55.0006 (MSE:0.0511, Reg:54.9495) beta=7.68
+Iter  7639 | Total loss: 0.0508 (MSE:0.0508, Reg:0.0000) beta=6.47
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -1226,15 +1225,15 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0040 (MSE:0.0040, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 154090.6250 (MSE:0.0037, Reg:154090.6250) beta=20.00
-Iter  1000 | Total loss: 166.1372 (MSE:0.0039, Reg:166.1334) beta=19.05
-Iter  2000 | Total loss: 46.0040 (MSE:0.0040, Reg:46.0000) beta=17.16
-Iter  3000 | Total loss: 29.8195 (MSE:0.0041, Reg:29.8154) beta=15.26
-Iter  4000 | Total loss: 18.0040 (MSE:0.0040, Reg:18.0000) beta=13.37
-Iter  5000 | Total loss: 12.0041 (MSE:0.0041, Reg:12.0000) beta=11.47
-Iter  6000 | Total loss: 2.0039 (MSE:0.0039, Reg:2.0000) beta=9.58
-Iter  6940 | Total loss: 0.0042 (MSE:0.0042, Reg:0.0000) beta=7.80
+Iter     1 | Total loss: 0.0044 (MSE:0.0044, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 153859.0312 (MSE:0.0038, Reg:153859.0312) beta=20.00
+Iter  1000 | Total loss: 200.1656 (MSE:0.0041, Reg:200.1615) beta=19.05
+Iter  2000 | Total loss: 68.9768 (MSE:0.0039, Reg:68.9730) beta=17.16
+Iter  3000 | Total loss: 40.0038 (MSE:0.0038, Reg:40.0000) beta=15.26
+Iter  4000 | Total loss: 23.0016 (MSE:0.0040, Reg:22.9976) beta=13.37
+Iter  5000 | Total loss: 13.0041 (MSE:0.0041, Reg:13.0000) beta=11.47
+Iter  6000 | Total loss: 6.0039 (MSE:0.0039, Reg:6.0000) beta=9.58
+Iter  6858 | Total loss: 0.0042 (MSE:0.0042, Reg:0.0000) beta=7.95
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -1257,16 +1256,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.1344 (MSE:0.1344, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 826142.6875 (MSE:0.0895, Reg:826142.6250) beta=20.00
-Iter  1000 | Total loss: 53104.5352 (MSE:0.0886, Reg:53104.4453) beta=19.05
-Iter  2000 | Total loss: 23076.9707 (MSE:0.0873, Reg:23076.8828) beta=17.16
-Iter  3000 | Total loss: 13308.6377 (MSE:0.0995, Reg:13308.5381) beta=15.26
-Iter  4000 | Total loss: 7480.2847 (MSE:0.0941, Reg:7480.1904) beta=13.37
-Iter  5000 | Total loss: 3397.6565 (MSE:0.0875, Reg:3397.5691) beta=11.47
-Iter  6000 | Total loss: 793.6613 (MSE:0.0891, Reg:793.5721) beta=9.58
-Iter  7000 | Total loss: 11.4519 (MSE:0.0902, Reg:11.3617) beta=7.68
-Iter  7175 | Total loss: 0.0852 (MSE:0.0852, Reg:0.0000) beta=7.35
+Iter     1 | Total loss: 0.1424 (MSE:0.1424, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 826040.6250 (MSE:0.0812, Reg:826040.5625) beta=20.00
+Iter  1000 | Total loss: 51022.4883 (MSE:0.0868, Reg:51022.4023) beta=19.05
+Iter  2000 | Total loss: 22401.7734 (MSE:0.0905, Reg:22401.6836) beta=17.16
+Iter  3000 | Total loss: 12975.5752 (MSE:0.1004, Reg:12975.4746) beta=15.26
+Iter  4000 | Total loss: 7407.1699 (MSE:0.0945, Reg:7407.0752) beta=13.37
+Iter  5000 | Total loss: 3325.7043 (MSE:0.0916, Reg:3325.6128) beta=11.47
+Iter  6000 | Total loss: 735.5378 (MSE:0.0880, Reg:735.4498) beta=9.58
+Iter  7000 | Total loss: 18.7069 (MSE:0.0914, Reg:18.6154) beta=7.68
+Iter  7571 | Total loss: 0.0868 (MSE:0.0868, Reg:0.0000) beta=6.60
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -1289,15 +1288,15 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0117 (MSE:0.0117, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 348468.5000 (MSE:0.0110, Reg:348468.5000) beta=20.00
-Iter  1000 | Total loss: 465.3080 (MSE:0.0119, Reg:465.2961) beta=19.05
-Iter  2000 | Total loss: 175.9292 (MSE:0.0118, Reg:175.9174) beta=17.16
-Iter  3000 | Total loss: 111.9972 (MSE:0.0120, Reg:111.9852) beta=15.26
-Iter  4000 | Total loss: 78.0114 (MSE:0.0114, Reg:78.0000) beta=13.37
-Iter  5000 | Total loss: 54.0117 (MSE:0.0117, Reg:54.0000) beta=11.47
-Iter  6000 | Total loss: 16.0114 (MSE:0.0114, Reg:16.0000) beta=9.58
-Iter  6754 | Total loss: 0.0119 (MSE:0.0119, Reg:0.0000) beta=8.15
+Iter     1 | Total loss: 0.0123 (MSE:0.0123, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 348967.6875 (MSE:0.0110, Reg:348967.6875) beta=20.00
+Iter  1000 | Total loss: 456.1412 (MSE:0.0113, Reg:456.1299) beta=19.05
+Iter  2000 | Total loss: 156.2423 (MSE:0.0119, Reg:156.2304) beta=17.16
+Iter  3000 | Total loss: 95.0111 (MSE:0.0115, Reg:94.9996) beta=15.26
+Iter  4000 | Total loss: 67.9382 (MSE:0.0115, Reg:67.9268) beta=13.37
+Iter  5000 | Total loss: 38.0116 (MSE:0.0116, Reg:38.0000) beta=11.47
+Iter  6000 | Total loss: 15.2093 (MSE:0.0108, Reg:15.1985) beta=9.58
+Iter  6944 | Total loss: 0.0109 (MSE:0.0109, Reg:0.0000) beta=7.79
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -1320,16 +1319,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0634 (MSE:0.0634, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 607176.3125 (MSE:0.0441, Reg:607176.2500) beta=20.00
-Iter  1000 | Total loss: 41946.2422 (MSE:0.0485, Reg:41946.1953) beta=19.05
-Iter  2000 | Total loss: 18128.8555 (MSE:0.0478, Reg:18128.8086) beta=17.16
-Iter  3000 | Total loss: 11046.9736 (MSE:0.0537, Reg:11046.9199) beta=15.26
-Iter  4000 | Total loss: 6709.8179 (MSE:0.0522, Reg:6709.7656) beta=13.37
-Iter  5000 | Total loss: 3341.1497 (MSE:0.0509, Reg:3341.0986) beta=11.47
-Iter  6000 | Total loss: 917.9372 (MSE:0.0555, Reg:917.8817) beta=9.58
-Iter  7000 | Total loss: 32.9385 (MSE:0.0461, Reg:32.8924) beta=7.68
-Iter  7732 | Total loss: 0.0448 (MSE:0.0448, Reg:0.0000) beta=6.30
+Iter     1 | Total loss: 0.0622 (MSE:0.0622, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 608366.4375 (MSE:0.0478, Reg:608366.3750) beta=20.00
+Iter  1000 | Total loss: 42646.6719 (MSE:0.0487, Reg:42646.6250) beta=19.05
+Iter  2000 | Total loss: 18639.3301 (MSE:0.0535, Reg:18639.2773) beta=17.16
+Iter  3000 | Total loss: 11476.4678 (MSE:0.0474, Reg:11476.4199) beta=15.26
+Iter  4000 | Total loss: 7099.3896 (MSE:0.0511, Reg:7099.3384) beta=13.37
+Iter  5000 | Total loss: 3690.0293 (MSE:0.0473, Reg:3689.9819) beta=11.47
+Iter  6000 | Total loss: 1070.0945 (MSE:0.0479, Reg:1070.0466) beta=9.58
+Iter  7000 | Total loss: 35.6722 (MSE:0.0466, Reg:35.6257) beta=7.68
+Iter  7435 | Total loss: 0.0536 (MSE:0.0536, Reg:0.0000) beta=6.86
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -1352,14 +1351,15 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0045 (MSE:0.0045, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 143683.8750 (MSE:0.0033, Reg:143683.8750) beta=20.00
-Iter  1000 | Total loss: 119.0765 (MSE:0.0035, Reg:119.0729) beta=19.05
-Iter  2000 | Total loss: 27.0035 (MSE:0.0035, Reg:27.0000) beta=17.16
-Iter  3000 | Total loss: 16.0036 (MSE:0.0036, Reg:16.0000) beta=15.26
-Iter  4000 | Total loss: 11.0039 (MSE:0.0039, Reg:11.0000) beta=13.37
-Iter  5000 | Total loss: 6.0032 (MSE:0.0037, Reg:5.9996) beta=11.47
-Iter  5816 | Total loss: 0.0040 (MSE:0.0040, Reg:0.0000) beta=9.93
+Iter     1 | Total loss: 0.0037 (MSE:0.0037, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 142381.7031 (MSE:0.0034, Reg:142381.7031) beta=20.00
+Iter  1000 | Total loss: 112.0125 (MSE:0.0033, Reg:112.0091) beta=19.05
+Iter  2000 | Total loss: 35.0035 (MSE:0.0035, Reg:35.0000) beta=17.16
+Iter  3000 | Total loss: 15.0036 (MSE:0.0036, Reg:15.0000) beta=15.26
+Iter  4000 | Total loss: 9.0037 (MSE:0.0037, Reg:9.0000) beta=13.37
+Iter  5000 | Total loss: 5.0234 (MSE:0.0035, Reg:5.0199) beta=11.47
+Iter  6000 | Total loss: 2.0036 (MSE:0.0036, Reg:2.0000) beta=9.58
+Iter  6144 | Total loss: 0.0036 (MSE:0.0036, Reg:0.0000) beta=9.31
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -1382,16 +1382,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.2000 (MSE:0.2000, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 952900.3125 (MSE:0.1061, Reg:952900.1875) beta=20.00
-Iter  1000 | Total loss: 79044.5000 (MSE:0.1143, Reg:79044.3828) beta=19.05
-Iter  2000 | Total loss: 35086.5039 (MSE:0.1127, Reg:35086.3906) beta=17.16
-Iter  3000 | Total loss: 18640.9902 (MSE:0.1122, Reg:18640.8789) beta=15.26
-Iter  4000 | Total loss: 9941.1006 (MSE:0.1085, Reg:9940.9922) beta=13.37
-Iter  5000 | Total loss: 3851.1055 (MSE:0.1090, Reg:3850.9963) beta=11.47
-Iter  6000 | Total loss: 644.1921 (MSE:0.1032, Reg:644.0889) beta=9.58
-Iter  7000 | Total loss: 8.1059 (MSE:0.1059, Reg:8.0000) beta=7.68
-Iter  7414 | Total loss: 0.0999 (MSE:0.0999, Reg:0.0000) beta=6.90
+Iter     1 | Total loss: 0.1889 (MSE:0.1889, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 951013.8125 (MSE:0.1045, Reg:951013.6875) beta=20.00
+Iter  1000 | Total loss: 75988.7578 (MSE:0.1035, Reg:75988.6562) beta=19.05
+Iter  2000 | Total loss: 34006.3281 (MSE:0.0993, Reg:34006.2305) beta=17.16
+Iter  3000 | Total loss: 18258.4043 (MSE:0.1073, Reg:18258.2969) beta=15.26
+Iter  4000 | Total loss: 9611.2588 (MSE:0.1090, Reg:9611.1494) beta=13.37
+Iter  5000 | Total loss: 3644.3840 (MSE:0.1025, Reg:3644.2815) beta=11.47
+Iter  6000 | Total loss: 644.6947 (MSE:0.1015, Reg:644.5932) beta=9.58
+Iter  7000 | Total loss: 12.7127 (MSE:0.1087, Reg:12.6039) beta=7.68
+Iter  7300 | Total loss: 0.0991 (MSE:0.0991, Reg:0.0000) beta=7.12
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -1414,16 +1414,15 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0110 (MSE:0.0110, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 373778.5000 (MSE:0.0088, Reg:373778.5000) beta=20.00
-Iter  1000 | Total loss: 347.5302 (MSE:0.0111, Reg:347.5191) beta=19.05
-Iter  2000 | Total loss: 152.2762 (MSE:0.0114, Reg:152.2648) beta=17.16
-Iter  3000 | Total loss: 109.0107 (MSE:0.0108, Reg:109.0000) beta=15.26
-Iter  4000 | Total loss: 78.0111 (MSE:0.0111, Reg:78.0000) beta=13.37
-Iter  5000 | Total loss: 48.6841 (MSE:0.0110, Reg:48.6731) beta=11.47
-Iter  6000 | Total loss: 17.0112 (MSE:0.0112, Reg:17.0000) beta=9.58
-Iter  7000 | Total loss: 3.0112 (MSE:0.0112, Reg:3.0000) beta=7.68
-Iter  7320 | Total loss: 0.0105 (MSE:0.0105, Reg:0.0000) beta=7.08
+Iter     1 | Total loss: 0.0113 (MSE:0.0113, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 372950.9375 (MSE:0.0089, Reg:372950.9375) beta=20.00
+Iter  1000 | Total loss: 333.8891 (MSE:0.0105, Reg:333.8786) beta=19.05
+Iter  2000 | Total loss: 168.5877 (MSE:0.0111, Reg:168.5766) beta=17.16
+Iter  3000 | Total loss: 124.0111 (MSE:0.0111, Reg:124.0000) beta=15.26
+Iter  4000 | Total loss: 84.0115 (MSE:0.0115, Reg:84.0000) beta=13.37
+Iter  5000 | Total loss: 53.2432 (MSE:0.0113, Reg:53.2319) beta=11.47
+Iter  6000 | Total loss: 25.0112 (MSE:0.0112, Reg:25.0000) beta=9.58
+Iter  6874 | Total loss: 0.0108 (MSE:0.0108, Reg:0.0000) beta=7.92
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -1446,16 +1445,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0444 (MSE:0.0444, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 600072.8750 (MSE:0.0276, Reg:600072.8750) beta=20.00
-Iter  1000 | Total loss: 41792.8359 (MSE:0.0306, Reg:41792.8047) beta=19.05
-Iter  2000 | Total loss: 16842.9902 (MSE:0.0300, Reg:16842.9609) beta=17.16
-Iter  3000 | Total loss: 9451.3994 (MSE:0.0299, Reg:9451.3691) beta=15.26
-Iter  4000 | Total loss: 5381.2075 (MSE:0.0335, Reg:5381.1738) beta=13.37
-Iter  5000 | Total loss: 2536.4026 (MSE:0.0296, Reg:2536.3730) beta=11.47
-Iter  6000 | Total loss: 725.0531 (MSE:0.0293, Reg:725.0238) beta=9.58
-Iter  7000 | Total loss: 32.1304 (MSE:0.0286, Reg:32.1019) beta=7.68
-Iter  7667 | Total loss: 0.0277 (MSE:0.0277, Reg:0.0000) beta=6.42
+Iter     1 | Total loss: 0.0445 (MSE:0.0445, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 601781.7500 (MSE:0.0279, Reg:601781.7500) beta=20.00
+Iter  1000 | Total loss: 42082.0039 (MSE:0.0273, Reg:42081.9766) beta=19.05
+Iter  2000 | Total loss: 17044.1387 (MSE:0.0280, Reg:17044.1113) beta=17.16
+Iter  3000 | Total loss: 9481.7393 (MSE:0.0260, Reg:9481.7129) beta=15.26
+Iter  4000 | Total loss: 5515.2939 (MSE:0.0322, Reg:5515.2617) beta=13.37
+Iter  5000 | Total loss: 2717.8523 (MSE:0.0286, Reg:2717.8237) beta=11.47
+Iter  6000 | Total loss: 782.8959 (MSE:0.0302, Reg:782.8658) beta=9.58
+Iter  7000 | Total loss: 44.9084 (MSE:0.0301, Reg:44.8783) beta=7.68
+Iter  7662 | Total loss: 0.0287 (MSE:0.0287, Reg:0.0000) beta=6.43
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -1478,14 +1477,13 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0016 (MSE:0.0016, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 126907.0156 (MSE:0.0015, Reg:126907.0156) beta=20.00
-Iter  1000 | Total loss: 30.9947 (MSE:0.0018, Reg:30.9928) beta=19.05
-Iter  2000 | Total loss: 11.9976 (MSE:0.0016, Reg:11.9960) beta=17.16
-Iter  3000 | Total loss: 5.0016 (MSE:0.0016, Reg:5.0000) beta=15.26
-Iter  4000 | Total loss: 2.0016 (MSE:0.0016, Reg:2.0000) beta=13.37
-Iter  5000 | Total loss: 1.0017 (MSE:0.0017, Reg:1.0000) beta=11.47
-Iter  5677 | Total loss: 0.0018 (MSE:0.0018, Reg:0.0000) beta=10.19
+Iter     1 | Total loss: 0.0018 (MSE:0.0018, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 128491.6797 (MSE:0.0014, Reg:128491.6797) beta=20.00
+Iter  1000 | Total loss: 18.0016 (MSE:0.0016, Reg:18.0000) beta=19.05
+Iter  2000 | Total loss: 6.0016 (MSE:0.0016, Reg:6.0000) beta=17.16
+Iter  3000 | Total loss: 4.0016 (MSE:0.0016, Reg:4.0000) beta=15.26
+Iter  4000 | Total loss: 1.8297 (MSE:0.0017, Reg:1.8280) beta=13.37
+Iter  4210 | Total loss: 0.0015 (MSE:0.0015, Reg:0.0000) beta=12.97
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -1508,16 +1506,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.1811 (MSE:0.1811, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 983610.0000 (MSE:0.0831, Reg:983609.9375) beta=20.00
-Iter  1000 | Total loss: 89119.9141 (MSE:0.0824, Reg:89119.8281) beta=19.05
-Iter  2000 | Total loss: 37548.1836 (MSE:0.0826, Reg:37548.1016) beta=17.16
-Iter  3000 | Total loss: 19413.7441 (MSE:0.0826, Reg:19413.6621) beta=15.26
-Iter  4000 | Total loss: 9984.5654 (MSE:0.0829, Reg:9984.4824) beta=13.37
-Iter  5000 | Total loss: 3836.6401 (MSE:0.0867, Reg:3836.5535) beta=11.47
-Iter  6000 | Total loss: 653.4670 (MSE:0.0790, Reg:653.3881) beta=9.58
-Iter  7000 | Total loss: 17.0715 (MSE:0.0922, Reg:16.9793) beta=7.68
-Iter  7289 | Total loss: 0.0816 (MSE:0.0816, Reg:0.0000) beta=7.14
+Iter     1 | Total loss: 0.1878 (MSE:0.1878, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 982346.3125 (MSE:0.0872, Reg:982346.2500) beta=20.00
+Iter  1000 | Total loss: 84627.9062 (MSE:0.0913, Reg:84627.8125) beta=19.05
+Iter  2000 | Total loss: 35696.9805 (MSE:0.0834, Reg:35696.8984) beta=17.16
+Iter  3000 | Total loss: 18687.8418 (MSE:0.0858, Reg:18687.7559) beta=15.26
+Iter  4000 | Total loss: 9612.7148 (MSE:0.0857, Reg:9612.6289) beta=13.37
+Iter  5000 | Total loss: 3619.4756 (MSE:0.0868, Reg:3619.3887) beta=11.47
+Iter  6000 | Total loss: 612.5295 (MSE:0.0879, Reg:612.4415) beta=9.58
+Iter  7000 | Total loss: 13.0904 (MSE:0.0907, Reg:12.9997) beta=7.68
+Iter  7386 | Total loss: 0.0833 (MSE:0.0833, Reg:0.0000) beta=6.95
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -1540,16 +1538,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0128 (MSE:0.0128, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 347006.9062 (MSE:0.0083, Reg:347006.9062) beta=20.00
-Iter  1000 | Total loss: 515.1119 (MSE:0.0104, Reg:515.1015) beta=19.05
-Iter  2000 | Total loss: 248.1625 (MSE:0.0096, Reg:248.1529) beta=17.16
-Iter  3000 | Total loss: 176.6785 (MSE:0.0101, Reg:176.6684) beta=15.26
-Iter  4000 | Total loss: 109.8176 (MSE:0.0101, Reg:109.8075) beta=13.37
-Iter  5000 | Total loss: 58.2854 (MSE:0.0097, Reg:58.2757) beta=11.47
-Iter  6000 | Total loss: 23.9884 (MSE:0.0101, Reg:23.9783) beta=9.58
-Iter  7000 | Total loss: 1.0096 (MSE:0.0096, Reg:1.0000) beta=7.68
-Iter  7200 | Total loss: 0.0100 (MSE:0.0100, Reg:0.0000) beta=7.31
+Iter     1 | Total loss: 0.0097 (MSE:0.0097, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 348590.8125 (MSE:0.0087, Reg:348590.8125) beta=20.00
+Iter  1000 | Total loss: 457.5320 (MSE:0.0097, Reg:457.5222) beta=19.05
+Iter  2000 | Total loss: 221.0111 (MSE:0.0111, Reg:221.0000) beta=17.16
+Iter  3000 | Total loss: 149.5830 (MSE:0.0109, Reg:149.5721) beta=15.26
+Iter  4000 | Total loss: 105.8695 (MSE:0.0099, Reg:105.8596) beta=13.37
+Iter  5000 | Total loss: 63.4242 (MSE:0.0100, Reg:63.4142) beta=11.47
+Iter  6000 | Total loss: 24.9536 (MSE:0.0105, Reg:24.9431) beta=9.58
+Iter  7000 | Total loss: 1.0099 (MSE:0.0099, Reg:1.0000) beta=7.68
+Iter  7283 | Total loss: 0.0095 (MSE:0.0095, Reg:0.0000) beta=7.15
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -1572,16 +1570,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0395 (MSE:0.0395, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 594584.3125 (MSE:0.0319, Reg:594584.2500) beta=20.00
-Iter  1000 | Total loss: 21292.0977 (MSE:0.0311, Reg:21292.0664) beta=19.05
-Iter  2000 | Total loss: 8095.5796 (MSE:0.0300, Reg:8095.5498) beta=17.16
-Iter  3000 | Total loss: 4593.4150 (MSE:0.0294, Reg:4593.3857) beta=15.26
-Iter  4000 | Total loss: 2803.3013 (MSE:0.0317, Reg:2803.2695) beta=13.37
-Iter  5000 | Total loss: 1355.2695 (MSE:0.0304, Reg:1355.2391) beta=11.47
-Iter  6000 | Total loss: 408.0711 (MSE:0.0352, Reg:408.0359) beta=9.58
-Iter  7000 | Total loss: 24.9233 (MSE:0.0308, Reg:24.8925) beta=7.68
-Iter  7756 | Total loss: 0.0309 (MSE:0.0309, Reg:0.0000) beta=6.25
+Iter     1 | Total loss: 0.0418 (MSE:0.0418, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 593865.8125 (MSE:0.0291, Reg:593865.8125) beta=20.00
+Iter  1000 | Total loss: 22166.2207 (MSE:0.0300, Reg:22166.1914) beta=19.05
+Iter  2000 | Total loss: 8360.9619 (MSE:0.0305, Reg:8360.9316) beta=17.16
+Iter  3000 | Total loss: 4694.3579 (MSE:0.0309, Reg:4694.3271) beta=15.26
+Iter  4000 | Total loss: 2804.7026 (MSE:0.0311, Reg:2804.6714) beta=13.37
+Iter  5000 | Total loss: 1360.5798 (MSE:0.0293, Reg:1360.5505) beta=11.47
+Iter  6000 | Total loss: 398.0903 (MSE:0.0319, Reg:398.0584) beta=9.58
+Iter  7000 | Total loss: 24.1345 (MSE:0.0313, Reg:24.1032) beta=7.68
+Iter  7627 | Total loss: 0.0297 (MSE:0.0297, Reg:0.0000) beta=6.50
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -1604,15 +1602,15 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0020 (MSE:0.0020, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 162275.3594 (MSE:0.0013, Reg:162275.3594) beta=20.00
-Iter  1000 | Total loss: 491.6037 (MSE:0.0017, Reg:491.6021) beta=19.05
-Iter  2000 | Total loss: 178.4429 (MSE:0.0019, Reg:178.4410) beta=17.16
-Iter  3000 | Total loss: 78.7634 (MSE:0.0015, Reg:78.7619) beta=15.26
-Iter  4000 | Total loss: 36.0017 (MSE:0.0017, Reg:36.0000) beta=13.37
-Iter  5000 | Total loss: 14.8541 (MSE:0.0017, Reg:14.8523) beta=11.47
-Iter  6000 | Total loss: 2.0016 (MSE:0.0016, Reg:2.0000) beta=9.58
-Iter  6654 | Total loss: 0.0018 (MSE:0.0018, Reg:0.0000) beta=8.34
+Iter     1 | Total loss: 0.0018 (MSE:0.0018, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 161040.3750 (MSE:0.0014, Reg:161040.3750) beta=20.00
+Iter  1000 | Total loss: 603.2014 (MSE:0.0014, Reg:603.2000) beta=19.05
+Iter  2000 | Total loss: 193.0927 (MSE:0.0016, Reg:193.0910) beta=17.16
+Iter  3000 | Total loss: 70.8422 (MSE:0.0016, Reg:70.8406) beta=15.26
+Iter  4000 | Total loss: 34.0017 (MSE:0.0017, Reg:34.0000) beta=13.37
+Iter  5000 | Total loss: 10.9876 (MSE:0.0016, Reg:10.9860) beta=11.47
+Iter  6000 | Total loss: 2.0018 (MSE:0.0018, Reg:2.0000) beta=9.58
+Iter  6885 | Total loss: 0.0018 (MSE:0.0018, Reg:0.0000) beta=7.90
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -1635,16 +1633,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.1165 (MSE:0.1165, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 853670.2500 (MSE:0.0716, Reg:853670.1875) beta=20.00
-Iter  1000 | Total loss: 15490.2354 (MSE:0.0848, Reg:15490.1504) beta=19.05
-Iter  2000 | Total loss: 6346.9502 (MSE:0.0850, Reg:6346.8652) beta=17.16
-Iter  3000 | Total loss: 3956.1204 (MSE:0.0836, Reg:3956.0366) beta=15.26
-Iter  4000 | Total loss: 2587.7356 (MSE:0.0847, Reg:2587.6509) beta=13.37
-Iter  5000 | Total loss: 1369.4557 (MSE:0.0897, Reg:1369.3660) beta=11.47
-Iter  6000 | Total loss: 387.7079 (MSE:0.0906, Reg:387.6172) beta=9.58
-Iter  7000 | Total loss: 7.9610 (MSE:0.0845, Reg:7.8766) beta=7.68
-Iter  7296 | Total loss: 0.0922 (MSE:0.0922, Reg:0.0000) beta=7.12
+Iter     1 | Total loss: 0.1213 (MSE:0.1213, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 850924.3125 (MSE:0.0791, Reg:850924.2500) beta=20.00
+Iter  1000 | Total loss: 15768.1846 (MSE:0.0793, Reg:15768.1055) beta=19.05
+Iter  2000 | Total loss: 6691.9580 (MSE:0.0861, Reg:6691.8721) beta=17.16
+Iter  3000 | Total loss: 4226.3198 (MSE:0.0859, Reg:4226.2339) beta=15.26
+Iter  4000 | Total loss: 2695.7290 (MSE:0.0780, Reg:2695.6509) beta=13.37
+Iter  5000 | Total loss: 1409.2448 (MSE:0.0910, Reg:1409.1538) beta=11.47
+Iter  6000 | Total loss: 404.9862 (MSE:0.0872, Reg:404.8990) beta=9.58
+Iter  7000 | Total loss: 10.0844 (MSE:0.0851, Reg:9.9994) beta=7.68
+Iter  7278 | Total loss: 0.0899 (MSE:0.0899, Reg:0.0000) beta=7.16
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -1667,16 +1665,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0588 (MSE:0.0588, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 358731.4062 (MSE:0.0423, Reg:358731.3750) beta=20.00
-Iter  1000 | Total loss: 2018.8831 (MSE:0.0484, Reg:2018.8346) beta=19.05
-Iter  2000 | Total loss: 880.7940 (MSE:0.0463, Reg:880.7477) beta=17.16
-Iter  3000 | Total loss: 447.9151 (MSE:0.0451, Reg:447.8701) beta=15.26
-Iter  4000 | Total loss: 232.6216 (MSE:0.0491, Reg:232.5725) beta=13.37
-Iter  5000 | Total loss: 81.3816 (MSE:0.0540, Reg:81.3277) beta=11.47
-Iter  6000 | Total loss: 21.6211 (MSE:0.0493, Reg:21.5718) beta=9.58
-Iter  7000 | Total loss: 1.0105 (MSE:0.0446, Reg:0.9659) beta=7.68
-Iter  7018 | Total loss: 0.0450 (MSE:0.0450, Reg:0.0000) beta=7.65
+Iter     1 | Total loss: 0.0548 (MSE:0.0548, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 348763.3125 (MSE:0.0496, Reg:348763.2500) beta=20.00
+Iter  1000 | Total loss: 2414.0769 (MSE:0.0452, Reg:2414.0317) beta=19.05
+Iter  2000 | Total loss: 955.0497 (MSE:0.0460, Reg:955.0037) beta=17.16
+Iter  3000 | Total loss: 476.2356 (MSE:0.0424, Reg:476.1931) beta=15.26
+Iter  4000 | Total loss: 241.0361 (MSE:0.0457, Reg:240.9905) beta=13.37
+Iter  5000 | Total loss: 88.2332 (MSE:0.0446, Reg:88.1886) beta=11.47
+Iter  6000 | Total loss: 19.8439 (MSE:0.0474, Reg:19.7965) beta=9.58
+Iter  7000 | Total loss: 1.0552 (MSE:0.0552, Reg:1.0000) beta=7.68
+Iter  7162 | Total loss: 0.0395 (MSE:0.0395, Reg:0.0000) beta=7.38
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -1699,16 +1697,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0636 (MSE:0.0636, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 553840.5000 (MSE:0.0464, Reg:553840.4375) beta=20.00
-Iter  1000 | Total loss: 15663.5518 (MSE:0.0464, Reg:15663.5049) beta=19.05
-Iter  2000 | Total loss: 4926.6074 (MSE:0.0471, Reg:4926.5605) beta=17.16
-Iter  3000 | Total loss: 2480.4731 (MSE:0.0532, Reg:2480.4199) beta=15.26
-Iter  4000 | Total loss: 1334.2869 (MSE:0.0469, Reg:1334.2400) beta=13.37
-Iter  5000 | Total loss: 605.3267 (MSE:0.0461, Reg:605.2805) beta=11.47
-Iter  6000 | Total loss: 170.6954 (MSE:0.0495, Reg:170.6458) beta=9.58
-Iter  7000 | Total loss: 12.9253 (MSE:0.0517, Reg:12.8736) beta=7.68
-Iter  7474 | Total loss: 0.0508 (MSE:0.0508, Reg:0.0000) beta=6.79
+Iter     1 | Total loss: 0.0624 (MSE:0.0624, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 557524.4375 (MSE:0.0474, Reg:557524.3750) beta=20.00
+Iter  1000 | Total loss: 15590.8926 (MSE:0.0489, Reg:15590.8438) beta=19.05
+Iter  2000 | Total loss: 5094.1260 (MSE:0.0492, Reg:5094.0767) beta=17.16
+Iter  3000 | Total loss: 2608.0259 (MSE:0.0449, Reg:2607.9810) beta=15.26
+Iter  4000 | Total loss: 1382.8247 (MSE:0.0447, Reg:1382.7800) beta=13.37
+Iter  5000 | Total loss: 611.0136 (MSE:0.0474, Reg:610.9662) beta=11.47
+Iter  6000 | Total loss: 169.3707 (MSE:0.0522, Reg:169.3185) beta=9.58
+Iter  7000 | Total loss: 8.5388 (MSE:0.0438, Reg:8.4950) beta=7.68
+Iter  7476 | Total loss: 0.0507 (MSE:0.0507, Reg:0.0000) beta=6.78
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -1731,14 +1729,15 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0065 (MSE:0.0065, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 154767.6719 (MSE:0.0040, Reg:154767.6719) beta=20.00
-Iter  1000 | Total loss: 1377.8455 (MSE:0.0047, Reg:1377.8408) beta=19.05
-Iter  2000 | Total loss: 532.8834 (MSE:0.0047, Reg:532.8787) beta=17.16
-Iter  3000 | Total loss: 193.2207 (MSE:0.0060, Reg:193.2147) beta=15.26
-Iter  4000 | Total loss: 78.9474 (MSE:0.0050, Reg:78.9424) beta=13.37
-Iter  5000 | Total loss: 17.0055 (MSE:0.0055, Reg:17.0000) beta=11.47
-Iter  5900 | Total loss: 0.0051 (MSE:0.0051, Reg:0.0000) beta=9.77
+Iter     1 | Total loss: 0.0063 (MSE:0.0063, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 154193.6406 (MSE:0.0044, Reg:154193.6406) beta=20.00
+Iter  1000 | Total loss: 1244.6119 (MSE:0.0052, Reg:1244.6067) beta=19.05
+Iter  2000 | Total loss: 422.2535 (MSE:0.0057, Reg:422.2478) beta=17.16
+Iter  3000 | Total loss: 145.4272 (MSE:0.0053, Reg:145.4220) beta=15.26
+Iter  4000 | Total loss: 49.9842 (MSE:0.0056, Reg:49.9786) beta=13.37
+Iter  5000 | Total loss: 12.0051 (MSE:0.0051, Reg:12.0000) beta=11.47
+Iter  6000 | Total loss: 2.9814 (MSE:0.0051, Reg:2.9763) beta=9.58
+Iter  6412 | Total loss: 0.0054 (MSE:0.0054, Reg:0.0000) beta=8.80
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -1761,16 +1760,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.1078 (MSE:0.1078, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 755400.6250 (MSE:0.0946, Reg:755400.5000) beta=20.00
-Iter  1000 | Total loss: 5659.3433 (MSE:0.0996, Reg:5659.2437) beta=19.05
-Iter  2000 | Total loss: 1908.3156 (MSE:0.0954, Reg:1908.2202) beta=17.16
-Iter  3000 | Total loss: 1075.9417 (MSE:0.1010, Reg:1075.8407) beta=15.26
-Iter  4000 | Total loss: 665.9568 (MSE:0.0978, Reg:665.8591) beta=13.37
-Iter  5000 | Total loss: 344.8365 (MSE:0.0966, Reg:344.7398) beta=11.47
-Iter  6000 | Total loss: 115.9471 (MSE:0.1040, Reg:115.8431) beta=9.58
-Iter  7000 | Total loss: 4.2347 (MSE:0.0872, Reg:4.1475) beta=7.68
-Iter  7273 | Total loss: 0.0905 (MSE:0.0905, Reg:0.0000) beta=7.17
+Iter     1 | Total loss: 0.1073 (MSE:0.1073, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 758079.5625 (MSE:0.0882, Reg:758079.5000) beta=20.00
+Iter  1000 | Total loss: 5022.4663 (MSE:0.0883, Reg:5022.3779) beta=19.05
+Iter  2000 | Total loss: 1716.0879 (MSE:0.0925, Reg:1715.9954) beta=17.16
+Iter  3000 | Total loss: 1012.5134 (MSE:0.0928, Reg:1012.4207) beta=15.26
+Iter  4000 | Total loss: 659.5474 (MSE:0.1011, Reg:659.4463) beta=13.37
+Iter  5000 | Total loss: 351.9991 (MSE:0.1046, Reg:351.8945) beta=11.47
+Iter  6000 | Total loss: 117.9283 (MSE:0.0903, Reg:117.8380) beta=9.58
+Iter  7000 | Total loss: 4.0704 (MSE:0.0906, Reg:3.9798) beta=7.68
+Iter  7219 | Total loss: 0.0898 (MSE:0.0898, Reg:0.0000) beta=7.27
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -1793,15 +1792,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0977 (MSE:0.0977, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 370830.4688 (MSE:0.0173, Reg:370830.4375) beta=20.00
-Iter  1000 | Total loss: 100.9004 (MSE:0.0923, Reg:100.8082) beta=19.05
-Iter  2000 | Total loss: 37.0913 (MSE:0.0913, Reg:37.0000) beta=17.16
-Iter  3000 | Total loss: 25.0899 (MSE:0.0899, Reg:25.0000) beta=15.26
-Iter  4000 | Total loss: 17.0928 (MSE:0.0928, Reg:17.0000) beta=13.37
-Iter  5000 | Total loss: 8.0875 (MSE:0.0875, Reg:8.0000) beta=11.47
-Iter  6000 | Total loss: 5.0916 (MSE:0.0916, Reg:5.0000) beta=9.58
-Iter  6915 | Total loss: 0.0873 (MSE:0.0873, Reg:0.0000) beta=7.85
+Iter     1 | Total loss: 0.0893 (MSE:0.0893, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 375912.6875 (MSE:0.0159, Reg:375912.6562) beta=20.00
+Iter  1000 | Total loss: 80.0027 (MSE:0.0932, Reg:79.9095) beta=19.05
+Iter  2000 | Total loss: 22.0918 (MSE:0.0918, Reg:22.0000) beta=17.16
+Iter  3000 | Total loss: 13.0888 (MSE:0.0888, Reg:13.0000) beta=15.26
+Iter  4000 | Total loss: 9.0881 (MSE:0.0881, Reg:9.0000) beta=13.37
+Iter  5000 | Total loss: 6.0889 (MSE:0.0889, Reg:6.0000) beta=11.47
+Iter  6000 | Total loss: 2.0860 (MSE:0.0860, Reg:2.0000) beta=9.58
+Iter  7000 | Total loss: 1.0863 (MSE:0.0863, Reg:1.0000) beta=7.68
+Iter  7150 | Total loss: 0.0917 (MSE:0.0917, Reg:0.0000) beta=7.40
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -1824,19 +1824,19 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.2097 (MSE:0.2097, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 203283.0938 (MSE:0.1630, Reg:203282.9375) beta=20.00
-Iter  1000 | Total loss: 23862.3184 (MSE:0.1243, Reg:23862.1934) beta=19.05
-Iter  2000 | Total loss: 6278.9209 (MSE:0.1307, Reg:6278.7900) beta=17.16
-Iter  3000 | Total loss: 2693.1829 (MSE:0.1355, Reg:2693.0474) beta=15.26
-Iter  4000 | Total loss: 1068.7307 (MSE:0.1462, Reg:1068.5845) beta=13.37
-Iter  5000 | Total loss: 329.5901 (MSE:0.1457, Reg:329.4444) beta=11.47
-Iter  6000 | Total loss: 35.1259 (MSE:0.1286, Reg:34.9973) beta=9.58
-Iter  6961 | Total loss: 0.1276 (MSE:0.1276, Reg:0.0000) beta=7.76
+Iter     1 | Total loss: 0.2148 (MSE:0.2148, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 216800.5625 (MSE:0.1165, Reg:216800.4531) beta=20.00
+Iter  1000 | Total loss: 25030.9023 (MSE:0.1177, Reg:25030.7852) beta=19.05
+Iter  2000 | Total loss: 6675.5576 (MSE:0.1075, Reg:6675.4502) beta=17.16
+Iter  3000 | Total loss: 2875.3372 (MSE:0.1223, Reg:2875.2148) beta=15.26
+Iter  4000 | Total loss: 1125.5309 (MSE:0.1205, Reg:1125.4104) beta=13.37
+Iter  5000 | Total loss: 347.1898 (MSE:0.1149, Reg:347.0750) beta=11.47
+Iter  6000 | Total loss: 49.6881 (MSE:0.1187, Reg:49.5694) beta=9.58
+Iter  6762 | Total loss: 0.1105 (MSE:0.1105, Reg:0.0000) beta=8.14
     Early stopped
     Set the rounding value
 
 AdaRound for PerLayer weights is done.
 
-    Quantized model Evaluation accuracy on 50000 images, 79.134%
-Total time: 3871.28 sec
+    Quantized model Evaluation accuracy on 50000 images, 79.076%
+Total time: 9195.40 sec
