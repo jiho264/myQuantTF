@@ -97,7 +97,7 @@ def _adaround_for_a_module(model, module, cali_data, batch_size, lr, n_iter):
             print(
                 f"Iter {i:5d} | Total loss: {loss_sum:.4f} (MSE:{_mse:.4f}, Reg:{_reg_loss_sum:.4f}) beta={_beta:.2f}"
             )
-        if _beta > 0 and _reg_loss < 0.00001:
+        if _beta > 0 and _reg_loss_sum < 0.00001:
             print(
                 f"Iter {i:5d} | Total loss: {loss_sum:.4f} (MSE:{_mse:.4f}, Reg:{_reg_loss_sum:.4f}) beta={_beta:.2f}\n    Early stopped"
             )
