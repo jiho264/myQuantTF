@@ -13,8 +13,8 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         "num_samples": 1024,
     }
 
-    args_w = {"scheme": "AbsMaxQuantizer", "bit_width": 8, "per_channel": True}
-    # args_w.update({"AdaRound": "PerEncoder"})
+    args_w = {"scheme": "AbsMaxQuantizer", "bit_width": 4, "per_channel": True}
+    args_w.update({"AdaRound": "PerLayer"})
 
     """NOW IS ONLY FOR WEIGHTS"""
 
