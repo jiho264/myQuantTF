@@ -13,24 +13,25 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         "num_samples": 1024,
     }
 
-    args_w = {"scheme": "AbsMaxQuantizer", "bit_width": 4, "per_channel": True}
-    args_w.update({"AdaRound": "PerEncoder"})
+    args_w = {"scheme": "AbsMaxQuantizer", "bit_width": 8, "per_channel": True}
+    # args_w.update({"AdaRound": "PerEncoder"})
 
     """NOW IS ONLY FOR WEIGHTS"""
 
     args_a = {
         "scheme": "MovAvgAbsMaxQuantizer",
         "bit_width": 8,
+        "idadd_bit_width": 16,
         "per_channel": False,
         # below values are default in the class
         "momentum": 0.95,
         "batches": 16,
         # "batches": 4,
     }
-    args_gelu = {"bit_width": 8}
+    args_gelu = {"sigmoid_bit_width": 8}
     args_softmax = {"bit_width": 16}
     args_ln = {
-        "bit_width": 8
+        "None": None,
     }  # FIXME layer norm bit width is no matter. have to change another setting method
 
     calib_len = args_a.get("batches", 16)
@@ -78,7 +79,7 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
 
     """ evaluation """
     _top1, _ = evaluate(model, test_loader, len(test_loader), "cuda")
-    # _top1, _ = evaluate(model, test_loader, 1, "cuda")
+    # # _top1, _ = evaluate(model, test_loader, 1, "cuda")
     print(
         f"\n    Quantized model Evaluation accuracy on 50000 images, {_top1.avg:2.3f}%"
     )

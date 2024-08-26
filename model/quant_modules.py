@@ -85,15 +85,14 @@ class QuantAct(nn.Module):
         ), "only per-tensor quantization is supported for Activation Quantization"
 
         if which == "idAdd":
-            self.bit_width = 16
+            self.bit_width = args_a.get("idadd_bit_width")
             print(f"Int Activation {self.bit_width} for {which} for identity add")
         elif which == "softmax_act":
-            self.bit_width = 9
-            # UINT8
-            print(f"Int Activation Unsigned {self.bit_width-1} for {which}")
+            # 24.08.26 INT9 == UINT8 for non negative values
+            self.bit_width = args_a.get("bit_width") + 1
         else:
-            self.bit_width = args_a.get("bit_width", 8)
-            print(f"Int Activation {self.bit_width}")
+            self.bit_width = args_a.get("bit_width")
+            # print(f"Int Activation {self.bit_width}")
 
         self.running_stat = args_a.get("batches")
         self.min_val = torch.zeros(1)
@@ -205,7 +204,7 @@ class QuantLinearWithWeight(nn.Module):
             # do not quantize
             return
 
-        self.bit_width = args_w.get("bit_width", 8)
+        self.bit_width = args_w.get("bit_width")
 
         assert (
             args_w.get("scheme") == "AbsMaxQuantizer"
@@ -359,19 +358,20 @@ class QuantLinearWithWeight(nn.Module):
 
 
 class IntGELU(nn.Module):
-    def __init__(self, args_gelu):
+    def __init__(self, args_gelu, args_a):
         super().__init__()
         self.do_quant = False
         if args_gelu == {}:
             # do not quantize
             return
 
-        self.bit_width = args_gelu.get("bit_width", 8)
+        self.sigmoid_bit_width = args_gelu.get("sigmoid_bit_width")
 
         self.n = 17  # sufficiently large integer
         # The minimum value for ensuring accuracy (varies depending on models)
+        self.gelu_act = QuantAct(args_a=args_a)
 
-        print(f"IntGELU bit: {self.bit_width}")
+        print(f"IntGELU bit: {self.sigmoid_bit_width}")
 
     def int_exp_shift(self, x_int, scaling_factor):
         x_int = x_int + floor_ste.apply(x_int / 2) - floor_ste.apply(x_int / 2**4)
@@ -401,11 +401,11 @@ class IntGELU(nn.Module):
             -x_int_max, scaling_factor_sig
         )  # e^(-x_max)
         exp_int_sum = exp_int + exp_int_max
-
         exp_int_sum.clamp_max_(2**31 - 1)
         factor = floor_ste.apply((2**31 - 1) / exp_int_sum)
-        sigmoid_int = floor_ste.apply(exp_int * factor / 2 ** (31 - self.bit_width + 1))
-        sigmoid_scaling_factor = torch.Tensor([1 / 2 ** (self.bit_width - 1)]).cuda()
+        sigmoid_int = floor_ste.apply(exp_int * factor / 2 ** (31 - self.sigmoid_bit_width + 1))
+        sigmoid_scaling_factor = torch.Tensor([1 / 2 ** (self.sigmoid_bit_width - 1)]).cuda()
+        assert sigmoid_int.min() >= 0
 
         x_int = pre_x_int * sigmoid_int
         scaling_factor = scaling_factor * sigmoid_scaling_factor
@@ -417,7 +417,10 @@ class IntGELU(nn.Module):
             with torch.no_grad():
                 _test_input_int = (input / s_pre).round()
                 assert -128 <= _test_input_int.min() and _test_input_int.max() <= 127
-            return self.int_forward(input, s_pre)
+
+            gelu_hat, s_x = self.int_forward(input, s_pre)
+
+            return self.gelu_act(gelu_hat, s_x)
         else:
             # print("FP GELU")
             return F.gelu(input), s_pre
@@ -431,7 +434,7 @@ class IntSoftMax(nn.Module):
             # do not quantize
             return
 
-        self.bit_width = args_softmax.get("bit_width", 16)
+        self.bit_width = args_softmax.get("bit_width")
 
         self.n = 15  # sufficiently large integer
         # The minimum value for ensuring accuracy (varies depending on models)
@@ -465,6 +468,8 @@ class IntSoftMax(nn.Module):
         exp_int = floor_ste.apply(exp_int * factor / 2 ** (31 - self.bit_width + 1))
         scaling_factor = torch.Tensor([1 / 2 ** (self.bit_width - 1)]).cuda()
 
+        assert exp_int.min() >= 0
+        
         return exp_int * scaling_factor, scaling_factor
 
     def forward(self, input, s_pre, dim: int = -1):

@@ -25,8 +25,7 @@ class QuantMLP(nn.Module):
         )
 
         # [2] GELU(approximate='none')
-        self.gelu = IntGELU(args_gelu=args_gelu)
-        self.gelu_act = QuantAct(args_a=args_a)
+        self.gelu = IntGELU(args_gelu=args_gelu, args_a=args_a)
 
         self.dropout_1 = orgModule.get_submodule("2")
         # Dropout(p=0.0, inplace=False)
@@ -45,13 +44,10 @@ class QuantMLP(nn.Module):
 
         # [2]
         x_hat_int8, s_x = self.gelu(x_hat_int8, s_x)
-        x_hat_int8, s_x = self.gelu_act(x_hat_int8, s_x)
-
         x_hat_int8 = self.dropout_1(x_hat_int8)
 
         # [3]
         x_hat_int8, s_x = self.linear_2(x_hat_int8, s_x)
-
         x_hat_int8 = self.dropout_2(x_hat_int8)
 
         return x_hat_int8, s_x
