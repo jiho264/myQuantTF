@@ -270,13 +270,13 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0032 (MSE:0.0032, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 117873.6328 (MSE:0.0005, Reg:117873.6328) beta=20.00
-Iter  1000 | Total loss: 14.0028 (MSE:0.0028, Reg:14.0000) beta=19.05
-Iter  2000 | Total loss: 7.0033 (MSE:0.0033, Reg:7.0000) beta=17.16
-Iter  3000 | Total loss: 4.0031 (MSE:0.0031, Reg:4.0000) beta=15.26
-Iter  4000 | Total loss: 2.0023 (MSE:0.0023, Reg:2.0000) beta=13.37
-Iter  4671 | Total loss: 0.0032 (MSE:0.0032, Reg:0.0000) beta=12.10
+Iter     1 | Total loss: 0.0033 (MSE:0.0033, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 119101.3672 (MSE:0.0005, Reg:119101.3672) beta=20.00
+Iter  1000 | Total loss: 16.0032 (MSE:0.0032, Reg:16.0000) beta=19.05
+Iter  2000 | Total loss: 7.0030 (MSE:0.0030, Reg:7.0000) beta=17.16
+Iter  3000 | Total loss: 5.9877 (MSE:0.0032, Reg:5.9844) beta=15.26
+Iter  4000 | Total loss: 2.0037 (MSE:0.0037, Reg:2.0000) beta=13.37
+Iter  4906 | Total loss: 0.0030 (MSE:0.0030, Reg:0.0000) beta=11.65
     Early stopped
     Set the rounding value
     s_a : act_quant, torch.Size([]), Parameter containing:
@@ -300,19 +300,19 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0019 (MSE:0.0019, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 155008.1406 (MSE:0.0004, Reg:155008.1406) beta=20.00
-Iter  1000 | Total loss: 4680.9673 (MSE:0.0003, Reg:4680.9668) beta=19.05
-Iter  2000 | Total loss: 2176.2522 (MSE:0.0003, Reg:2176.2520) beta=17.16
-Iter  3000 | Total loss: 1146.8229 (MSE:0.0003, Reg:1146.8226) beta=15.26
-Iter  4000 | Total loss: 607.0526 (MSE:0.0003, Reg:607.0523) beta=13.37
-Iter  5000 | Total loss: 295.8045 (MSE:0.0003, Reg:295.8042) beta=11.47
-Iter  6000 | Total loss: 95.6637 (MSE:0.0003, Reg:95.6634) beta=9.58
-Iter  7000 | Total loss: 10.5079 (MSE:0.0003, Reg:10.5076) beta=7.68
-Iter  7972 | Total loss: 0.0003 (MSE:0.0003, Reg:0.0000) beta=5.84
+Iter     1 | Total loss: 0.0023 (MSE:0.0023, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 212175.8438 (MSE:0.0001, Reg:212175.8438) beta=20.00
+Iter  1000 | Total loss: 4885.9414 (MSE:0.0001, Reg:4885.9414) beta=19.05
+Iter  2000 | Total loss: 2378.4814 (MSE:0.0001, Reg:2378.4814) beta=17.16
+Iter  3000 | Total loss: 1260.4618 (MSE:0.0001, Reg:1260.4617) beta=15.26
+Iter  4000 | Total loss: 650.8584 (MSE:0.0001, Reg:650.8583) beta=13.37
+Iter  5000 | Total loss: 260.6978 (MSE:0.0001, Reg:260.6977) beta=11.47
+Iter  6000 | Total loss: 59.8191 (MSE:0.0001, Reg:59.8190) beta=9.58
+Iter  7000 | Total loss: 13.7671 (MSE:0.0001, Reg:13.7670) beta=7.68
+Iter  8000 | Total loss: 2.0001 (MSE:0.0001, Reg:2.0000) beta=5.79
+Iter  8535 | Total loss: 0.0001 (MSE:0.0001, Reg:0.0000) beta=4.78
     Early stopped
     Set the rounding value
-    - The rounding value is same with the residual.
     s_a : in_proj.act_quant, torch.Size([]), Parameter containing:
 tensor(0.0258, device='cuda:0', requires_grad=True)
     s_a : qk_act, torch.Size([]), Parameter containing:
@@ -343,19 +343,18 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0170 (MSE:0.0170, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 552326.0000 (MSE:0.0046, Reg:552326.0000) beta=20.00
-Iter  1000 | Total loss: 17895.9473 (MSE:0.0047, Reg:17895.9434) beta=19.05
-Iter  2000 | Total loss: 6769.7915 (MSE:0.0046, Reg:6769.7871) beta=17.16
-Iter  3000 | Total loss: 3585.6582 (MSE:0.0043, Reg:3585.6538) beta=15.26
-Iter  4000 | Total loss: 1971.0961 (MSE:0.0049, Reg:1971.0912) beta=13.37
-Iter  5000 | Total loss: 987.6095 (MSE:0.0042, Reg:987.6053) beta=11.47
-Iter  6000 | Total loss: 338.2856 (MSE:0.0049, Reg:338.2808) beta=9.58
-Iter  7000 | Total loss: 34.7454 (MSE:0.0041, Reg:34.7413) beta=7.68
-Iter  7762 | Total loss: 0.0045 (MSE:0.0045, Reg:0.0000) beta=6.24
+Iter     1 | Total loss: 0.0216 (MSE:0.0216, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 766733.9375 (MSE:0.0025, Reg:766733.9375) beta=20.00
+Iter  1000 | Total loss: 16789.5430 (MSE:0.0027, Reg:16789.5391) beta=19.05
+Iter  2000 | Total loss: 5895.7461 (MSE:0.0029, Reg:5895.7432) beta=17.16
+Iter  3000 | Total loss: 3020.2637 (MSE:0.0028, Reg:3020.2607) beta=15.26
+Iter  4000 | Total loss: 1630.2756 (MSE:0.0033, Reg:1630.2725) beta=13.37
+Iter  5000 | Total loss: 797.5153 (MSE:0.0033, Reg:797.5119) beta=11.47
+Iter  6000 | Total loss: 277.7504 (MSE:0.0029, Reg:277.7476) beta=9.58
+Iter  7000 | Total loss: 35.4673 (MSE:0.0028, Reg:35.4644) beta=7.68
+Iter  7722 | Total loss: 0.0027 (MSE:0.0027, Reg:0.0000) beta=6.32
     Early stopped
     Set the rounding value
-    - The rounding value is same with the residual.
     s_a : linear_1.act_quant, torch.Size([]), Parameter containing:
 tensor(0.0633, device='cuda:0', requires_grad=True)
     s_a : gelu_act, torch.Size([]), Parameter containing:
@@ -382,19 +381,18 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0012 (MSE:0.0012, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 117676.5391 (MSE:0.0005, Reg:117676.5391) beta=20.00
-Iter  1000 | Total loss: 915.8937 (MSE:0.0005, Reg:915.8932) beta=19.05
-Iter  2000 | Total loss: 244.7370 (MSE:0.0005, Reg:244.7365) beta=17.16
-Iter  3000 | Total loss: 125.2246 (MSE:0.0006, Reg:125.2239) beta=15.26
-Iter  4000 | Total loss: 64.9999 (MSE:0.0006, Reg:64.9993) beta=13.37
-Iter  5000 | Total loss: 26.0006 (MSE:0.0006, Reg:26.0000) beta=11.47
-Iter  6000 | Total loss: 11.0006 (MSE:0.0005, Reg:11.0000) beta=9.58
-Iter  7000 | Total loss: 1.0005 (MSE:0.0005, Reg:1.0000) beta=7.68
-Iter  7421 | Total loss: 0.0009 (MSE:0.0009, Reg:0.0000) beta=6.89
+Iter     1 | Total loss: 0.0007 (MSE:0.0007, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 192298.4531 (MSE:0.0003, Reg:192298.4531) beta=20.00
+Iter  1000 | Total loss: 1268.0837 (MSE:0.0003, Reg:1268.0834) beta=19.05
+Iter  2000 | Total loss: 359.2510 (MSE:0.0002, Reg:359.2508) beta=17.16
+Iter  3000 | Total loss: 184.6551 (MSE:0.0002, Reg:184.6548) beta=15.26
+Iter  4000 | Total loss: 92.7437 (MSE:0.0003, Reg:92.7434) beta=13.37
+Iter  5000 | Total loss: 41.0003 (MSE:0.0003, Reg:41.0000) beta=11.47
+Iter  6000 | Total loss: 18.0003 (MSE:0.0003, Reg:18.0000) beta=9.58
+Iter  7000 | Total loss: 1.0003 (MSE:0.0003, Reg:1.0000) beta=7.68
+Iter  7046 | Total loss: 0.0002 (MSE:0.0002, Reg:0.0000) beta=7.60
     Early stopped
     Set the rounding value
-    - The rounding value is same with the residual.
     s_a : in_proj.act_quant, torch.Size([]), Parameter containing:
 tensor(0.0307, device='cuda:0', requires_grad=True)
     s_a : qk_act, torch.Size([]), Parameter containing:
@@ -425,19 +423,18 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0093 (MSE:0.0093, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 451362.9375 (MSE:0.0048, Reg:451362.9375) beta=20.00
-Iter  1000 | Total loss: 5849.7109 (MSE:0.0059, Reg:5849.7051) beta=19.05
-Iter  2000 | Total loss: 1697.1665 (MSE:0.0052, Reg:1697.1614) beta=17.16
-Iter  3000 | Total loss: 795.9261 (MSE:0.0056, Reg:795.9205) beta=15.26
-Iter  4000 | Total loss: 408.0985 (MSE:0.0053, Reg:408.0932) beta=13.37
-Iter  5000 | Total loss: 199.3386 (MSE:0.0051, Reg:199.3334) beta=11.47
-Iter  6000 | Total loss: 59.0057 (MSE:0.0057, Reg:59.0000) beta=9.58
-Iter  7000 | Total loss: 3.9206 (MSE:0.0055, Reg:3.9151) beta=7.68
-Iter  7378 | Total loss: 0.0056 (MSE:0.0056, Reg:0.0000) beta=6.97
+Iter     1 | Total loss: 0.0070 (MSE:0.0070, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 896393.5000 (MSE:0.0024, Reg:896393.5000) beta=20.00
+Iter  1000 | Total loss: 2045.0820 (MSE:0.0040, Reg:2045.0780) beta=19.05
+Iter  2000 | Total loss: 580.5795 (MSE:0.0039, Reg:580.5757) beta=17.16
+Iter  3000 | Total loss: 317.1646 (MSE:0.0040, Reg:317.1607) beta=15.26
+Iter  4000 | Total loss: 196.0032 (MSE:0.0038, Reg:195.9995) beta=13.37
+Iter  5000 | Total loss: 101.8471 (MSE:0.0047, Reg:101.8424) beta=11.47
+Iter  6000 | Total loss: 26.2584 (MSE:0.0039, Reg:26.2545) beta=9.58
+Iter  7000 | Total loss: 2.8584 (MSE:0.0046, Reg:2.8538) beta=7.68
+Iter  7264 | Total loss: 0.0041 (MSE:0.0041, Reg:0.0000) beta=7.18
     Early stopped
     Set the rounding value
-    - The rounding value is same with the residual.
     s_a : linear_1.act_quant, torch.Size([]), Parameter containing:
 tensor(0.0666, device='cuda:0', requires_grad=True)
     s_a : gelu_act, torch.Size([]), Parameter containing:
@@ -464,19 +461,18 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0033 (MSE:0.0033, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 151104.2188 (MSE:0.0030, Reg:151104.2188) beta=20.00
-Iter  1000 | Total loss: 2748.0654 (MSE:0.0027, Reg:2748.0627) beta=19.05
-Iter  2000 | Total loss: 814.6626 (MSE:0.0021, Reg:814.6605) beta=17.16
-Iter  3000 | Total loss: 431.2932 (MSE:0.0024, Reg:431.2908) beta=15.26
-Iter  4000 | Total loss: 258.0943 (MSE:0.0024, Reg:258.0919) beta=13.37
-Iter  5000 | Total loss: 122.2191 (MSE:0.0021, Reg:122.2170) beta=11.47
-Iter  6000 | Total loss: 41.3985 (MSE:0.0023, Reg:41.3962) beta=9.58
-Iter  7000 | Total loss: 6.0023 (MSE:0.0023, Reg:6.0000) beta=7.68
-Iter  7269 | Total loss: 0.0022 (MSE:0.0022, Reg:0.0000) beta=7.17
+Iter     1 | Total loss: 0.0025 (MSE:0.0025, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 328450.2812 (MSE:0.0010, Reg:328450.2812) beta=20.00
+Iter  1000 | Total loss: 1833.9055 (MSE:0.0013, Reg:1833.9042) beta=19.05
+Iter  2000 | Total loss: 613.9628 (MSE:0.0012, Reg:613.9615) beta=17.16
+Iter  3000 | Total loss: 332.9427 (MSE:0.0011, Reg:332.9416) beta=15.26
+Iter  4000 | Total loss: 178.7720 (MSE:0.0013, Reg:178.7707) beta=13.37
+Iter  5000 | Total loss: 95.6567 (MSE:0.0011, Reg:95.6556) beta=11.47
+Iter  6000 | Total loss: 37.8330 (MSE:0.0012, Reg:37.8318) beta=9.58
+Iter  7000 | Total loss: 5.0012 (MSE:0.0012, Reg:5.0000) beta=7.68
+Iter  7702 | Total loss: 0.0013 (MSE:0.0013, Reg:0.0000) beta=6.35
     Early stopped
     Set the rounding value
-    - The rounding value is same with the residual.
     s_a : in_proj.act_quant, torch.Size([]), Parameter containing:
 tensor(0.0445, device='cuda:0', requires_grad=True)
     s_a : qk_act, torch.Size([]), Parameter containing:
@@ -507,19 +503,18 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0131 (MSE:0.0131, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 502706.5625 (MSE:0.0100, Reg:502706.5625) beta=20.00
-Iter  1000 | Total loss: 4575.5225 (MSE:0.0100, Reg:4575.5127) beta=19.05
-Iter  2000 | Total loss: 1449.4918 (MSE:0.0093, Reg:1449.4824) beta=17.16
-Iter  3000 | Total loss: 842.0757 (MSE:0.0102, Reg:842.0656) beta=15.26
-Iter  4000 | Total loss: 507.7029 (MSE:0.0097, Reg:507.6932) beta=13.37
-Iter  5000 | Total loss: 279.1392 (MSE:0.0098, Reg:279.1294) beta=11.47
-Iter  6000 | Total loss: 121.5928 (MSE:0.0098, Reg:121.5829) beta=9.58
-Iter  7000 | Total loss: 17.7479 (MSE:0.0105, Reg:17.7374) beta=7.68
-Iter  7565 | Total loss: 0.0098 (MSE:0.0098, Reg:0.0000) beta=6.61
+Iter     1 | Total loss: 0.0121 (MSE:0.0121, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 976486.1250 (MSE:0.0053, Reg:976486.1250) beta=20.00
+Iter  1000 | Total loss: 4340.6519 (MSE:0.0074, Reg:4340.6445) beta=19.05
+Iter  2000 | Total loss: 1412.8962 (MSE:0.0077, Reg:1412.8885) beta=17.16
+Iter  3000 | Total loss: 833.4022 (MSE:0.0068, Reg:833.3954) beta=15.26
+Iter  4000 | Total loss: 550.2197 (MSE:0.0072, Reg:550.2125) beta=13.37
+Iter  5000 | Total loss: 255.2027 (MSE:0.0073, Reg:255.1954) beta=11.47
+Iter  6000 | Total loss: 66.0080 (MSE:0.0081, Reg:65.9999) beta=9.58
+Iter  7000 | Total loss: 9.7873 (MSE:0.0076, Reg:9.7797) beta=7.68
+Iter  7658 | Total loss: 0.0074 (MSE:0.0074, Reg:0.0000) beta=6.44
     Early stopped
     Set the rounding value
-    - The rounding value is same with the residual.
     s_a : linear_1.act_quant, torch.Size([]), Parameter containing:
 tensor(0.0790, device='cuda:0', requires_grad=True)
     s_a : gelu_act, torch.Size([]), Parameter containing:
@@ -546,19 +541,18 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0057 (MSE:0.0057, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 183290.8125 (MSE:0.0036, Reg:183290.8125) beta=20.00
-Iter  1000 | Total loss: 8382.2861 (MSE:0.0035, Reg:8382.2822) beta=19.05
-Iter  2000 | Total loss: 2580.1594 (MSE:0.0035, Reg:2580.1560) beta=17.16
-Iter  3000 | Total loss: 1253.6166 (MSE:0.0035, Reg:1253.6130) beta=15.26
-Iter  4000 | Total loss: 624.8279 (MSE:0.0037, Reg:624.8242) beta=13.37
-Iter  5000 | Total loss: 298.9240 (MSE:0.0035, Reg:298.9205) beta=11.47
-Iter  6000 | Total loss: 83.8765 (MSE:0.0035, Reg:83.8730) beta=9.58
-Iter  7000 | Total loss: 8.0017 (MSE:0.0036, Reg:7.9981) beta=7.68
-Iter  7492 | Total loss: 0.0035 (MSE:0.0035, Reg:0.0000) beta=6.75
+Iter     1 | Total loss: 0.0048 (MSE:0.0048, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 425343.9375 (MSE:0.0024, Reg:425343.9375) beta=20.00
+Iter  1000 | Total loss: 3938.7739 (MSE:0.0023, Reg:3938.7717) beta=19.05
+Iter  2000 | Total loss: 1235.4844 (MSE:0.0022, Reg:1235.4822) beta=17.16
+Iter  3000 | Total loss: 633.7007 (MSE:0.0022, Reg:633.6985) beta=15.26
+Iter  4000 | Total loss: 364.3306 (MSE:0.0022, Reg:364.3284) beta=13.37
+Iter  5000 | Total loss: 165.1053 (MSE:0.0022, Reg:165.1030) beta=11.47
+Iter  6000 | Total loss: 59.0013 (MSE:0.0019, Reg:58.9994) beta=9.58
+Iter  7000 | Total loss: 6.0023 (MSE:0.0023, Reg:6.0000) beta=7.68
+Iter  7495 | Total loss: 0.0022 (MSE:0.0022, Reg:0.0000) beta=6.75
     Early stopped
     Set the rounding value
-    - The rounding value is same with the residual.
     s_a : in_proj.act_quant, torch.Size([]), Parameter containing:
 tensor(0.0453, device='cuda:0', requires_grad=True)
     s_a : qk_act, torch.Size([]), Parameter containing:
@@ -589,19 +583,18 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0100 (MSE:0.0100, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 439796.3438 (MSE:0.0084, Reg:439796.3438) beta=20.00
-Iter  1000 | Total loss: 2042.1986 (MSE:0.0086, Reg:2042.1899) beta=19.05
-Iter  2000 | Total loss: 725.3970 (MSE:0.0083, Reg:725.3886) beta=17.16
-Iter  3000 | Total loss: 434.4726 (MSE:0.0088, Reg:434.4638) beta=15.26
-Iter  4000 | Total loss: 263.8492 (MSE:0.0082, Reg:263.8409) beta=13.37
-Iter  5000 | Total loss: 124.9879 (MSE:0.0083, Reg:124.9796) beta=11.47
-Iter  6000 | Total loss: 50.3867 (MSE:0.0089, Reg:50.3778) beta=9.58
-Iter  7000 | Total loss: 2.0085 (MSE:0.0085, Reg:2.0000) beta=7.68
-Iter  7190 | Total loss: 0.0090 (MSE:0.0090, Reg:0.0000) beta=7.32
+Iter     1 | Total loss: 0.0074 (MSE:0.0074, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 787195.2500 (MSE:0.0054, Reg:787195.2500) beta=20.00
+Iter  1000 | Total loss: 2190.5281 (MSE:0.0063, Reg:2190.5217) beta=19.05
+Iter  2000 | Total loss: 620.1400 (MSE:0.0058, Reg:620.1342) beta=17.16
+Iter  3000 | Total loss: 353.4868 (MSE:0.0061, Reg:353.4807) beta=15.26
+Iter  4000 | Total loss: 221.8713 (MSE:0.0064, Reg:221.8649) beta=13.37
+Iter  5000 | Total loss: 101.0039 (MSE:0.0062, Reg:100.9977) beta=11.47
+Iter  6000 | Total loss: 49.0060 (MSE:0.0061, Reg:48.9999) beta=9.58
+Iter  7000 | Total loss: 2.0062 (MSE:0.0062, Reg:2.0000) beta=7.68
+Iter  7376 | Total loss: 0.0055 (MSE:0.0055, Reg:0.0000) beta=6.97
     Early stopped
     Set the rounding value
-    - The rounding value is same with the residual.
     s_a : linear_1.act_quant, torch.Size([]), Parameter containing:
 tensor(0.0613, device='cuda:0', requires_grad=True)
     s_a : gelu_act, torch.Size([]), Parameter containing:
@@ -628,19 +621,18 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0089 (MSE:0.0089, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 198702.4688 (MSE:0.0048, Reg:198702.4688) beta=20.00
-Iter  1000 | Total loss: 11758.4795 (MSE:0.0048, Reg:11758.4746) beta=19.05
-Iter  2000 | Total loss: 3645.1311 (MSE:0.0052, Reg:3645.1260) beta=17.16
-Iter  3000 | Total loss: 1706.2606 (MSE:0.0049, Reg:1706.2557) beta=15.26
-Iter  4000 | Total loss: 785.1447 (MSE:0.0052, Reg:785.1395) beta=13.37
-Iter  5000 | Total loss: 319.0263 (MSE:0.0056, Reg:319.0207) beta=11.47
-Iter  6000 | Total loss: 94.2988 (MSE:0.0054, Reg:94.2934) beta=9.58
-Iter  7000 | Total loss: 3.0056 (MSE:0.0056, Reg:3.0000) beta=7.68
-Iter  7180 | Total loss: 0.0049 (MSE:0.0049, Reg:0.0000) beta=7.34
+Iter     1 | Total loss: 0.0075 (MSE:0.0075, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 464464.5625 (MSE:0.0032, Reg:464464.5625) beta=20.00
+Iter  1000 | Total loss: 2963.5273 (MSE:0.0033, Reg:2963.5239) beta=19.05
+Iter  2000 | Total loss: 926.3737 (MSE:0.0035, Reg:926.3701) beta=17.16
+Iter  3000 | Total loss: 434.6064 (MSE:0.0035, Reg:434.6029) beta=15.26
+Iter  4000 | Total loss: 210.9893 (MSE:0.0034, Reg:210.9859) beta=13.37
+Iter  5000 | Total loss: 95.0409 (MSE:0.0036, Reg:95.0373) beta=11.47
+Iter  6000 | Total loss: 28.8176 (MSE:0.0034, Reg:28.8142) beta=9.58
+Iter  7000 | Total loss: 2.0036 (MSE:0.0036, Reg:2.0000) beta=7.68
+Iter  7412 | Total loss: 0.0038 (MSE:0.0038, Reg:0.0000) beta=6.90
     Early stopped
     Set the rounding value
-    - The rounding value is same with the residual.
     s_a : in_proj.act_quant, torch.Size([]), Parameter containing:
 tensor(0.0447, device='cuda:0', requires_grad=True)
     s_a : qk_act, torch.Size([]), Parameter containing:
@@ -671,19 +663,18 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0136 (MSE:0.0136, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 429901.4375 (MSE:0.0105, Reg:429901.4375) beta=20.00
-Iter  1000 | Total loss: 1113.7810 (MSE:0.0134, Reg:1113.7676) beta=19.05
-Iter  2000 | Total loss: 374.4388 (MSE:0.0127, Reg:374.4261) beta=17.16
-Iter  3000 | Total loss: 218.4294 (MSE:0.0143, Reg:218.4151) beta=15.26
-Iter  4000 | Total loss: 144.0122 (MSE:0.0122, Reg:144.0000) beta=13.37
-Iter  5000 | Total loss: 79.5089 (MSE:0.0136, Reg:79.4953) beta=11.47
-Iter  6000 | Total loss: 30.0127 (MSE:0.0127, Reg:30.0000) beta=9.58
-Iter  7000 | Total loss: 0.6965 (MSE:0.0144, Reg:0.6821) beta=7.68
-Iter  7005 | Total loss: 0.0132 (MSE:0.0132, Reg:0.0000) beta=7.67
+Iter     1 | Total loss: 0.0100 (MSE:0.0100, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 761085.7500 (MSE:0.0076, Reg:761085.7500) beta=20.00
+Iter  1000 | Total loss: 2454.5542 (MSE:0.0076, Reg:2454.5466) beta=19.05
+Iter  2000 | Total loss: 744.6153 (MSE:0.0084, Reg:744.6069) beta=17.16
+Iter  3000 | Total loss: 336.4024 (MSE:0.0075, Reg:336.3950) beta=15.26
+Iter  4000 | Total loss: 185.5559 (MSE:0.0086, Reg:185.5473) beta=13.37
+Iter  5000 | Total loss: 104.5785 (MSE:0.0080, Reg:104.5705) beta=11.47
+Iter  6000 | Total loss: 44.0080 (MSE:0.0081, Reg:43.9999) beta=9.58
+Iter  7000 | Total loss: 8.7612 (MSE:0.0076, Reg:8.7536) beta=7.68
+Iter  7378 | Total loss: 0.0078 (MSE:0.0078, Reg:0.0000) beta=6.97
     Early stopped
     Set the rounding value
-    - The rounding value is same with the residual.
     s_a : linear_1.act_quant, torch.Size([]), Parameter containing:
 tensor(0.0533, device='cuda:0', requires_grad=True)
     s_a : gelu_act, torch.Size([]), Parameter containing:
@@ -710,19 +701,17 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0112 (MSE:0.0112, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 205378.6406 (MSE:0.0068, Reg:205378.6406) beta=20.00
-Iter  1000 | Total loss: 13881.9639 (MSE:0.0068, Reg:13881.9570) beta=19.05
-Iter  2000 | Total loss: 4443.9399 (MSE:0.0061, Reg:4443.9336) beta=17.16
-Iter  3000 | Total loss: 1987.3540 (MSE:0.0061, Reg:1987.3479) beta=15.26
-Iter  4000 | Total loss: 910.9214 (MSE:0.0068, Reg:910.9147) beta=13.37
-Iter  5000 | Total loss: 327.2004 (MSE:0.0057, Reg:327.1947) beta=11.47
-Iter  6000 | Total loss: 78.0411 (MSE:0.0060, Reg:78.0351) beta=9.58
-Iter  7000 | Total loss: 5.0062 (MSE:0.0068, Reg:4.9994) beta=7.68
-Iter  7306 | Total loss: 0.0070 (MSE:0.0070, Reg:0.0000) beta=7.10
+Iter     1 | Total loss: 0.0079 (MSE:0.0079, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 461308.5625 (MSE:0.0034, Reg:461308.5625) beta=20.00
+Iter  1000 | Total loss: 1357.4786 (MSE:0.0044, Reg:1357.4742) beta=19.05
+Iter  2000 | Total loss: 387.6193 (MSE:0.0048, Reg:387.6146) beta=17.16
+Iter  3000 | Total loss: 191.7762 (MSE:0.0046, Reg:191.7716) beta=15.26
+Iter  4000 | Total loss: 96.0039 (MSE:0.0044, Reg:95.9995) beta=13.37
+Iter  5000 | Total loss: 34.0042 (MSE:0.0042, Reg:34.0000) beta=11.47
+Iter  6000 | Total loss: 12.6410 (MSE:0.0048, Reg:12.6363) beta=9.58
+Iter  6995 | Total loss: 0.0045 (MSE:0.0045, Reg:0.0000) beta=7.69
     Early stopped
     Set the rounding value
-    - The rounding value is same with the residual.
     s_a : in_proj.act_quant, torch.Size([]), Parameter containing:
 tensor(0.0408, device='cuda:0', requires_grad=True)
     s_a : qk_act, torch.Size([]), Parameter containing:
@@ -753,19 +742,17 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0930 (MSE:0.0930, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 508568.1250 (MSE:0.0686, Reg:508568.0625) beta=20.00
-Iter  1000 | Total loss: 6266.1978 (MSE:0.0698, Reg:6266.1279) beta=19.05
-Iter  2000 | Total loss: 1989.3663 (MSE:0.0703, Reg:1989.2960) beta=17.16
-Iter  3000 | Total loss: 884.0719 (MSE:0.0736, Reg:883.9983) beta=15.26
-Iter  4000 | Total loss: 414.7326 (MSE:0.0718, Reg:414.6608) beta=13.37
-Iter  5000 | Total loss: 190.9839 (MSE:0.0769, Reg:190.9070) beta=11.47
-Iter  6000 | Total loss: 41.4677 (MSE:0.0849, Reg:41.3828) beta=9.58
-Iter  7000 | Total loss: 3.0783 (MSE:0.0783, Reg:3.0000) beta=7.68
-Iter  7402 | Total loss: 0.0886 (MSE:0.0886, Reg:0.0000) beta=6.92
+Iter     1 | Total loss: 0.0585 (MSE:0.0585, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 1019386.6250 (MSE:0.0415, Reg:1019386.6250) beta=20.00
+Iter  1000 | Total loss: 3493.4180 (MSE:0.0446, Reg:3493.3733) beta=19.05
+Iter  2000 | Total loss: 1002.4001 (MSE:0.0438, Reg:1002.3563) beta=17.16
+Iter  3000 | Total loss: 485.4160 (MSE:0.0468, Reg:485.3692) beta=15.26
+Iter  4000 | Total loss: 243.7858 (MSE:0.0468, Reg:243.7389) beta=13.37
+Iter  5000 | Total loss: 107.2456 (MSE:0.0480, Reg:107.1976) beta=11.47
+Iter  6000 | Total loss: 27.7336 (MSE:0.0493, Reg:27.6844) beta=9.58
+Iter  6715 | Total loss: 0.0528 (MSE:0.0528, Reg:0.0000) beta=8.22
     Early stopped
     Set the rounding value
-    - The rounding value is same with the residual.
     s_a : linear_1.act_quant, torch.Size([]), Parameter containing:
 tensor(0.1109, device='cuda:0', requires_grad=True)
     s_a : gelu_act, torch.Size([]), Parameter containing:
@@ -792,19 +779,17 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0129 (MSE:0.0129, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 198787.3281 (MSE:0.0099, Reg:198787.3125) beta=20.00
-Iter  1000 | Total loss: 9770.6367 (MSE:0.0093, Reg:9770.6270) beta=19.05
-Iter  2000 | Total loss: 3227.7979 (MSE:0.0092, Reg:3227.7886) beta=17.16
-Iter  3000 | Total loss: 1420.0903 (MSE:0.0092, Reg:1420.0812) beta=15.26
-Iter  4000 | Total loss: 622.0928 (MSE:0.0096, Reg:622.0831) beta=13.37
-Iter  5000 | Total loss: 232.8889 (MSE:0.0085, Reg:232.8803) beta=11.47
-Iter  6000 | Total loss: 48.9844 (MSE:0.0090, Reg:48.9754) beta=9.58
-Iter  7000 | Total loss: 2.0098 (MSE:0.0098, Reg:2.0000) beta=7.68
-Iter  7124 | Total loss: 0.0090 (MSE:0.0090, Reg:0.0000) beta=7.45
+Iter     1 | Total loss: 0.0093 (MSE:0.0093, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 474235.2188 (MSE:0.0060, Reg:474235.2188) beta=20.00
+Iter  1000 | Total loss: 1749.3479 (MSE:0.0064, Reg:1749.3416) beta=19.05
+Iter  2000 | Total loss: 453.1930 (MSE:0.0065, Reg:453.1865) beta=17.16
+Iter  3000 | Total loss: 218.9100 (MSE:0.0066, Reg:218.9034) beta=15.26
+Iter  4000 | Total loss: 114.2210 (MSE:0.0064, Reg:114.2146) beta=13.37
+Iter  5000 | Total loss: 51.0060 (MSE:0.0060, Reg:51.0000) beta=11.47
+Iter  6000 | Total loss: 13.0067 (MSE:0.0067, Reg:13.0000) beta=9.58
+Iter  6958 | Total loss: 0.0064 (MSE:0.0064, Reg:0.0000) beta=7.76
     Early stopped
     Set the rounding value
-    - The rounding value is same with the residual.
     s_a : in_proj.act_quant, torch.Size([]), Parameter containing:
 tensor(0.0434, device='cuda:0', requires_grad=True)
     s_a : qk_act, torch.Size([]), Parameter containing:
@@ -835,18 +820,17 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0175 (MSE:0.0175, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 365923.5938 (MSE:0.0182, Reg:365923.5625) beta=20.00
-Iter  1000 | Total loss: 460.1950 (MSE:0.0183, Reg:460.1767) beta=19.05
-Iter  2000 | Total loss: 151.6063 (MSE:0.0175, Reg:151.5888) beta=17.16
-Iter  3000 | Total loss: 87.0169 (MSE:0.0169, Reg:87.0000) beta=15.26
-Iter  4000 | Total loss: 50.9851 (MSE:0.0170, Reg:50.9681) beta=13.37
-Iter  5000 | Total loss: 25.0162 (MSE:0.0162, Reg:25.0000) beta=11.47
-Iter  6000 | Total loss: 10.0173 (MSE:0.0173, Reg:10.0000) beta=9.58
-Iter  6747 | Total loss: 0.0186 (MSE:0.0186, Reg:0.0000) beta=8.16
+Iter     1 | Total loss: 0.0130 (MSE:0.0130, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 736159.0000 (MSE:0.0094, Reg:736159.0000) beta=20.00
+Iter  1000 | Total loss: 995.7029 (MSE:0.0114, Reg:995.6915) beta=19.05
+Iter  2000 | Total loss: 275.3390 (MSE:0.0106, Reg:275.3284) beta=17.16
+Iter  3000 | Total loss: 158.0151 (MSE:0.0112, Reg:158.0039) beta=15.26
+Iter  4000 | Total loss: 84.9931 (MSE:0.0114, Reg:84.9817) beta=13.37
+Iter  5000 | Total loss: 37.0113 (MSE:0.0113, Reg:37.0000) beta=11.47
+Iter  6000 | Total loss: 8.0105 (MSE:0.0105, Reg:8.0000) beta=9.58
+Iter  6894 | Total loss: 0.0109 (MSE:0.0109, Reg:0.0000) beta=7.89
     Early stopped
     Set the rounding value
-    - The rounding value is same with the residual.
     s_a : linear_1.act_quant, torch.Size([]), Parameter containing:
 tensor(0.0579, device='cuda:0', requires_grad=True)
     s_a : gelu_act, torch.Size([]), Parameter containing:
@@ -873,19 +857,17 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0106 (MSE:0.0106, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 192420.0469 (MSE:0.0086, Reg:192420.0312) beta=20.00
-Iter  1000 | Total loss: 9011.4062 (MSE:0.0074, Reg:9011.3984) beta=19.05
-Iter  2000 | Total loss: 3029.8821 (MSE:0.0077, Reg:3029.8745) beta=17.16
-Iter  3000 | Total loss: 1383.3979 (MSE:0.0073, Reg:1383.3906) beta=15.26
-Iter  4000 | Total loss: 631.2944 (MSE:0.0078, Reg:631.2867) beta=13.37
-Iter  5000 | Total loss: 213.3875 (MSE:0.0074, Reg:213.3800) beta=11.47
-Iter  6000 | Total loss: 41.4592 (MSE:0.0080, Reg:41.4512) beta=9.58
-Iter  7000 | Total loss: 1.8659 (MSE:0.0075, Reg:1.8584) beta=7.68
-Iter  7233 | Total loss: 0.0077 (MSE:0.0077, Reg:0.0000) beta=7.24
+Iter     1 | Total loss: 0.0065 (MSE:0.0065, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 458075.0000 (MSE:0.0045, Reg:458075.0000) beta=20.00
+Iter  1000 | Total loss: 623.3011 (MSE:0.0051, Reg:623.2960) beta=19.05
+Iter  2000 | Total loss: 161.9145 (MSE:0.0053, Reg:161.9092) beta=17.16
+Iter  3000 | Total loss: 77.0053 (MSE:0.0053, Reg:77.0000) beta=15.26
+Iter  4000 | Total loss: 40.0054 (MSE:0.0054, Reg:40.0000) beta=13.37
+Iter  5000 | Total loss: 17.9357 (MSE:0.0058, Reg:17.9299) beta=11.47
+Iter  6000 | Total loss: 5.0051 (MSE:0.0051, Reg:5.0000) beta=9.58
+Iter  6664 | Total loss: 0.0049 (MSE:0.0049, Reg:0.0000) beta=8.32
     Early stopped
     Set the rounding value
-    - The rounding value is same with the residual.
     s_a : in_proj.act_quant, torch.Size([]), Parameter containing:
 tensor(0.0419, device='cuda:0', requires_grad=True)
     s_a : qk_act, torch.Size([]), Parameter containing:
@@ -916,18 +898,17 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0222 (MSE:0.0222, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 349845.5000 (MSE:0.0193, Reg:349845.4688) beta=20.00
-Iter  1000 | Total loss: 792.9118 (MSE:0.0210, Reg:792.8908) beta=19.05
-Iter  2000 | Total loss: 272.7579 (MSE:0.0219, Reg:272.7360) beta=17.16
-Iter  3000 | Total loss: 158.7885 (MSE:0.0210, Reg:158.7675) beta=15.26
-Iter  4000 | Total loss: 88.9497 (MSE:0.0223, Reg:88.9274) beta=13.37
-Iter  5000 | Total loss: 38.0216 (MSE:0.0216, Reg:38.0000) beta=11.47
-Iter  6000 | Total loss: 13.0203 (MSE:0.0203, Reg:13.0000) beta=9.58
-Iter  6478 | Total loss: 0.0211 (MSE:0.0211, Reg:0.0000) beta=8.67
+Iter     1 | Total loss: 0.0132 (MSE:0.0132, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 708855.1250 (MSE:0.0132, Reg:708855.1250) beta=20.00
+Iter  1000 | Total loss: 1097.8438 (MSE:0.0136, Reg:1097.8301) beta=19.05
+Iter  2000 | Total loss: 345.1622 (MSE:0.0143, Reg:345.1479) beta=17.16
+Iter  3000 | Total loss: 173.0104 (MSE:0.0123, Reg:172.9981) beta=15.26
+Iter  4000 | Total loss: 90.9505 (MSE:0.0134, Reg:90.9370) beta=13.37
+Iter  5000 | Total loss: 44.0124 (MSE:0.0124, Reg:44.0000) beta=11.47
+Iter  6000 | Total loss: 11.5328 (MSE:0.0136, Reg:11.5192) beta=9.58
+Iter  6808 | Total loss: 0.0137 (MSE:0.0137, Reg:0.0000) beta=8.05
     Early stopped
     Set the rounding value
-    - The rounding value is same with the residual.
     s_a : linear_1.act_quant, torch.Size([]), Parameter containing:
 tensor(0.0593, device='cuda:0', requires_grad=True)
     s_a : gelu_act, torch.Size([]), Parameter containing:
@@ -954,18 +935,17 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0090 (MSE:0.0090, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 180528.5156 (MSE:0.0069, Reg:180528.5156) beta=20.00
-Iter  1000 | Total loss: 7867.3037 (MSE:0.0076, Reg:7867.2959) beta=19.05
-Iter  2000 | Total loss: 2564.5623 (MSE:0.0074, Reg:2564.5549) beta=17.16
-Iter  3000 | Total loss: 1170.7899 (MSE:0.0074, Reg:1170.7825) beta=15.26
-Iter  4000 | Total loss: 554.7238 (MSE:0.0071, Reg:554.7167) beta=13.37
-Iter  5000 | Total loss: 209.0550 (MSE:0.0071, Reg:209.0479) beta=11.47
-Iter  6000 | Total loss: 40.9897 (MSE:0.0068, Reg:40.9829) beta=9.58
-Iter  6924 | Total loss: 0.0069 (MSE:0.0069, Reg:0.0000) beta=7.83
+Iter     1 | Total loss: 0.0054 (MSE:0.0054, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 412677.9375 (MSE:0.0043, Reg:412677.9375) beta=20.00
+Iter  1000 | Total loss: 310.2472 (MSE:0.0043, Reg:310.2429) beta=19.05
+Iter  2000 | Total loss: 71.4539 (MSE:0.0049, Reg:71.4490) beta=17.16
+Iter  3000 | Total loss: 32.0047 (MSE:0.0047, Reg:32.0000) beta=15.26
+Iter  4000 | Total loss: 12.2520 (MSE:0.0051, Reg:12.2469) beta=13.37
+Iter  5000 | Total loss: 9.0046 (MSE:0.0046, Reg:9.0000) beta=11.47
+Iter  6000 | Total loss: 2.0049 (MSE:0.0049, Reg:2.0000) beta=9.58
+Iter  6517 | Total loss: 0.0046 (MSE:0.0046, Reg:0.0000) beta=8.60
     Early stopped
     Set the rounding value
-    - The rounding value is same with the residual.
     s_a : in_proj.act_quant, torch.Size([]), Parameter containing:
 tensor(0.0402, device='cuda:0', requires_grad=True)
     s_a : qk_act, torch.Size([]), Parameter containing:
@@ -996,19 +976,18 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0162 (MSE:0.0162, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 350502.9375 (MSE:0.0151, Reg:350502.9375) beta=20.00
-Iter  1000 | Total loss: 284.0959 (MSE:0.0165, Reg:284.0794) beta=19.05
-Iter  2000 | Total loss: 127.6721 (MSE:0.0166, Reg:127.6555) beta=17.16
-Iter  3000 | Total loss: 89.2133 (MSE:0.0168, Reg:89.1965) beta=15.26
-Iter  4000 | Total loss: 59.0159 (MSE:0.0167, Reg:58.9993) beta=13.37
-Iter  5000 | Total loss: 39.9725 (MSE:0.0173, Reg:39.9552) beta=11.47
-Iter  6000 | Total loss: 13.9330 (MSE:0.0172, Reg:13.9158) beta=9.58
-Iter  7000 | Total loss: 1.0168 (MSE:0.0168, Reg:1.0000) beta=7.68
-Iter  7252 | Total loss: 0.0169 (MSE:0.0169, Reg:0.0000) beta=7.21
+Iter     1 | Total loss: 0.0127 (MSE:0.0127, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 735834.6250 (MSE:0.0094, Reg:735834.6250) beta=20.00
+Iter  1000 | Total loss: 608.0978 (MSE:0.0119, Reg:608.0859) beta=19.05
+Iter  2000 | Total loss: 201.0118 (MSE:0.0126, Reg:200.9992) beta=17.16
+Iter  3000 | Total loss: 121.0624 (MSE:0.0117, Reg:121.0507) beta=15.26
+Iter  4000 | Total loss: 78.2987 (MSE:0.0119, Reg:78.2868) beta=13.37
+Iter  5000 | Total loss: 44.8521 (MSE:0.0119, Reg:44.8402) beta=11.47
+Iter  6000 | Total loss: 12.9980 (MSE:0.0128, Reg:12.9852) beta=9.58
+Iter  7000 | Total loss: 1.0125 (MSE:0.0128, Reg:0.9998) beta=7.68
+Iter  7029 | Total loss: 0.0121 (MSE:0.0121, Reg:0.0000) beta=7.63
     Early stopped
     Set the rounding value
-    - The rounding value is same with the residual.
     s_a : linear_1.act_quant, torch.Size([]), Parameter containing:
 tensor(0.0585, device='cuda:0', requires_grad=True)
     s_a : gelu_act, torch.Size([]), Parameter containing:
@@ -1035,19 +1014,17 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0069 (MSE:0.0069, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 203414.6562 (MSE:0.0031, Reg:203414.6562) beta=20.00
-Iter  1000 | Total loss: 19309.7285 (MSE:0.0028, Reg:19309.7266) beta=19.05
-Iter  2000 | Total loss: 6880.1426 (MSE:0.0029, Reg:6880.1396) beta=17.16
-Iter  3000 | Total loss: 3112.6606 (MSE:0.0032, Reg:3112.6575) beta=15.26
-Iter  4000 | Total loss: 1422.2517 (MSE:0.0030, Reg:1422.2488) beta=13.37
-Iter  5000 | Total loss: 535.1125 (MSE:0.0029, Reg:535.1096) beta=11.47
-Iter  6000 | Total loss: 123.1531 (MSE:0.0027, Reg:123.1503) beta=9.58
-Iter  7000 | Total loss: 3.0029 (MSE:0.0029, Reg:3.0000) beta=7.68
-Iter  7466 | Total loss: 0.0028 (MSE:0.0028, Reg:0.0000) beta=6.80
+Iter     1 | Total loss: 0.0038 (MSE:0.0038, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 364666.6562 (MSE:0.0016, Reg:364666.6562) beta=20.00
+Iter  1000 | Total loss: 639.0830 (MSE:0.0024, Reg:639.0806) beta=19.05
+Iter  2000 | Total loss: 199.0023 (MSE:0.0024, Reg:198.9999) beta=17.16
+Iter  3000 | Total loss: 100.0025 (MSE:0.0025, Reg:100.0000) beta=15.26
+Iter  4000 | Total loss: 50.7352 (MSE:0.0022, Reg:50.7329) beta=13.37
+Iter  5000 | Total loss: 16.0023 (MSE:0.0023, Reg:16.0000) beta=11.47
+Iter  6000 | Total loss: 4.0026 (MSE:0.0026, Reg:4.0000) beta=9.58
+Iter  6497 | Total loss: 0.0022 (MSE:0.0022, Reg:0.0000) beta=8.64
     Early stopped
     Set the rounding value
-    - The rounding value is same with the residual.
     s_a : in_proj.act_quant, torch.Size([]), Parameter containing:
 tensor(0.0304, device='cuda:0', requires_grad=True)
     s_a : qk_act, torch.Size([]), Parameter containing:
@@ -1078,19 +1055,18 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0169 (MSE:0.0169, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 342770.8438 (MSE:0.0147, Reg:342770.8438) beta=20.00
-Iter  1000 | Total loss: 498.6524 (MSE:0.0153, Reg:498.6371) beta=19.05
-Iter  2000 | Total loss: 219.5211 (MSE:0.0150, Reg:219.5061) beta=17.16
-Iter  3000 | Total loss: 143.0183 (MSE:0.0183, Reg:143.0000) beta=15.26
-Iter  4000 | Total loss: 94.8117 (MSE:0.0177, Reg:94.7941) beta=13.37
-Iter  5000 | Total loss: 47.7797 (MSE:0.0166, Reg:47.7631) beta=11.47
-Iter  6000 | Total loss: 18.8585 (MSE:0.0148, Reg:18.8437) beta=9.58
-Iter  7000 | Total loss: 2.0168 (MSE:0.0168, Reg:2.0000) beta=7.68
-Iter  7263 | Total loss: 0.0161 (MSE:0.0161, Reg:0.0000) beta=7.19
+Iter     1 | Total loss: 0.0115 (MSE:0.0115, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 654890.2500 (MSE:0.0082, Reg:654890.2500) beta=20.00
+Iter  1000 | Total loss: 907.0297 (MSE:0.0107, Reg:907.0190) beta=19.05
+Iter  2000 | Total loss: 346.7956 (MSE:0.0101, Reg:346.7855) beta=17.16
+Iter  3000 | Total loss: 212.0109 (MSE:0.0111, Reg:211.9999) beta=15.26
+Iter  4000 | Total loss: 133.4607 (MSE:0.0112, Reg:133.4495) beta=13.37
+Iter  5000 | Total loss: 79.0089 (MSE:0.0110, Reg:78.9979) beta=11.47
+Iter  6000 | Total loss: 22.0109 (MSE:0.0109, Reg:22.0000) beta=9.58
+Iter  7000 | Total loss: 3.0093 (MSE:0.0099, Reg:2.9994) beta=7.68
+Iter  7157 | Total loss: 0.0105 (MSE:0.0105, Reg:0.0000) beta=7.39
     Early stopped
     Set the rounding value
-    - The rounding value is same with the residual.
     s_a : linear_1.act_quant, torch.Size([]), Parameter containing:
 tensor(0.0538, device='cuda:0', requires_grad=True)
     s_a : gelu_act, torch.Size([]), Parameter containing:
@@ -1117,19 +1093,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0084 (MSE:0.0084, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 208041.9531 (MSE:0.0022, Reg:208041.9531) beta=20.00
-Iter  1000 | Total loss: 19628.9629 (MSE:0.0029, Reg:19628.9609) beta=19.05
-Iter  2000 | Total loss: 6931.0386 (MSE:0.0032, Reg:6931.0352) beta=17.16
-Iter  3000 | Total loss: 3058.0999 (MSE:0.0027, Reg:3058.0972) beta=15.26
-Iter  4000 | Total loss: 1321.7472 (MSE:0.0036, Reg:1321.7437) beta=13.37
-Iter  5000 | Total loss: 411.0816 (MSE:0.0032, Reg:411.0784) beta=11.47
-Iter  6000 | Total loss: 80.8760 (MSE:0.0029, Reg:80.8731) beta=9.58
-Iter  7000 | Total loss: 1.3203 (MSE:0.0029, Reg:1.3175) beta=7.68
-Iter  7015 | Total loss: 0.0030 (MSE:0.0030, Reg:0.0000) beta=7.66
+Iter     1 | Total loss: 0.0027 (MSE:0.0027, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 384007.0000 (MSE:0.0025, Reg:384007.0000) beta=20.00
+Iter  1000 | Total loss: 127.6485 (MSE:0.0022, Reg:127.6463) beta=19.05
+Iter  2000 | Total loss: 36.1501 (MSE:0.0020, Reg:36.1481) beta=17.16
+Iter  3000 | Total loss: 23.0021 (MSE:0.0021, Reg:23.0000) beta=15.26
+Iter  4000 | Total loss: 11.0023 (MSE:0.0023, Reg:11.0000) beta=13.37
+Iter  5000 | Total loss: 10.0022 (MSE:0.0022, Reg:10.0000) beta=11.47
+Iter  5840 | Total loss: 0.0021 (MSE:0.0021, Reg:0.0000) beta=9.88
     Early stopped
     Set the rounding value
-    - The rounding value is same with the residual.
     s_a : in_proj.act_quant, torch.Size([]), Parameter containing:
 tensor(0.0283, device='cuda:0', requires_grad=True)
     s_a : qk_act, torch.Size([]), Parameter containing:
@@ -1160,19 +1133,17 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.1556 (MSE:0.1556, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 375680.2188 (MSE:0.0812, Reg:375680.1250) beta=20.00
-Iter  1000 | Total loss: 6123.4248 (MSE:0.0857, Reg:6123.3394) beta=19.05
-Iter  2000 | Total loss: 2284.5730 (MSE:0.0887, Reg:2284.4844) beta=17.16
-Iter  3000 | Total loss: 1053.3234 (MSE:0.0827, Reg:1053.2407) beta=15.26
-Iter  4000 | Total loss: 471.4301 (MSE:0.0935, Reg:471.3366) beta=13.37
-Iter  5000 | Total loss: 141.5869 (MSE:0.0917, Reg:141.4951) beta=11.47
-Iter  6000 | Total loss: 31.4857 (MSE:0.0745, Reg:31.4112) beta=9.58
-Iter  7000 | Total loss: 4.0829 (MSE:0.0829, Reg:4.0000) beta=7.68
-Iter  7436 | Total loss: 0.0877 (MSE:0.0877, Reg:0.0000) beta=6.86
+Iter     1 | Total loss: 0.0755 (MSE:0.0755, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 1061952.8750 (MSE:0.0580, Reg:1061952.7500) beta=20.00
+Iter  1000 | Total loss: 4632.0703 (MSE:0.0460, Reg:4632.0244) beta=19.05
+Iter  2000 | Total loss: 1290.9924 (MSE:0.0513, Reg:1290.9412) beta=17.16
+Iter  3000 | Total loss: 536.6309 (MSE:0.0470, Reg:536.5839) beta=15.26
+Iter  4000 | Total loss: 226.3147 (MSE:0.0551, Reg:226.2596) beta=13.37
+Iter  5000 | Total loss: 88.0038 (MSE:0.0491, Reg:87.9547) beta=11.47
+Iter  6000 | Total loss: 27.0343 (MSE:0.0549, Reg:26.9794) beta=9.58
+Iter  6876 | Total loss: 0.0502 (MSE:0.0502, Reg:0.0000) beta=7.92
     Early stopped
     Set the rounding value
-    - The rounding value is same with the residual.
     s_a : linear_1.act_quant, torch.Size([]), Parameter containing:
 tensor(0.0805, device='cuda:0', requires_grad=True)
     s_a : gelu_act, torch.Size([]), Parameter containing:
@@ -1199,17 +1170,16 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.0104 (MSE:0.0104, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 169195.2188 (MSE:0.0082, Reg:169195.2031) beta=20.00
-Iter  1000 | Total loss: 185.1790 (MSE:0.0079, Reg:185.1711) beta=19.05
-Iter  2000 | Total loss: 69.1049 (MSE:0.0086, Reg:69.0963) beta=17.16
-Iter  3000 | Total loss: 25.0103 (MSE:0.0103, Reg:25.0000) beta=15.26
-Iter  4000 | Total loss: 7.0102 (MSE:0.0102, Reg:7.0000) beta=13.37
-Iter  5000 | Total loss: 3.0092 (MSE:0.0092, Reg:3.0000) beta=11.47
-Iter  5207 | Total loss: 0.0100 (MSE:0.0100, Reg:0.0000) beta=11.08
+Iter     1 | Total loss: 0.0075 (MSE:0.0075, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 465031.5625 (MSE:0.0037, Reg:465031.5625) beta=20.00
+Iter  1000 | Total loss: 254.8754 (MSE:0.0058, Reg:254.8696) beta=19.05
+Iter  2000 | Total loss: 50.7271 (MSE:0.0056, Reg:50.7215) beta=17.16
+Iter  3000 | Total loss: 19.0012 (MSE:0.0051, Reg:18.9961) beta=15.26
+Iter  4000 | Total loss: 4.0065 (MSE:0.0065, Reg:4.0000) beta=13.37
+Iter  5000 | Total loss: 1.0055 (MSE:0.0056, Reg:0.9999) beta=11.47
+Iter  5026 | Total loss: 0.0054 (MSE:0.0054, Reg:0.0000) beta=11.42
     Early stopped
     Set the rounding value
-    - The rounding value is same with the residual.
     s_a : in_proj.act_quant, torch.Size([]), Parameter containing:
 tensor(0.0394, device='cuda:0', requires_grad=True)
     s_a : qk_act, torch.Size([]), Parameter containing:
@@ -1240,19 +1210,18 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.1435 (MSE:0.1435, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 401234.2500 (MSE:0.0258, Reg:401234.2188) beta=20.00
-Iter  1000 | Total loss: 396.1282 (MSE:0.1034, Reg:396.0248) beta=19.05
-Iter  2000 | Total loss: 132.1047 (MSE:0.1047, Reg:132.0000) beta=17.16
-Iter  3000 | Total loss: 59.1006 (MSE:0.1006, Reg:59.0000) beta=15.26
-Iter  4000 | Total loss: 34.1005 (MSE:0.1042, Reg:33.9963) beta=13.37
-Iter  5000 | Total loss: 18.1014 (MSE:0.1015, Reg:18.0000) beta=11.47
-Iter  6000 | Total loss: 8.1045 (MSE:0.1045, Reg:8.0000) beta=9.58
-Iter  7000 | Total loss: 1.1051 (MSE:0.1051, Reg:1.0000) beta=7.68
-Iter  7377 | Total loss: 0.1026 (MSE:0.1026, Reg:0.0000) beta=6.97
+Iter     1 | Total loss: 0.0953 (MSE:0.0953, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 950367.2500 (MSE:0.0179, Reg:950367.2500) beta=20.00
+Iter  1000 | Total loss: 226.0907 (MSE:0.0911, Reg:225.9996) beta=19.05
+Iter  2000 | Total loss: 69.7736 (MSE:0.0960, Reg:69.6775) beta=17.16
+Iter  3000 | Total loss: 38.7989 (MSE:0.0936, Reg:38.7053) beta=15.26
+Iter  4000 | Total loss: 28.0883 (MSE:0.0883, Reg:28.0000) beta=13.37
+Iter  5000 | Total loss: 11.0916 (MSE:0.0916, Reg:11.0000) beta=11.47
+Iter  6000 | Total loss: 4.0918 (MSE:0.0918, Reg:4.0000) beta=9.58
+Iter  7000 | Total loss: 2.0922 (MSE:0.0922, Reg:2.0000) beta=7.68
+Iter  7646 | Total loss: 0.0926 (MSE:0.0926, Reg:0.0000) beta=6.46
     Early stopped
     Set the rounding value
-    - The rounding value is same with the residual.
     s_a : linear_1.act_quant, torch.Size([]), Parameter containing:
 tensor(0.0596, device='cuda:0', requires_grad=True)
     s_a : gelu_act, torch.Size([]), Parameter containing:
@@ -1278,19 +1247,20 @@ Parameter Group 0
     maximize: False
     weight_decay: 0
 ) 10000
-Iter     1 | Total loss: 0.1968 (MSE:0.1968, Reg:0.0000) beta=0.00
-Iter   500 | Total loss: 199135.3438 (MSE:0.1839, Reg:199135.1562) beta=20.00
-Iter  1000 | Total loss: 20656.9199 (MSE:0.1977, Reg:20656.7227) beta=19.05
-Iter  2000 | Total loss: 5216.3325 (MSE:0.1684, Reg:5216.1641) beta=17.16
-Iter  3000 | Total loss: 2206.2002 (MSE:0.1851, Reg:2206.0151) beta=15.26
-Iter  4000 | Total loss: 892.5972 (MSE:0.1795, Reg:892.4177) beta=13.37
-Iter  5000 | Total loss: 265.5395 (MSE:0.1550, Reg:265.3845) beta=11.47
-Iter  6000 | Total loss: 32.1044 (MSE:0.1712, Reg:31.9332) beta=9.58
-Iter  6716 | Total loss: 0.1637 (MSE:0.1637, Reg:0.0000) beta=8.22
+Iter     1 | Total loss: 0.2142 (MSE:0.2142, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 210395.3906 (MSE:0.1390, Reg:210395.2500) beta=20.00
+Iter  1000 | Total loss: 23759.8359 (MSE:0.1720, Reg:23759.6641) beta=19.05
+Iter  2000 | Total loss: 5819.8530 (MSE:0.1560, Reg:5819.6973) beta=17.16
+Iter  3000 | Total loss: 2521.9509 (MSE:0.1558, Reg:2521.7952) beta=15.26
+Iter  4000 | Total loss: 1011.0977 (MSE:0.1434, Reg:1010.9542) beta=13.37
+Iter  5000 | Total loss: 300.6649 (MSE:0.1534, Reg:300.5114) beta=11.47
+Iter  6000 | Total loss: 43.7274 (MSE:0.1316, Reg:43.5959) beta=9.58
+Iter  7000 | Total loss: 1.1487 (MSE:0.1487, Reg:1.0000) beta=7.68
+Iter  7163 | Total loss: 0.1502 (MSE:0.1502, Reg:0.0000) beta=7.38
     Early stopped
     Set the rounding value
 
 AdaRound for PerBlock weights is done.
 
-    Quantized model Evaluation accuracy on 50000 images, 77.180%
-Total time: 8213.52 sec
+    Quantized model Evaluation accuracy on 50000 images, 78.484%
+Total time: 9130.46 sec
