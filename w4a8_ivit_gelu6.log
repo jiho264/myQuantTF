@@ -1,0 +1,84 @@
+
+- main_args params:
+    - arch: ViT_B_16
+    - batch_size: 128
+    - num_samples: 1024
+
+- weight params:
+    - scheme: AbsMaxQuantizer
+    - bit_width: 4
+    - per_channel: True
+
+- activation params:
+    - scheme: MovAvgAbsMaxQuantizer
+    - bit_width: 8
+    - idadd_bit_width: 16
+    - per_channel: False
+    - momentum: 0.95
+    - batches: 16
+    - Identity addition : INT16 (The input of each LayerNorm)
+
+- softmax params:
+    - bit_width: 16
+    - Activation of Softmax(Q@K/d_K) (attn_map) : UINT8
+
+- layer_norm params:
+    - None: None
+
+- gelu params:
+    - sigmoid_bit_width: 6
+
+Int Activation 16 for idAdd for identity add
+IntSoftMax 16
+Int Activation 16 for idAdd for identity add
+IntGELU bit: 6
+Int Activation 16 for idAdd for identity add
+IntSoftMax 16
+Int Activation 16 for idAdd for identity add
+IntGELU bit: 6
+Int Activation 16 for idAdd for identity add
+IntSoftMax 16
+Int Activation 16 for idAdd for identity add
+IntGELU bit: 6
+Int Activation 16 for idAdd for identity add
+IntSoftMax 16
+Int Activation 16 for idAdd for identity add
+IntGELU bit: 6
+Int Activation 16 for idAdd for identity add
+IntSoftMax 16
+Int Activation 16 for idAdd for identity add
+IntGELU bit: 6
+Int Activation 16 for idAdd for identity add
+IntSoftMax 16
+Int Activation 16 for idAdd for identity add
+IntGELU bit: 6
+Int Activation 16 for idAdd for identity add
+IntSoftMax 16
+Int Activation 16 for idAdd for identity add
+IntGELU bit: 6
+Int Activation 16 for idAdd for identity add
+IntSoftMax 16
+Int Activation 16 for idAdd for identity add
+IntGELU bit: 6
+Int Activation 16 for idAdd for identity add
+IntSoftMax 16
+Int Activation 16 for idAdd for identity add
+IntGELU bit: 6
+Int Activation 16 for idAdd for identity add
+IntSoftMax 16
+Int Activation 16 for idAdd for identity add
+IntGELU bit: 6
+Int Activation 16 for idAdd for identity add
+IntSoftMax 16
+Int Activation 16 for idAdd for identity add
+IntGELU bit: 6
+Int Activation 16 for idAdd for identity add
+IntSoftMax 16
+Int Activation 16 for idAdd for identity add
+IntGELU bit: 6
+Int Activation 16 for idAdd for identity add
+Activation calibration is done.
+
+
+    Quantized model Evaluation accuracy on 50000 images, 76.204%
+Total time: 1068.31 sec

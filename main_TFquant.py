@@ -14,7 +14,7 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     }
 
     args_w = {"scheme": "AbsMaxQuantizer", "bit_width": 4, "per_channel": True}
-    args_w.update({"AdaRound": "PerLayer"})
+    # args_w.update({"AdaRound": "PerLayer"})
 
     """NOW IS ONLY FOR WEIGHTS"""
 
