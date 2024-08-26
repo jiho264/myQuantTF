@@ -28,7 +28,7 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         "batches": 16,
         # "batches": 4,
     }
-    args_gelu = {"sigmoid_bit_width": 8}
+    args_gelu = {"sigmoid_bit_width": 6}
     args_softmax = {"bit_width": 16}
     args_ln = {
         "None": None,

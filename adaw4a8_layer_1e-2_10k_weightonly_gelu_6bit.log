@@ -1,0 +1,1715 @@
+
+- main_args params:
+    - arch: ViT_B_16
+    - batch_size: 128
+    - num_samples: 1024
+
+- weight params:
+    - scheme: AbsMaxQuantizer
+    - bit_width: 4
+    - per_channel: True
+    - AdaRound: PerLayer
+
+- activation params:
+    - scheme: MovAvgAbsMaxQuantizer
+    - bit_width: 8
+    - idadd_bit_width: 16
+    - per_channel: False
+    - momentum: 0.95
+    - batches: 16
+    - Identity addition : INT16 (The input of each LayerNorm)
+
+- softmax params:
+    - bit_width: 16
+    - Activation of Softmax(Q@K/d_K) (attn_map) : UINT8
+
+- layer_norm params:
+    - None: None
+
+- gelu params:
+    - sigmoid_bit_width: 6
+
+    Initiated the V
+Int Activation 16 for idAdd for identity add
+    Initiated the V
+IntSoftMax 16
+    Initiated the V
+Int Activation 16 for idAdd for identity add
+    Initiated the V
+IntGELU bit: 6
+    Initiated the V
+Int Activation 16 for idAdd for identity add
+    Initiated the V
+IntSoftMax 16
+    Initiated the V
+Int Activation 16 for idAdd for identity add
+    Initiated the V
+IntGELU bit: 6
+    Initiated the V
+Int Activation 16 for idAdd for identity add
+    Initiated the V
+IntSoftMax 16
+    Initiated the V
+Int Activation 16 for idAdd for identity add
+    Initiated the V
+IntGELU bit: 6
+    Initiated the V
+Int Activation 16 for idAdd for identity add
+    Initiated the V
+IntSoftMax 16
+    Initiated the V
+Int Activation 16 for idAdd for identity add
+    Initiated the V
+IntGELU bit: 6
+    Initiated the V
+Int Activation 16 for idAdd for identity add
+    Initiated the V
+IntSoftMax 16
+    Initiated the V
+Int Activation 16 for idAdd for identity add
+    Initiated the V
+IntGELU bit: 6
+    Initiated the V
+Int Activation 16 for idAdd for identity add
+    Initiated the V
+IntSoftMax 16
+    Initiated the V
+Int Activation 16 for idAdd for identity add
+    Initiated the V
+IntGELU bit: 6
+    Initiated the V
+Int Activation 16 for idAdd for identity add
+    Initiated the V
+IntSoftMax 16
+    Initiated the V
+Int Activation 16 for idAdd for identity add
+    Initiated the V
+IntGELU bit: 6
+    Initiated the V
+Int Activation 16 for idAdd for identity add
+    Initiated the V
+IntSoftMax 16
+    Initiated the V
+Int Activation 16 for idAdd for identity add
+    Initiated the V
+IntGELU bit: 6
+    Initiated the V
+Int Activation 16 for idAdd for identity add
+    Initiated the V
+IntSoftMax 16
+    Initiated the V
+Int Activation 16 for idAdd for identity add
+    Initiated the V
+IntGELU bit: 6
+    Initiated the V
+Int Activation 16 for idAdd for identity add
+    Initiated the V
+IntSoftMax 16
+    Initiated the V
+Int Activation 16 for idAdd for identity add
+    Initiated the V
+IntGELU bit: 6
+    Initiated the V
+Int Activation 16 for idAdd for identity add
+    Initiated the V
+IntSoftMax 16
+    Initiated the V
+Int Activation 16 for idAdd for identity add
+    Initiated the V
+IntGELU bit: 6
+    Initiated the V
+Int Activation 16 for idAdd for identity add
+    Initiated the V
+IntSoftMax 16
+    Initiated the V
+Int Activation 16 for idAdd for identity add
+    Initiated the V
+IntGELU bit: 6
+    Initiated the V
+Int Activation 16 for idAdd for identity add
+    Initiated the V
+Activation calibration is done.
+
+[1/50] conv_proj
+    INPUT_FP : torch.Size([1024, 3, 224, 224])
+    OUTPUT_FP : torch.Size([1024, 768, 14, 14])
+    V   : , torch.Size([768, 3, 16, 16])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0033 (MSE:0.0033, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 119101.3672 (MSE:0.0005, Reg:119101.3672) beta=20.00
+Iter  1000 | Total loss: 16.0032 (MSE:0.0032, Reg:16.0000) beta=19.05
+Iter  2000 | Total loss: 7.0030 (MSE:0.0030, Reg:7.0000) beta=17.16
+Iter  3000 | Total loss: 5.9877 (MSE:0.0032, Reg:5.9844) beta=15.26
+Iter  4000 | Total loss: 2.0037 (MSE:0.0037, Reg:2.0000) beta=13.37
+Iter  4906 | Total loss: 0.0030 (MSE:0.0030, Reg:0.0000) beta=11.65
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0539, device='cuda:0', requires_grad=True)
+
+[2/50] encoder.layers.0.self_attention.in_proj
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 2304])
+    V   : , torch.Size([2304, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0109 (MSE:0.0109, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 259165.7188 (MSE:0.0023, Reg:259165.7188) beta=20.00
+Iter  1000 | Total loss: 18580.5020 (MSE:0.0024, Reg:18580.5000) beta=19.05
+Iter  2000 | Total loss: 8297.9756 (MSE:0.0022, Reg:8297.9736) beta=17.16
+Iter  3000 | Total loss: 4888.5576 (MSE:0.0021, Reg:4888.5557) beta=15.26
+Iter  4000 | Total loss: 2983.8943 (MSE:0.0023, Reg:2983.8921) beta=13.37
+Iter  5000 | Total loss: 1578.2844 (MSE:0.0027, Reg:1578.2817) beta=11.47
+Iter  6000 | Total loss: 728.3537 (MSE:0.0022, Reg:728.3514) beta=9.58
+Iter  7000 | Total loss: 175.3537 (MSE:0.0023, Reg:175.3514) beta=7.68
+Iter  8000 | Total loss: 8.8292 (MSE:0.0026, Reg:8.8266) beta=5.79
+Iter  8548 | Total loss: 0.0026 (MSE:0.0026, Reg:0.0000) beta=4.75
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0258, device='cuda:0', requires_grad=True)
+
+[3/50] encoder.layers.0.self_attention.out_proj
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 768])
+    V   : , torch.Size([768, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0002 (MSE:0.0002, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 50016.1094 (MSE:0.0001, Reg:50016.1094) beta=20.00
+Iter  1000 | Total loss: 181.0363 (MSE:0.0001, Reg:181.0362) beta=19.05
+Iter  2000 | Total loss: 68.9944 (MSE:0.0001, Reg:68.9943) beta=17.16
+Iter  3000 | Total loss: 28.0001 (MSE:0.0001, Reg:28.0000) beta=15.26
+Iter  4000 | Total loss: 19.0001 (MSE:0.0001, Reg:19.0000) beta=13.37
+Iter  5000 | Total loss: 8.0001 (MSE:0.0001, Reg:8.0000) beta=11.47
+Iter  6000 | Total loss: 4.0001 (MSE:0.0001, Reg:4.0000) beta=9.58
+Iter  7000 | Total loss: 1.0001 (MSE:0.0001, Reg:1.0000) beta=7.68
+Iter  7400 | Total loss: 0.0001 (MSE:0.0001, Reg:0.0000) beta=6.93
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0125, device='cuda:0', requires_grad=True)
+
+[4/50] encoder.layers.0.mlp.linear_1
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 3072])
+    V   : , torch.Size([3072, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0279 (MSE:0.0279, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 425035.4375 (MSE:0.0064, Reg:425035.4375) beta=20.00
+Iter  1000 | Total loss: 15097.2471 (MSE:0.0067, Reg:15097.2402) beta=19.05
+Iter  2000 | Total loss: 7254.8076 (MSE:0.0074, Reg:7254.8003) beta=17.16
+Iter  3000 | Total loss: 5031.1807 (MSE:0.0070, Reg:5031.1738) beta=15.26
+Iter  4000 | Total loss: 3470.8604 (MSE:0.0069, Reg:3470.8535) beta=13.37
+Iter  5000 | Total loss: 2007.7109 (MSE:0.0078, Reg:2007.7031) beta=11.47
+Iter  6000 | Total loss: 926.2044 (MSE:0.0066, Reg:926.1978) beta=9.58
+Iter  7000 | Total loss: 239.8837 (MSE:0.0071, Reg:239.8767) beta=7.68
+Iter  8000 | Total loss: 10.9462 (MSE:0.0071, Reg:10.9390) beta=5.79
+Iter  8274 | Total loss: 0.0071 (MSE:0.0071, Reg:0.0000) beta=5.27
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0633, device='cuda:0', requires_grad=True)
+
+[5/50] encoder.layers.0.mlp.linear_2
+    INPUT_FP : torch.Size([1024, 197, 3072])
+    OUTPUT_FP : torch.Size([1024, 197, 768])
+    V   : , torch.Size([768, 3072])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0041 (MSE:0.0041, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 489172.1875 (MSE:0.0021, Reg:489172.1875) beta=20.00
+Iter  1000 | Total loss: 4894.2100 (MSE:0.0027, Reg:4894.2070) beta=19.05
+Iter  2000 | Total loss: 2168.1350 (MSE:0.0025, Reg:2168.1326) beta=17.16
+Iter  3000 | Total loss: 1415.2109 (MSE:0.0028, Reg:1415.2081) beta=15.26
+Iter  4000 | Total loss: 916.2298 (MSE:0.0028, Reg:916.2270) beta=13.37
+Iter  5000 | Total loss: 521.3899 (MSE:0.0028, Reg:521.3871) beta=11.47
+Iter  6000 | Total loss: 212.9744 (MSE:0.0026, Reg:212.9719) beta=9.58
+Iter  7000 | Total loss: 48.0006 (MSE:0.0027, Reg:47.9979) beta=7.68
+Iter  7887 | Total loss: 0.0028 (MSE:0.0028, Reg:0.0000) beta=6.00
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0313, device='cuda:0', requires_grad=True)
+
+[6/50] encoder.layers.1.self_attention.in_proj
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 2304])
+    V   : , torch.Size([2304, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0126 (MSE:0.0126, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 327321.2500 (MSE:0.0050, Reg:327321.2500) beta=20.00
+Iter  1000 | Total loss: 16944.5762 (MSE:0.0044, Reg:16944.5723) beta=19.05
+Iter  2000 | Total loss: 6864.9355 (MSE:0.0049, Reg:6864.9307) beta=17.16
+Iter  3000 | Total loss: 4307.6943 (MSE:0.0049, Reg:4307.6895) beta=15.26
+Iter  4000 | Total loss: 2802.7573 (MSE:0.0049, Reg:2802.7524) beta=13.37
+Iter  5000 | Total loss: 1650.9026 (MSE:0.0046, Reg:1650.8979) beta=11.47
+Iter  6000 | Total loss: 673.0472 (MSE:0.0049, Reg:673.0422) beta=9.58
+Iter  7000 | Total loss: 156.8868 (MSE:0.0048, Reg:156.8820) beta=7.68
+Iter  7978 | Total loss: 0.0051 (MSE:0.0051, Reg:0.0000) beta=5.83
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0308, device='cuda:0', requires_grad=True)
+
+[7/50] encoder.layers.1.self_attention.out_proj
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 768])
+    V   : , torch.Size([768, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0003 (MSE:0.0003, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 72588.0781 (MSE:0.0002, Reg:72588.0781) beta=20.00
+Iter  1000 | Total loss: 99.9545 (MSE:0.0003, Reg:99.9542) beta=19.05
+Iter  2000 | Total loss: 30.8536 (MSE:0.0003, Reg:30.8533) beta=17.16
+Iter  3000 | Total loss: 17.0003 (MSE:0.0003, Reg:17.0000) beta=15.26
+Iter  4000 | Total loss: 11.0004 (MSE:0.0004, Reg:11.0000) beta=13.37
+Iter  5000 | Total loss: 8.0003 (MSE:0.0003, Reg:8.0000) beta=11.47
+Iter  6000 | Total loss: 1.9935 (MSE:0.0003, Reg:1.9932) beta=9.58
+Iter  6511 | Total loss: 0.0003 (MSE:0.0003, Reg:0.0000) beta=8.61
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0083, device='cuda:0', requires_grad=True)
+
+[8/50] encoder.layers.1.mlp.linear_1
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 3072])
+    V   : , torch.Size([3072, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0622 (MSE:0.0622, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 773384.4375 (MSE:0.0183, Reg:773384.4375) beta=20.00
+Iter  1000 | Total loss: 40922.2109 (MSE:0.0198, Reg:40922.1914) beta=19.05
+Iter  2000 | Total loss: 16598.9531 (MSE:0.0196, Reg:16598.9336) beta=17.16
+Iter  3000 | Total loss: 10398.2988 (MSE:0.0196, Reg:10398.2793) beta=15.26
+Iter  4000 | Total loss: 6658.7729 (MSE:0.0193, Reg:6658.7539) beta=13.37
+Iter  5000 | Total loss: 3727.6980 (MSE:0.0206, Reg:3727.6775) beta=11.47
+Iter  6000 | Total loss: 1513.8815 (MSE:0.0200, Reg:1513.8615) beta=9.58
+Iter  7000 | Total loss: 206.3476 (MSE:0.0210, Reg:206.3267) beta=7.68
+Iter  7711 | Total loss: 0.0197 (MSE:0.0197, Reg:0.0000) beta=6.34
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0670, device='cuda:0', requires_grad=True)
+
+[9/50] encoder.layers.1.mlp.linear_2
+    INPUT_FP : torch.Size([1024, 197, 3072])
+    OUTPUT_FP : torch.Size([1024, 197, 768])
+    V   : , torch.Size([768, 3072])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0027 (MSE:0.0027, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 300245.0312 (MSE:0.0022, Reg:300245.0312) beta=20.00
+Iter  1000 | Total loss: 411.4496 (MSE:0.0026, Reg:411.4471) beta=19.05
+Iter  2000 | Total loss: 174.7759 (MSE:0.0025, Reg:174.7734) beta=17.16
+Iter  3000 | Total loss: 117.0025 (MSE:0.0025, Reg:117.0000) beta=15.26
+Iter  4000 | Total loss: 75.0026 (MSE:0.0027, Reg:75.0000) beta=13.37
+Iter  5000 | Total loss: 47.2292 (MSE:0.0026, Reg:47.2266) beta=11.47
+Iter  6000 | Total loss: 17.0026 (MSE:0.0026, Reg:17.0000) beta=9.58
+Iter  7000 | Total loss: 4.0026 (MSE:0.0026, Reg:4.0000) beta=7.68
+Iter  7439 | Total loss: 0.0027 (MSE:0.0027, Reg:0.0000) beta=6.85
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0204, device='cuda:0', requires_grad=True)
+
+[10/50] encoder.layers.2.self_attention.in_proj
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 2304])
+    V   : , torch.Size([2304, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0186 (MSE:0.0186, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 434482.2500 (MSE:0.0128, Reg:434482.2500) beta=20.00
+Iter  1000 | Total loss: 24858.8457 (MSE:0.0137, Reg:24858.8320) beta=19.05
+Iter  2000 | Total loss: 9880.6943 (MSE:0.0134, Reg:9880.6807) beta=17.16
+Iter  3000 | Total loss: 6137.6143 (MSE:0.0142, Reg:6137.6001) beta=15.26
+Iter  4000 | Total loss: 3990.5269 (MSE:0.0140, Reg:3990.5127) beta=13.37
+Iter  5000 | Total loss: 2261.4292 (MSE:0.0123, Reg:2261.4170) beta=11.47
+Iter  6000 | Total loss: 954.2189 (MSE:0.0138, Reg:954.2051) beta=9.58
+Iter  7000 | Total loss: 177.7976 (MSE:0.0138, Reg:177.7838) beta=7.68
+Iter  8000 | Total loss: 1.0135 (MSE:0.0135, Reg:1.0000) beta=5.79
+Iter  8176 | Total loss: 0.0202 (MSE:0.0202, Reg:0.0000) beta=5.46
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0467, device='cuda:0', requires_grad=True)
+
+[11/50] encoder.layers.2.self_attention.out_proj
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 768])
+    V   : , torch.Size([768, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0013 (MSE:0.0013, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 106886.4766 (MSE:0.0010, Reg:106886.4766) beta=20.00
+Iter  1000 | Total loss: 435.8971 (MSE:0.0010, Reg:435.8960) beta=19.05
+Iter  2000 | Total loss: 160.0012 (MSE:0.0012, Reg:160.0000) beta=17.16
+Iter  3000 | Total loss: 110.8595 (MSE:0.0011, Reg:110.8584) beta=15.26
+Iter  4000 | Total loss: 81.0010 (MSE:0.0010, Reg:81.0000) beta=13.37
+Iter  5000 | Total loss: 56.0012 (MSE:0.0012, Reg:56.0000) beta=11.47
+Iter  6000 | Total loss: 21.9936 (MSE:0.0010, Reg:21.9925) beta=9.58
+Iter  7000 | Total loss: 4.0012 (MSE:0.0012, Reg:4.0000) beta=7.68
+Iter  7343 | Total loss: 0.0011 (MSE:0.0011, Reg:0.0000) beta=7.03
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0078, device='cuda:0', requires_grad=True)
+
+[12/50] encoder.layers.2.mlp.linear_1
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 3072])
+    V   : , torch.Size([3072, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0514 (MSE:0.0514, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 755349.5000 (MSE:0.0258, Reg:755349.5000) beta=20.00
+Iter  1000 | Total loss: 61352.2305 (MSE:0.0264, Reg:61352.2031) beta=19.05
+Iter  2000 | Total loss: 34553.4609 (MSE:0.0272, Reg:34553.4336) beta=17.16
+Iter  3000 | Total loss: 25363.8008 (MSE:0.0270, Reg:25363.7734) beta=15.26
+Iter  4000 | Total loss: 18639.5703 (MSE:0.0273, Reg:18639.5430) beta=13.37
+Iter  5000 | Total loss: 12512.3027 (MSE:0.0273, Reg:12512.2754) beta=11.47
+Iter  6000 | Total loss: 6892.3135 (MSE:0.0278, Reg:6892.2856) beta=9.58
+Iter  7000 | Total loss: 3085.7134 (MSE:0.0277, Reg:3085.6855) beta=7.68
+Iter  7918 | Total loss: 0.0297 (MSE:0.0297, Reg:0.0000) beta=5.94
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0794, device='cuda:0', requires_grad=True)
+
+[13/50] encoder.layers.2.mlp.linear_2
+    INPUT_FP : torch.Size([1024, 197, 3072])
+    OUTPUT_FP : torch.Size([1024, 197, 768])
+    V   : , torch.Size([768, 3072])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0055 (MSE:0.0055, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 357547.5312 (MSE:0.0049, Reg:357547.5312) beta=20.00
+Iter  1000 | Total loss: 449.0031 (MSE:0.0051, Reg:448.9980) beta=19.05
+Iter  2000 | Total loss: 152.6437 (MSE:0.0050, Reg:152.6387) beta=17.16
+Iter  3000 | Total loss: 100.9768 (MSE:0.0052, Reg:100.9716) beta=15.26
+Iter  4000 | Total loss: 59.0050 (MSE:0.0053, Reg:58.9997) beta=13.37
+Iter  5000 | Total loss: 38.5072 (MSE:0.0052, Reg:38.5020) beta=11.47
+Iter  6000 | Total loss: 18.0050 (MSE:0.0051, Reg:17.9999) beta=9.58
+Iter  7000 | Total loss: 4.0041 (MSE:0.0052, Reg:3.9989) beta=7.68
+Iter  7445 | Total loss: 0.0049 (MSE:0.0049, Reg:0.0000) beta=6.84
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0208, device='cuda:0', requires_grad=True)
+
+[14/50] encoder.layers.3.self_attention.in_proj
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 2304])
+    V   : , torch.Size([2304, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0279 (MSE:0.0279, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 467038.9375 (MSE:0.0189, Reg:467038.9062) beta=20.00
+Iter  1000 | Total loss: 28977.9141 (MSE:0.0188, Reg:28977.8945) beta=19.05
+Iter  2000 | Total loss: 11285.1943 (MSE:0.0211, Reg:11285.1729) beta=17.16
+Iter  3000 | Total loss: 7033.8223 (MSE:0.0207, Reg:7033.8018) beta=15.26
+Iter  4000 | Total loss: 4331.8018 (MSE:0.0213, Reg:4331.7803) beta=13.37
+Iter  5000 | Total loss: 2350.7493 (MSE:0.0198, Reg:2350.7295) beta=11.47
+Iter  6000 | Total loss: 937.0160 (MSE:0.0220, Reg:936.9940) beta=9.58
+Iter  7000 | Total loss: 182.3296 (MSE:0.0237, Reg:182.3058) beta=7.68
+Iter  8000 | Total loss: 1.0193 (MSE:0.0193, Reg:1.0000) beta=5.79
+Iter  8094 | Total loss: 0.0208 (MSE:0.0208, Reg:0.0000) beta=5.61
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0467, device='cuda:0', requires_grad=True)
+
+[15/50] encoder.layers.3.self_attention.out_proj
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 768])
+    V   : , torch.Size([768, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0018 (MSE:0.0018, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 127939.7422 (MSE:0.0016, Reg:127939.7422) beta=20.00
+Iter  1000 | Total loss: 454.3318 (MSE:0.0016, Reg:454.3302) beta=19.05
+Iter  2000 | Total loss: 194.7511 (MSE:0.0017, Reg:194.7494) beta=17.16
+Iter  3000 | Total loss: 134.9934 (MSE:0.0016, Reg:134.9918) beta=15.26
+Iter  4000 | Total loss: 101.5779 (MSE:0.0017, Reg:101.5762) beta=13.37
+Iter  5000 | Total loss: 67.8176 (MSE:0.0017, Reg:67.8159) beta=11.47
+Iter  6000 | Total loss: 26.9755 (MSE:0.0018, Reg:26.9737) beta=9.58
+Iter  7000 | Total loss: 4.0018 (MSE:0.0018, Reg:4.0000) beta=7.68
+Iter  7323 | Total loss: 0.0017 (MSE:0.0017, Reg:0.0000) beta=7.07
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0110, device='cuda:0', requires_grad=True)
+
+[16/50] encoder.layers.3.mlp.linear_1
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 3072])
+    V   : , torch.Size([3072, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0642 (MSE:0.0642, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 708701.8125 (MSE:0.0392, Reg:708701.7500) beta=20.00
+Iter  1000 | Total loss: 44958.7070 (MSE:0.0415, Reg:44958.6641) beta=19.05
+Iter  2000 | Total loss: 19924.7734 (MSE:0.0420, Reg:19924.7305) beta=17.16
+Iter  3000 | Total loss: 12955.6611 (MSE:0.0443, Reg:12955.6172) beta=15.26
+Iter  4000 | Total loss: 8531.1426 (MSE:0.0412, Reg:8531.1016) beta=13.37
+Iter  5000 | Total loss: 4661.1318 (MSE:0.0428, Reg:4661.0889) beta=11.47
+Iter  6000 | Total loss: 1696.0874 (MSE:0.0396, Reg:1696.0479) beta=9.58
+Iter  7000 | Total loss: 161.5940 (MSE:0.0413, Reg:161.5527) beta=7.68
+Iter  7564 | Total loss: 0.0420 (MSE:0.0420, Reg:0.0000) beta=6.62
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0614, device='cuda:0', requires_grad=True)
+
+[17/50] encoder.layers.3.mlp.linear_2
+    INPUT_FP : torch.Size([1024, 197, 3072])
+    OUTPUT_FP : torch.Size([1024, 197, 768])
+    V   : , torch.Size([768, 3072])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0048 (MSE:0.0048, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 368368.5625 (MSE:0.0041, Reg:368368.5625) beta=20.00
+Iter  1000 | Total loss: 381.2956 (MSE:0.0042, Reg:381.2914) beta=19.05
+Iter  2000 | Total loss: 157.0045 (MSE:0.0045, Reg:157.0000) beta=17.16
+Iter  3000 | Total loss: 96.9986 (MSE:0.0046, Reg:96.9940) beta=15.26
+Iter  4000 | Total loss: 59.0045 (MSE:0.0045, Reg:59.0000) beta=13.37
+Iter  5000 | Total loss: 31.7549 (MSE:0.0042, Reg:31.7507) beta=11.47
+Iter  6000 | Total loss: 8.0046 (MSE:0.0046, Reg:8.0000) beta=9.58
+Iter  7000 | Total loss: 1.0049 (MSE:0.0049, Reg:1.0000) beta=7.68
+Iter  7388 | Total loss: 0.0050 (MSE:0.0050, Reg:0.0000) beta=6.95
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0128, device='cuda:0', requires_grad=True)
+
+[18/50] encoder.layers.4.self_attention.in_proj
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 2304])
+    V   : , torch.Size([2304, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0456 (MSE:0.0456, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 482945.6562 (MSE:0.0313, Reg:482945.6250) beta=20.00
+Iter  1000 | Total loss: 44192.9688 (MSE:0.0371, Reg:44192.9336) beta=19.05
+Iter  2000 | Total loss: 19136.6152 (MSE:0.0332, Reg:19136.5820) beta=17.16
+Iter  3000 | Total loss: 12078.5791 (MSE:0.0380, Reg:12078.5410) beta=15.26
+Iter  4000 | Total loss: 7470.3472 (MSE:0.0348, Reg:7470.3125) beta=13.37
+Iter  5000 | Total loss: 3958.1614 (MSE:0.0328, Reg:3958.1287) beta=11.47
+Iter  6000 | Total loss: 1426.8390 (MSE:0.0389, Reg:1426.8000) beta=9.58
+Iter  7000 | Total loss: 170.1140 (MSE:0.0344, Reg:170.0796) beta=7.68
+Iter  7804 | Total loss: 0.0375 (MSE:0.0375, Reg:0.0000) beta=6.16
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0445, device='cuda:0', requires_grad=True)
+
+[19/50] encoder.layers.4.self_attention.out_proj
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 768])
+    V   : , torch.Size([768, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0025 (MSE:0.0025, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 135813.2500 (MSE:0.0023, Reg:135813.2500) beta=20.00
+Iter  1000 | Total loss: 173.4504 (MSE:0.0024, Reg:173.4480) beta=19.05
+Iter  2000 | Total loss: 70.0023 (MSE:0.0023, Reg:70.0000) beta=17.16
+Iter  3000 | Total loss: 35.0023 (MSE:0.0023, Reg:35.0000) beta=15.26
+Iter  4000 | Total loss: 19.0023 (MSE:0.0023, Reg:19.0000) beta=13.37
+Iter  5000 | Total loss: 10.0025 (MSE:0.0025, Reg:10.0000) beta=11.47
+Iter  6000 | Total loss: 1.0025 (MSE:0.0025, Reg:1.0000) beta=9.58
+Iter  6290 | Total loss: 0.0024 (MSE:0.0024, Reg:0.0000) beta=9.03
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0113, device='cuda:0', requires_grad=True)
+
+[20/50] encoder.layers.4.mlp.linear_1
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 3072])
+    V   : , torch.Size([3072, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0647 (MSE:0.0647, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 641356.1875 (MSE:0.0475, Reg:641356.1250) beta=20.00
+Iter  1000 | Total loss: 47046.9609 (MSE:0.0568, Reg:47046.9023) beta=19.05
+Iter  2000 | Total loss: 21946.0352 (MSE:0.0518, Reg:21945.9824) beta=17.16
+Iter  3000 | Total loss: 14638.9785 (MSE:0.0472, Reg:14638.9316) beta=15.26
+Iter  4000 | Total loss: 9362.5488 (MSE:0.0470, Reg:9362.5020) beta=13.37
+Iter  5000 | Total loss: 5221.7529 (MSE:0.0537, Reg:5221.6992) beta=11.47
+Iter  6000 | Total loss: 1743.2498 (MSE:0.0565, Reg:1743.1932) beta=9.58
+Iter  7000 | Total loss: 145.5407 (MSE:0.0575, Reg:145.4831) beta=7.68
+Iter  7762 | Total loss: 0.0535 (MSE:0.0535, Reg:0.0000) beta=6.24
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0541, device='cuda:0', requires_grad=True)
+
+[21/50] encoder.layers.4.mlp.linear_2
+    INPUT_FP : torch.Size([1024, 197, 3072])
+    OUTPUT_FP : torch.Size([1024, 197, 768])
+    V   : , torch.Size([768, 3072])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0062 (MSE:0.0062, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 377062.3750 (MSE:0.0067, Reg:377062.3750) beta=20.00
+Iter  1000 | Total loss: 137.2346 (MSE:0.0068, Reg:137.2278) beta=19.05
+Iter  2000 | Total loss: 59.0062 (MSE:0.0062, Reg:59.0000) beta=17.16
+Iter  3000 | Total loss: 35.0069 (MSE:0.0069, Reg:35.0000) beta=15.26
+Iter  4000 | Total loss: 25.0059 (MSE:0.0059, Reg:25.0000) beta=13.37
+Iter  5000 | Total loss: 19.0068 (MSE:0.0068, Reg:19.0000) beta=11.47
+Iter  6000 | Total loss: 5.0064 (MSE:0.0064, Reg:5.0000) beta=9.58
+Iter  7000 | Total loss: 1.0041 (MSE:0.0066, Reg:0.9975) beta=7.68
+Iter  7025 | Total loss: 0.0066 (MSE:0.0066, Reg:0.0000) beta=7.64
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0595, device='cuda:0', requires_grad=True)
+
+[22/50] encoder.layers.5.self_attention.in_proj
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 2304])
+    V   : , torch.Size([2304, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0446 (MSE:0.0446, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 512745.5000 (MSE:0.0363, Reg:512745.4688) beta=20.00
+Iter  1000 | Total loss: 43945.5352 (MSE:0.0361, Reg:43945.5000) beta=19.05
+Iter  2000 | Total loss: 19468.6289 (MSE:0.0354, Reg:19468.5938) beta=17.16
+Iter  3000 | Total loss: 12421.0840 (MSE:0.0395, Reg:12421.0449) beta=15.26
+Iter  4000 | Total loss: 7664.7686 (MSE:0.0430, Reg:7664.7256) beta=13.37
+Iter  5000 | Total loss: 4060.1028 (MSE:0.0347, Reg:4060.0681) beta=11.47
+Iter  6000 | Total loss: 1463.5083 (MSE:0.0375, Reg:1463.4707) beta=9.58
+Iter  7000 | Total loss: 134.4880 (MSE:0.0378, Reg:134.4502) beta=7.68
+Iter  7621 | Total loss: 0.0357 (MSE:0.0357, Reg:0.0000) beta=6.51
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0407, device='cuda:0', requires_grad=True)
+
+[23/50] encoder.layers.5.self_attention.out_proj
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 768])
+    V   : , torch.Size([768, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0030 (MSE:0.0030, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 146425.0938 (MSE:0.0026, Reg:146425.0938) beta=20.00
+Iter  1000 | Total loss: 247.5648 (MSE:0.0028, Reg:247.5620) beta=19.05
+Iter  2000 | Total loss: 79.0028 (MSE:0.0028, Reg:79.0000) beta=17.16
+Iter  3000 | Total loss: 52.0029 (MSE:0.0029, Reg:52.0000) beta=15.26
+Iter  4000 | Total loss: 34.7388 (MSE:0.0028, Reg:34.7360) beta=13.37
+Iter  5000 | Total loss: 18.0027 (MSE:0.0027, Reg:18.0000) beta=11.47
+Iter  6000 | Total loss: 4.0031 (MSE:0.0031, Reg:4.0000) beta=9.58
+Iter  6445 | Total loss: 0.0029 (MSE:0.0029, Reg:0.0000) beta=8.74
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0113, device='cuda:0', requires_grad=True)
+
+[24/50] encoder.layers.5.mlp.linear_1
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 3072])
+    V   : , torch.Size([3072, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0816 (MSE:0.0816, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 684462.5625 (MSE:0.0618, Reg:684462.5000) beta=20.00
+Iter  1000 | Total loss: 50732.8906 (MSE:0.0634, Reg:50732.8281) beta=19.05
+Iter  2000 | Total loss: 24050.6211 (MSE:0.0669, Reg:24050.5547) beta=17.16
+Iter  3000 | Total loss: 15819.4170 (MSE:0.0657, Reg:15819.3516) beta=15.26
+Iter  4000 | Total loss: 10227.4502 (MSE:0.0634, Reg:10227.3867) beta=13.37
+Iter  5000 | Total loss: 5304.2075 (MSE:0.0617, Reg:5304.1460) beta=11.47
+Iter  6000 | Total loss: 1634.1530 (MSE:0.0652, Reg:1634.0878) beta=9.58
+Iter  7000 | Total loss: 75.7772 (MSE:0.0633, Reg:75.7139) beta=7.68
+Iter  7773 | Total loss: 0.0691 (MSE:0.0691, Reg:0.0000) beta=6.22
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.1127, device='cuda:0', requires_grad=True)
+
+[25/50] encoder.layers.5.mlp.linear_2
+    INPUT_FP : torch.Size([1024, 197, 3072])
+    OUTPUT_FP : torch.Size([1024, 197, 768])
+    V   : , torch.Size([768, 3072])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0509 (MSE:0.0509, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 530191.3125 (MSE:0.0423, Reg:530191.2500) beta=20.00
+Iter  1000 | Total loss: 4116.2900 (MSE:0.0345, Reg:4116.2554) beta=19.05
+Iter  2000 | Total loss: 1555.6680 (MSE:0.0456, Reg:1555.6223) beta=17.16
+Iter  3000 | Total loss: 686.1617 (MSE:0.0392, Reg:686.1224) beta=15.26
+Iter  4000 | Total loss: 367.8581 (MSE:0.0398, Reg:367.8184) beta=13.37
+Iter  5000 | Total loss: 178.6598 (MSE:0.0466, Reg:178.6132) beta=11.47
+Iter  6000 | Total loss: 50.0459 (MSE:0.0459, Reg:50.0000) beta=9.58
+Iter  7000 | Total loss: 6.0367 (MSE:0.0367, Reg:6.0000) beta=7.68
+Iter  7837 | Total loss: 0.0414 (MSE:0.0414, Reg:0.0000) beta=6.10
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.2094, device='cuda:0', requires_grad=True)
+
+[26/50] encoder.layers.6.self_attention.in_proj
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 2304])
+    V   : , torch.Size([2304, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0617 (MSE:0.0617, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 534060.4375 (MSE:0.0509, Reg:534060.3750) beta=20.00
+Iter  1000 | Total loss: 44975.6484 (MSE:0.0552, Reg:44975.5938) beta=19.05
+Iter  2000 | Total loss: 20478.0020 (MSE:0.0529, Reg:20477.9492) beta=17.16
+Iter  3000 | Total loss: 13280.6484 (MSE:0.0541, Reg:13280.5947) beta=15.26
+Iter  4000 | Total loss: 8288.2158 (MSE:0.0491, Reg:8288.1670) beta=13.37
+Iter  5000 | Total loss: 4254.4312 (MSE:0.0534, Reg:4254.3779) beta=11.47
+Iter  6000 | Total loss: 1361.7690 (MSE:0.0603, Reg:1361.7087) beta=9.58
+Iter  7000 | Total loss: 95.1065 (MSE:0.0555, Reg:95.0510) beta=7.68
+Iter  7549 | Total loss: 0.0537 (MSE:0.0537, Reg:0.0000) beta=6.64
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0454, device='cuda:0', requires_grad=True)
+
+[27/50] encoder.layers.6.self_attention.out_proj
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 768])
+    V   : , torch.Size([768, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0052 (MSE:0.0052, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 162340.0312 (MSE:0.0044, Reg:162340.0312) beta=20.00
+Iter  1000 | Total loss: 481.2631 (MSE:0.0048, Reg:481.2582) beta=19.05
+Iter  2000 | Total loss: 137.0044 (MSE:0.0047, Reg:136.9997) beta=17.16
+Iter  3000 | Total loss: 71.2692 (MSE:0.0044, Reg:71.2648) beta=15.26
+Iter  4000 | Total loss: 40.0041 (MSE:0.0045, Reg:39.9996) beta=13.37
+Iter  5000 | Total loss: 20.0047 (MSE:0.0047, Reg:20.0000) beta=11.47
+Iter  6000 | Total loss: 6.0048 (MSE:0.0048, Reg:6.0000) beta=9.58
+Iter  6391 | Total loss: 0.0045 (MSE:0.0045, Reg:0.0000) beta=8.84
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0135, device='cuda:0', requires_grad=True)
+
+[28/50] encoder.layers.6.mlp.linear_1
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 3072])
+    V   : , torch.Size([3072, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0844 (MSE:0.0844, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 666516.0625 (MSE:0.0744, Reg:666516.0000) beta=20.00
+Iter  1000 | Total loss: 38088.9570 (MSE:0.0706, Reg:38088.8867) beta=19.05
+Iter  2000 | Total loss: 18228.7461 (MSE:0.0696, Reg:18228.6758) beta=17.16
+Iter  3000 | Total loss: 12115.6787 (MSE:0.0677, Reg:12115.6113) beta=15.26
+Iter  4000 | Total loss: 7868.8994 (MSE:0.0686, Reg:7868.8311) beta=13.37
+Iter  5000 | Total loss: 4098.1855 (MSE:0.0727, Reg:4098.1128) beta=11.47
+Iter  6000 | Total loss: 1269.3356 (MSE:0.0757, Reg:1269.2599) beta=9.58
+Iter  7000 | Total loss: 48.7691 (MSE:0.0685, Reg:48.7006) beta=7.68
+Iter  7496 | Total loss: 0.0774 (MSE:0.0774, Reg:0.0000) beta=6.74
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0577, device='cuda:0', requires_grad=True)
+
+[29/50] encoder.layers.6.mlp.linear_2
+    INPUT_FP : torch.Size([1024, 197, 3072])
+    OUTPUT_FP : torch.Size([1024, 197, 768])
+    V   : , torch.Size([768, 3072])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0089 (MSE:0.0089, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 378460.2500 (MSE:0.0079, Reg:378460.2500) beta=20.00
+Iter  1000 | Total loss: 208.2283 (MSE:0.0086, Reg:208.2197) beta=19.05
+Iter  2000 | Total loss: 103.0089 (MSE:0.0089, Reg:103.0000) beta=17.16
+Iter  3000 | Total loss: 67.0074 (MSE:0.0089, Reg:66.9985) beta=15.26
+Iter  4000 | Total loss: 49.0088 (MSE:0.0088, Reg:49.0000) beta=13.37
+Iter  5000 | Total loss: 35.9216 (MSE:0.0087, Reg:35.9129) beta=11.47
+Iter  6000 | Total loss: 14.0088 (MSE:0.0088, Reg:14.0000) beta=9.58
+Iter  7000 | Total loss: 1.0089 (MSE:0.0089, Reg:1.0000) beta=7.68
+Iter  7673 | Total loss: 0.0091 (MSE:0.0091, Reg:0.0000) beta=6.41
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0146, device='cuda:0', requires_grad=True)
+
+[30/50] encoder.layers.7.self_attention.in_proj
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 2304])
+    V   : , torch.Size([2304, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0609 (MSE:0.0609, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 568715.5625 (MSE:0.0505, Reg:568715.5000) beta=20.00
+Iter  1000 | Total loss: 40025.7227 (MSE:0.0524, Reg:40025.6719) beta=19.05
+Iter  2000 | Total loss: 18054.6562 (MSE:0.0472, Reg:18054.6094) beta=17.16
+Iter  3000 | Total loss: 11732.7656 (MSE:0.0494, Reg:11732.7158) beta=15.26
+Iter  4000 | Total loss: 7507.0508 (MSE:0.0457, Reg:7507.0049) beta=13.37
+Iter  5000 | Total loss: 3895.8645 (MSE:0.0485, Reg:3895.8159) beta=11.47
+Iter  6000 | Total loss: 1177.2389 (MSE:0.0495, Reg:1177.1893) beta=9.58
+Iter  7000 | Total loss: 65.6016 (MSE:0.0507, Reg:65.5509) beta=7.68
+Iter  7712 | Total loss: 0.0508 (MSE:0.0508, Reg:0.0000) beta=6.34
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0425, device='cuda:0', requires_grad=True)
+
+[31/50] encoder.layers.7.self_attention.out_proj
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 768])
+    V   : , torch.Size([768, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0040 (MSE:0.0040, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 151186.6406 (MSE:0.0039, Reg:151186.6406) beta=20.00
+Iter  1000 | Total loss: 133.3129 (MSE:0.0039, Reg:133.3090) beta=19.05
+Iter  2000 | Total loss: 45.0037 (MSE:0.0037, Reg:45.0000) beta=17.16
+Iter  3000 | Total loss: 29.0043 (MSE:0.0043, Reg:29.0000) beta=15.26
+Iter  4000 | Total loss: 17.0007 (MSE:0.0037, Reg:16.9970) beta=13.37
+Iter  5000 | Total loss: 9.0037 (MSE:0.0037, Reg:9.0000) beta=11.47
+Iter  6000 | Total loss: 2.0042 (MSE:0.0042, Reg:2.0000) beta=9.58
+Iter  6983 | Total loss: 0.0039 (MSE:0.0039, Reg:0.0000) beta=7.72
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0115, device='cuda:0', requires_grad=True)
+
+[32/50] encoder.layers.7.mlp.linear_1
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 3072])
+    V   : , torch.Size([3072, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0964 (MSE:0.0964, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 697497.8125 (MSE:0.0851, Reg:697497.7500) beta=20.00
+Iter  1000 | Total loss: 40371.1992 (MSE:0.0849, Reg:40371.1133) beta=19.05
+Iter  2000 | Total loss: 19190.0078 (MSE:0.0823, Reg:19189.9258) beta=17.16
+Iter  3000 | Total loss: 12805.2598 (MSE:0.0837, Reg:12805.1758) beta=15.26
+Iter  4000 | Total loss: 8306.0215 (MSE:0.0845, Reg:8305.9375) beta=13.37
+Iter  5000 | Total loss: 4360.2515 (MSE:0.0912, Reg:4360.1602) beta=11.47
+Iter  6000 | Total loss: 1200.1096 (MSE:0.0846, Reg:1200.0250) beta=9.58
+Iter  7000 | Total loss: 44.6371 (MSE:0.0857, Reg:44.5514) beta=7.68
+Iter  7554 | Total loss: 0.0823 (MSE:0.0823, Reg:0.0000) beta=6.63
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0568, device='cuda:0', requires_grad=True)
+
+[33/50] encoder.layers.7.mlp.linear_2
+    INPUT_FP : torch.Size([1024, 197, 3072])
+    OUTPUT_FP : torch.Size([1024, 197, 768])
+    V   : , torch.Size([768, 3072])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0116 (MSE:0.0116, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 368925.3125 (MSE:0.0119, Reg:368925.3125) beta=20.00
+Iter  1000 | Total loss: 323.7357 (MSE:0.0125, Reg:323.7231) beta=19.05
+Iter  2000 | Total loss: 139.3224 (MSE:0.0114, Reg:139.3110) beta=17.16
+Iter  3000 | Total loss: 89.9823 (MSE:0.0122, Reg:89.9701) beta=15.26
+Iter  4000 | Total loss: 66.0119 (MSE:0.0119, Reg:66.0000) beta=13.37
+Iter  5000 | Total loss: 38.7122 (MSE:0.0117, Reg:38.7005) beta=11.47
+Iter  6000 | Total loss: 15.0122 (MSE:0.0122, Reg:15.0000) beta=9.58
+Iter  7000 | Total loss: 0.9084 (MSE:0.0122, Reg:0.8962) beta=7.68
+Iter  7014 | Total loss: 0.0121 (MSE:0.0121, Reg:0.0000) beta=7.66
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0224, device='cuda:0', requires_grad=True)
+
+[34/50] encoder.layers.8.self_attention.in_proj
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 2304])
+    V   : , torch.Size([2304, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0551 (MSE:0.0551, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 606434.9375 (MSE:0.0450, Reg:606434.8750) beta=20.00
+Iter  1000 | Total loss: 33460.1719 (MSE:0.0481, Reg:33460.1250) beta=19.05
+Iter  2000 | Total loss: 14763.2832 (MSE:0.0484, Reg:14763.2344) beta=17.16
+Iter  3000 | Total loss: 9595.8721 (MSE:0.0536, Reg:9595.8184) beta=15.26
+Iter  4000 | Total loss: 6263.2891 (MSE:0.0458, Reg:6263.2432) beta=13.37
+Iter  5000 | Total loss: 3317.6719 (MSE:0.0496, Reg:3317.6223) beta=11.47
+Iter  6000 | Total loss: 976.5444 (MSE:0.0471, Reg:976.4973) beta=9.58
+Iter  7000 | Total loss: 42.1057 (MSE:0.0508, Reg:42.0549) beta=7.68
+Iter  7608 | Total loss: 0.0475 (MSE:0.0475, Reg:0.0000) beta=6.53
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0391, device='cuda:0', requires_grad=True)
+
+[35/50] encoder.layers.8.self_attention.out_proj
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 768])
+    V   : , torch.Size([768, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0037 (MSE:0.0037, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 142675.1562 (MSE:0.0034, Reg:142675.1562) beta=20.00
+Iter  1000 | Total loss: 66.8324 (MSE:0.0034, Reg:66.8290) beta=19.05
+Iter  2000 | Total loss: 19.0039 (MSE:0.0039, Reg:19.0000) beta=17.16
+Iter  3000 | Total loss: 8.0035 (MSE:0.0035, Reg:8.0000) beta=15.26
+Iter  4000 | Total loss: 2.0039 (MSE:0.0039, Reg:2.0000) beta=13.37
+Iter  4463 | Total loss: 0.0035 (MSE:0.0035, Reg:0.0000) beta=12.49
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0154, device='cuda:0', requires_grad=True)
+
+[36/50] encoder.layers.8.mlp.linear_1
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 3072])
+    V   : , torch.Size([3072, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.1124 (MSE:0.1124, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 717836.3125 (MSE:0.1052, Reg:717836.1875) beta=20.00
+Iter  1000 | Total loss: 35045.2812 (MSE:0.1045, Reg:35045.1758) beta=19.05
+Iter  2000 | Total loss: 16124.8564 (MSE:0.1022, Reg:16124.7539) beta=17.16
+Iter  3000 | Total loss: 10859.3584 (MSE:0.1028, Reg:10859.2559) beta=15.26
+Iter  4000 | Total loss: 7243.8242 (MSE:0.1016, Reg:7243.7227) beta=13.37
+Iter  5000 | Total loss: 3727.4370 (MSE:0.0999, Reg:3727.3372) beta=11.47
+Iter  6000 | Total loss: 1002.2224 (MSE:0.1048, Reg:1002.1176) beta=9.58
+Iter  7000 | Total loss: 29.9764 (MSE:0.1000, Reg:29.8764) beta=7.68
+Iter  7448 | Total loss: 0.1013 (MSE:0.1013, Reg:0.0000) beta=6.84
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0589, device='cuda:0', requires_grad=True)
+
+[37/50] encoder.layers.8.mlp.linear_2
+    INPUT_FP : torch.Size([1024, 197, 3072])
+    OUTPUT_FP : torch.Size([1024, 197, 768])
+    V   : , torch.Size([768, 3072])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0102 (MSE:0.0102, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 359423.8750 (MSE:0.0095, Reg:359423.8750) beta=20.00
+Iter  1000 | Total loss: 388.7582 (MSE:0.0112, Reg:388.7470) beta=19.05
+Iter  2000 | Total loss: 175.9648 (MSE:0.0096, Reg:175.9553) beta=17.16
+Iter  3000 | Total loss: 135.5829 (MSE:0.0104, Reg:135.5724) beta=15.26
+Iter  4000 | Total loss: 86.0107 (MSE:0.0107, Reg:86.0000) beta=13.37
+Iter  5000 | Total loss: 44.0101 (MSE:0.0101, Reg:44.0000) beta=11.47
+Iter  6000 | Total loss: 14.8580 (MSE:0.0105, Reg:14.8475) beta=9.58
+Iter  7000 | Total loss: 2.0101 (MSE:0.0101, Reg:2.0000) beta=7.68
+Iter  7051 | Total loss: 0.0101 (MSE:0.0101, Reg:0.0000) beta=7.59
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0230, device='cuda:0', requires_grad=True)
+
+[38/50] encoder.layers.9.self_attention.in_proj
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 2304])
+    V   : , torch.Size([2304, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0296 (MSE:0.0296, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 586053.7500 (MSE:0.0299, Reg:586053.7500) beta=20.00
+Iter  1000 | Total loss: 14552.2324 (MSE:0.0277, Reg:14552.2051) beta=19.05
+Iter  2000 | Total loss: 6327.4004 (MSE:0.0290, Reg:6327.3716) beta=17.16
+Iter  3000 | Total loss: 4196.3442 (MSE:0.0301, Reg:4196.3140) beta=15.26
+Iter  4000 | Total loss: 2717.8269 (MSE:0.0299, Reg:2717.7971) beta=13.37
+Iter  5000 | Total loss: 1629.8889 (MSE:0.0279, Reg:1629.8610) beta=11.47
+Iter  6000 | Total loss: 584.5790 (MSE:0.0294, Reg:584.5496) beta=9.58
+Iter  7000 | Total loss: 33.9037 (MSE:0.0288, Reg:33.8749) beta=7.68
+Iter  7488 | Total loss: 0.0270 (MSE:0.0270, Reg:0.0000) beta=6.76
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0335, device='cuda:0', requires_grad=True)
+
+[39/50] encoder.layers.9.self_attention.out_proj
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 768])
+    V   : , torch.Size([768, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0015 (MSE:0.0015, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 123878.6406 (MSE:0.0013, Reg:123878.6406) beta=20.00
+Iter  1000 | Total loss: 3.0015 (MSE:0.0015, Reg:3.0000) beta=19.05
+Iter  2000 | Total loss: 1.0015 (MSE:0.0015, Reg:1.0000) beta=17.16
+Iter  2848 | Total loss: 0.0015 (MSE:0.0015, Reg:0.0000) beta=15.55
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0144, device='cuda:0', requires_grad=True)
+
+[40/50] encoder.layers.9.mlp.linear_1
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 3072])
+    V   : , torch.Size([3072, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0961 (MSE:0.0961, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 764544.2500 (MSE:0.0753, Reg:764544.1875) beta=20.00
+Iter  1000 | Total loss: 31317.1895 (MSE:0.0834, Reg:31317.1055) beta=19.05
+Iter  2000 | Total loss: 13923.4004 (MSE:0.0786, Reg:13923.3223) beta=17.16
+Iter  3000 | Total loss: 9482.5791 (MSE:0.0827, Reg:9482.4961) beta=15.26
+Iter  4000 | Total loss: 6317.4604 (MSE:0.0777, Reg:6317.3828) beta=13.37
+Iter  5000 | Total loss: 3433.9919 (MSE:0.0819, Reg:3433.9102) beta=11.47
+Iter  6000 | Total loss: 1006.6403 (MSE:0.0751, Reg:1006.5652) beta=9.58
+Iter  7000 | Total loss: 28.0740 (MSE:0.0774, Reg:27.9966) beta=7.68
+Iter  7549 | Total loss: 0.0846 (MSE:0.0846, Reg:0.0000) beta=6.64
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0566, device='cuda:0', requires_grad=True)
+
+[41/50] encoder.layers.9.mlp.linear_2
+    INPUT_FP : torch.Size([1024, 197, 3072])
+    OUTPUT_FP : torch.Size([1024, 197, 768])
+    V   : , torch.Size([768, 3072])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0095 (MSE:0.0095, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 319005.9688 (MSE:0.0082, Reg:319005.9688) beta=20.00
+Iter  1000 | Total loss: 444.2708 (MSE:0.0093, Reg:444.2615) beta=19.05
+Iter  2000 | Total loss: 224.4037 (MSE:0.0099, Reg:224.3938) beta=17.16
+Iter  3000 | Total loss: 164.9973 (MSE:0.0093, Reg:164.9880) beta=15.26
+Iter  4000 | Total loss: 97.5108 (MSE:0.0096, Reg:97.5012) beta=13.37
+Iter  5000 | Total loss: 69.7730 (MSE:0.0094, Reg:69.7636) beta=11.47
+Iter  6000 | Total loss: 26.3224 (MSE:0.0090, Reg:26.3133) beta=9.58
+Iter  7000 | Total loss: 1.0099 (MSE:0.0099, Reg:1.0000) beta=7.68
+Iter  7390 | Total loss: 0.0097 (MSE:0.0097, Reg:0.0000) beta=6.95
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0311, device='cuda:0', requires_grad=True)
+
+[42/50] encoder.layers.10.self_attention.in_proj
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 2304])
+    V   : , torch.Size([2304, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0360 (MSE:0.0360, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 566689.7500 (MSE:0.0285, Reg:566689.7500) beta=20.00
+Iter  1000 | Total loss: 8306.3379 (MSE:0.0287, Reg:8306.3096) beta=19.05
+Iter  2000 | Total loss: 3265.6401 (MSE:0.0283, Reg:3265.6118) beta=17.16
+Iter  3000 | Total loss: 2026.7037 (MSE:0.0307, Reg:2026.6730) beta=15.26
+Iter  4000 | Total loss: 1314.7697 (MSE:0.0294, Reg:1314.7402) beta=13.37
+Iter  5000 | Total loss: 723.8046 (MSE:0.0302, Reg:723.7744) beta=11.47
+Iter  6000 | Total loss: 257.4217 (MSE:0.0320, Reg:257.3897) beta=9.58
+Iter  7000 | Total loss: 20.8085 (MSE:0.0281, Reg:20.7804) beta=7.68
+Iter  7509 | Total loss: 0.0332 (MSE:0.0332, Reg:0.0000) beta=6.72
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0308, device='cuda:0', requires_grad=True)
+
+[43/50] encoder.layers.10.self_attention.out_proj
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 768])
+    V   : , torch.Size([768, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0021 (MSE:0.0021, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 168100.1875 (MSE:0.0014, Reg:168100.1875) beta=20.00
+Iter  1000 | Total loss: 1573.2792 (MSE:0.0018, Reg:1573.2773) beta=19.05
+Iter  2000 | Total loss: 486.1357 (MSE:0.0016, Reg:486.1340) beta=17.16
+Iter  3000 | Total loss: 217.0014 (MSE:0.0014, Reg:217.0000) beta=15.26
+Iter  4000 | Total loss: 110.8269 (MSE:0.0014, Reg:110.8254) beta=13.37
+Iter  5000 | Total loss: 40.9892 (MSE:0.0016, Reg:40.9876) beta=11.47
+Iter  6000 | Total loss: 8.4434 (MSE:0.0014, Reg:8.4420) beta=9.58
+Iter  6954 | Total loss: 0.0016 (MSE:0.0016, Reg:0.0000) beta=7.77
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0078, device='cuda:0', requires_grad=True)
+
+[44/50] encoder.layers.10.mlp.linear_1
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 3072])
+    V   : , torch.Size([3072, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0947 (MSE:0.0947, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 725667.1875 (MSE:0.0729, Reg:725667.1250) beta=20.00
+Iter  1000 | Total loss: 20813.2324 (MSE:0.0782, Reg:20813.1543) beta=19.05
+Iter  2000 | Total loss: 8992.9600 (MSE:0.0750, Reg:8992.8848) beta=17.16
+Iter  3000 | Total loss: 6009.9175 (MSE:0.0832, Reg:6009.8345) beta=15.26
+Iter  4000 | Total loss: 3942.7024 (MSE:0.0776, Reg:3942.6248) beta=13.37
+Iter  5000 | Total loss: 2166.5579 (MSE:0.0871, Reg:2166.4707) beta=11.47
+Iter  6000 | Total loss: 703.1991 (MSE:0.0815, Reg:703.1176) beta=9.58
+Iter  7000 | Total loss: 31.5906 (MSE:0.0775, Reg:31.5131) beta=7.68
+Iter  7452 | Total loss: 0.0763 (MSE:0.0763, Reg:0.0000) beta=6.83
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0757, device='cuda:0', requires_grad=True)
+
+[45/50] encoder.layers.10.mlp.linear_2
+    INPUT_FP : torch.Size([1024, 197, 3072])
+    OUTPUT_FP : torch.Size([1024, 197, 768])
+    V   : , torch.Size([768, 3072])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0692 (MSE:0.0692, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 336885.8750 (MSE:0.0463, Reg:336885.8438) beta=20.00
+Iter  1000 | Total loss: 4732.7695 (MSE:0.0465, Reg:4732.7231) beta=19.05
+Iter  2000 | Total loss: 1941.2205 (MSE:0.0464, Reg:1941.1741) beta=17.16
+Iter  3000 | Total loss: 891.8480 (MSE:0.0488, Reg:891.7991) beta=15.26
+Iter  4000 | Total loss: 434.0641 (MSE:0.0473, Reg:434.0168) beta=13.37
+Iter  5000 | Total loss: 195.0166 (MSE:0.0459, Reg:194.9707) beta=11.47
+Iter  6000 | Total loss: 40.0431 (MSE:0.0431, Reg:40.0000) beta=9.58
+Iter  7000 | Total loss: 2.0446 (MSE:0.0449, Reg:1.9997) beta=7.68
+Iter  7499 | Total loss: 0.0473 (MSE:0.0473, Reg:0.0000) beta=6.74
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0742, device='cuda:0', requires_grad=True)
+
+[46/50] encoder.layers.11.self_attention.in_proj
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 2304])
+    V   : , torch.Size([2304, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0537 (MSE:0.0537, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 499766.7500 (MSE:0.0540, Reg:499766.6875) beta=20.00
+Iter  1000 | Total loss: 3407.4729 (MSE:0.0467, Reg:3407.4263) beta=19.05
+Iter  2000 | Total loss: 1099.7262 (MSE:0.0465, Reg:1099.6797) beta=17.16
+Iter  3000 | Total loss: 643.0647 (MSE:0.0477, Reg:643.0170) beta=15.26
+Iter  4000 | Total loss: 406.3497 (MSE:0.0532, Reg:406.2964) beta=13.37
+Iter  5000 | Total loss: 209.5587 (MSE:0.0463, Reg:209.5124) beta=11.47
+Iter  6000 | Total loss: 65.2155 (MSE:0.0453, Reg:65.1702) beta=9.58
+Iter  7000 | Total loss: 4.0534 (MSE:0.0534, Reg:4.0000) beta=7.68
+Iter  7585 | Total loss: 0.0470 (MSE:0.0470, Reg:0.0000) beta=6.58
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0382, device='cuda:0', requires_grad=True)
+
+[47/50] encoder.layers.11.self_attention.out_proj
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 768])
+    V   : , torch.Size([768, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0041 (MSE:0.0041, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 143569.5625 (MSE:0.0035, Reg:143569.5625) beta=20.00
+Iter  1000 | Total loss: 2.0047 (MSE:0.0047, Reg:2.0000) beta=19.05
+Iter  2000 | Total loss: 2.0040 (MSE:0.0040, Reg:2.0000) beta=17.16
+Iter  2619 | Total loss: 0.0039 (MSE:0.0039, Reg:0.0000) beta=15.99
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0327, device='cuda:0', requires_grad=True)
+
+[48/50] encoder.layers.11.mlp.linear_1
+    INPUT_FP : torch.Size([1024, 197, 768])
+    OUTPUT_FP : torch.Size([1024, 197, 3072])
+    V   : , torch.Size([3072, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.0976 (MSE:0.0976, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 681890.7500 (MSE:0.0792, Reg:681890.6875) beta=20.00
+Iter  1000 | Total loss: 6493.7056 (MSE:0.0897, Reg:6493.6157) beta=19.05
+Iter  2000 | Total loss: 2292.5469 (MSE:0.0869, Reg:2292.4600) beta=17.16
+Iter  3000 | Total loss: 1349.3252 (MSE:0.0909, Reg:1349.2344) beta=15.26
+Iter  4000 | Total loss: 815.1108 (MSE:0.0955, Reg:815.0153) beta=13.37
+Iter  5000 | Total loss: 469.5087 (MSE:0.0912, Reg:469.4175) beta=11.47
+Iter  6000 | Total loss: 156.2963 (MSE:0.0923, Reg:156.2040) beta=9.58
+Iter  7000 | Total loss: 6.9484 (MSE:0.0868, Reg:6.8616) beta=7.68
+Iter  7429 | Total loss: 0.0913 (MSE:0.0913, Reg:0.0000) beta=6.87
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0586, device='cuda:0', requires_grad=True)
+
+[49/50] encoder.layers.11.mlp.linear_2
+    INPUT_FP : torch.Size([1024, 197, 3072])
+    OUTPUT_FP : torch.Size([1024, 197, 768])
+    V   : , torch.Size([768, 3072])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.1150 (MSE:0.1150, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 353568.2500 (MSE:0.0160, Reg:353568.2188) beta=20.00
+Iter  1000 | Total loss: 214.5321 (MSE:0.1155, Reg:214.4167) beta=19.05
+Iter  2000 | Total loss: 80.0945 (MSE:0.1165, Reg:79.9780) beta=17.16
+Iter  3000 | Total loss: 41.8380 (MSE:0.1090, Reg:41.7290) beta=15.26
+Iter  4000 | Total loss: 26.1124 (MSE:0.1124, Reg:26.0000) beta=13.37
+Iter  5000 | Total loss: 16.1116 (MSE:0.1116, Reg:16.0000) beta=11.47
+Iter  6000 | Total loss: 9.1187 (MSE:0.1187, Reg:9.0000) beta=9.58
+Iter  7000 | Total loss: 1.1104 (MSE:0.1104, Reg:1.0000) beta=7.68
+Iter  7524 | Total loss: 0.1147 (MSE:0.1147, Reg:0.0000) beta=6.69
+    Early stopped
+    Set the rounding value
+    s_a : act_quant, torch.Size([]), Parameter containing:
+tensor(0.0645, device='cuda:0', requires_grad=True)
+
+[50/50] heads.0
+    INPUT_FP : torch.Size([1024, 768])
+    OUTPUT_FP : torch.Size([1024, 1000])
+    V   : , torch.Size([1000, 768])
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.01
+    maximize: False
+    weight_decay: 0
+) 10000
+Iter     1 | Total loss: 0.1074 (MSE:0.1074, Reg:0.0000) beta=0.00
+Iter   500 | Total loss: 185269.5938 (MSE:0.0666, Reg:185269.5312) beta=20.00
+Iter  1000 | Total loss: 15776.3115 (MSE:0.0863, Reg:15776.2256) beta=19.05
+Iter  2000 | Total loss: 3764.2236 (MSE:0.0733, Reg:3764.1504) beta=17.16
+Iter  3000 | Total loss: 1686.7531 (MSE:0.0756, Reg:1686.6775) beta=15.26
+Iter  4000 | Total loss: 722.8474 (MSE:0.0781, Reg:722.7693) beta=13.37
+Iter  5000 | Total loss: 208.4707 (MSE:0.0855, Reg:208.3853) beta=11.47
+Iter  6000 | Total loss: 31.2554 (MSE:0.0926, Reg:31.1628) beta=9.58
+Iter  6848 | Total loss: 0.0771 (MSE:0.0771, Reg:0.0000) beta=7.97
+    Early stopped
+    Set the rounding value
+
+AdaRound for PerLayer weights is done.
+
+    Quantized model Evaluation accuracy on 50000 images, 79.546%
+Total time: 3816.57 sec

@@ -20,6 +20,7 @@
 | [W]AdaR(Encoder) | [A]Mov | 8   | 8   | I*16-8  | I*8-8 | I*  | 16    | 78.782% |
 | [W]Abs           | [A]Mov | 4   | 8   | FP      | FP    | FP  | FP    | 76.894% |
 | [W]Abs           | [A]Mov | 4   | 8   | I*16-8  | I*8-8 | I*  | 16    | 72.964% |
+| [W]AdaR(Layer)   | [A]Mov | 4   | 8   | I*16-8  | I*6-8 | I*  | 16    | 79.546% |
 | [W]AdaR(Layer)   | [A]Mov | 4   | 8   | I*16-8  | I*8-8 | I*  | 16    | 79.076% |
 | [W]AdaR(Block)   | [A]Mov | 4   | 8   | I*16-8  | I*8-8 | I*  | 16    | 78.484% |
 | [W]AdaR(Encoder) | [A]Mov | 4   | 8   | I*16-8  | I*8-8 | I*  | 16    | 78.782% |
