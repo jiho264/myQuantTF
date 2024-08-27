@@ -559,10 +559,10 @@ class log_sqrt_2_quantizer(nn.Module):
                     0 <= x_hat.min() and x_hat.max() <= 1
                 ), f"{x_hat.min()} {x_hat.max()}"
 
-            caseNum = 0
+            caseNum = 1
 
             x_int = x_hat / s_x
-            factor = 3
+            factor = 4
             print(caseNum)
             if caseNum == 0:
                 """case0 log(sqrt(2))"""
@@ -570,7 +570,7 @@ class log_sqrt_2_quantizer(nn.Module):
                 x_quant = -2 * (
                     x_int.log2().round()
                     - x_int.max().log2().round()
-                    + torch.tensor(3).log2().round()
+                    + torch.tensor(factor).log2().round()
                 )
                 print(x_quant.unique(), torch.unique(x_quant).numel())
                 mask = x_quant >= self.n_levels
@@ -625,8 +625,10 @@ class log_sqrt_2_quantizer(nn.Module):
 
             print(x_float_q.unique(), torch.unique(x_float_q).numel())
             print(x_float_q.min(), x_float_q.max())
-            print()
+
             s_x = x_float_q.max() / (self.n_levels - 1)
+            print("out scaler", s_x)
+            print()
             return x_float_q, s_x
         else:
             return x_hat, s_x
