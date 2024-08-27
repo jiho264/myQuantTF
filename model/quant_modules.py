@@ -552,64 +552,61 @@ class log_sqrt_2_quantizer(nn.Module):
         """
 
     def _quantize(self, x_hat, s_x):
-        """Verify under INT8 input"""
-        with torch.no_grad():
-            assert 0 <= x_hat.min() and x_hat.max() <= 1, f"{x_hat.min()} {x_hat.max()}"
-        # print((x_hat / s_x).min(), (x_hat / s_x).max())
-        # x_int = torch.round(-1 * (x_hat / s_x).log2() * 2)
         x_int = x_hat / s_x
         factor = 3
-        # s_logx = x_hat.max() / factor
-        s_logx = (x_int * s_x).max() / factor
 
         # x_int = torch.round(-1 * (x_int / x_int.max() * 3).log2() * 2)
-        x_int = -2 * (
+        x_quant = -2 * (
             x_int.log2().round()
             - x_int.max().log2().round()
             + torch.tensor(3).log2().round()
         )
-        print(x_int.unique())
-        print(torch.unique(x_int).numel())
-        # print(torch.unique(x_int))
-        mask = x_int >= self.n_levels
-        x_quant = torch.clamp(x_int, 0, self.n_levels - 1)
-        print(x_quant.unique())
+        print(x_quant.unique(), torch.unique(x_quant))
+        mask = x_quant >= self.n_levels
+        x_quant = torch.clamp(x_quant, 0, self.n_levels - 1)
+        print(x_quant.unique(), torch.unique(x_quant).numel())
 
         odd_mask = (x_quant % 2) * (math.sqrt(2) - 1) + 1
-        x_float_q = 2 ** (-1 * torch.ceil(x_quant / 2)) * odd_mask * s_logx
-        x_float_q[mask] = 0
+        x_float_q = (
+            2 ** (-1 * torch.ceil(x_quant / 2))
+            * odd_mask
+            * (x_int * s_x).max()
+            / factor
+        )
+        # x_float_q[x_float_q <= 2 ** (-self.n_levels)] = (
+        #     0  # 2 ** (-self.n_levels) 보다 작은 값은 0으로 처리
+        # ) # 둘 차이 없음. 최솟값이 0.0000이냐 0.0017이냐 차이
+        x_float_q[mask] = 0  # 2 ** (-self.n_levels) 보다 작은 값은 0으로 처리
+
         print(x_float_q.unique(), torch.unique(x_float_q).numel())
         print(x_float_q.min(), x_float_q.max())
         print()
         return x_float_q
 
     # def _quantize(self, x_hat, s_x):
-    #     """Verify under INT8 input"""
-    #     with torch.no_grad():
-    #         assert 0 <= x_hat.min() and x_hat.max() <= 1, f"{x_hat.min()} {x_hat.max()}"
-    #     # print((x_hat / s_x).min(), (x_hat / s_x).max())
-    #     # x_int = torch.round(-1 * (x_hat / s_x).log2() * 2)
     #     x_int = x_hat / s_x
     #     factor = 3
-    #     # s_logx = x_hat.max() / factor
-    #     s_logx = (x_int * s_x).max() / factor
 
-    #     # x_int = torch.round(-1 * (x_int / x_int.max() * 3).log2() * 2)
-    #     x_int = -1 * (
+    #     # s_logx = (x_int * s_x).max() / factor
+
+    #     # x_int = torch.round(-1 * (x_int / x_int.max() * 3).log2())
+    #     x_quant = -1 * (
     #         x_int.log2().round()
     #         - x_int.max().log2().round()
     #         + torch.tensor(factor).log2().round()
     #     )
-    #     print(x_int.unique(), torch.unique(x_int).numel())
-    #     # print(torch.unique(x_int))
-    #     mask = x_int >= self.n_levels
-    #     x_quant = torch.clamp(x_int, 0, self.n_levels - 1)
+    #     print(x_quant.unique(), torch.unique(x_quant).numel())
+    #     # mask = x_int >= self.n_levels
+    #     x_quant = torch.clamp(x_quant, 0, self.n_levels - 1)
     #     print(x_quant.unique(), torch.unique(x_quant).numel())
 
-    #     # odd_mask = (x_quant % 2) * (math.sqrt(2) - 1) + 1
-    #     # x_float_q = 2 ** (-1 * torch.ceil(x_quant / 2)) * odd_mask * s_logx
-    #     x_float_q = 2 ** (-x_quant) * s_logx
-    #     x_float_q[mask] = 0
+    #     x_float_q = 2 ** (-x_quant) * (x_int * s_x).max() / factor
+
+    #     # x_float_q[mask] = 0  # 2 ** (-self.n_levels) 보다 작은 값은 0으로 처리
+    #     x_float_q[x_float_q <= 2 ** (-self.n_levels)] = (
+    #         0  # 2 ** (-self.n_levels) 보다 작은 값은 0으로 처리  # 둘 차이 없음. 여기선 완벽히 동일
+    #     )
+
     #     print(x_float_q.unique(), torch.unique(x_float_q).numel())
     #     print(x_float_q.min(), x_float_q.max())
     #     print()
@@ -617,6 +614,11 @@ class log_sqrt_2_quantizer(nn.Module):
 
     def forward(self, x_hat: torch.Tensor, s_x: torch.Tensor):
         if self.do_quant:
+            """Verify under INT8 input"""
+            with torch.no_grad():
+                assert (
+                    0 <= x_hat.min() and x_hat.max() <= 1
+                ), f"{x_hat.min()} {x_hat.max()}"
 
             x_dequant = self._quantize(x_hat, s_x)
             s_x = x_dequant.max() / (self.n_levels - 1)
