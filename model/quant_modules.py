@@ -609,9 +609,12 @@ class log_sqrt_2_quantizer(nn.Module):
                 s_x = (x_int * s_x).max() / factor
                 x_float_q = 2 ** (-x_int_log) * s_x
 
+                x_power_2 = (2 ** (-x_int_log) * (self.n_levels - 1)).round()
+                print("fsdfdssd")
+                print(x_power_2.min(), x_power_2.max(), x_power_2.unique())
                 # x_float_q[mask] = 0  # 2 ** (-self.n_levels) 보다 작은 값은 0으로 처리
                 # 2 ** (-self.n_levels) 보다 작은 값은 0으로 처리  # 둘 차이 없음. 여기선 완벽히 동일
-                x_float_q[x_float_q <= 2 ** (-self.n_levels)] = 0
+                # x_float_q[x_float_q <= 2 ** (-self.n_levels)] = 0
                 """last softmax
                 tensor([-2., -1., -0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11.,
                         12., 13., 14., inf], device='cuda:0') 18
@@ -623,16 +626,19 @@ class log_sqrt_2_quantizer(nn.Module):
                 tensor(9.5591e-06, device='cuda:0') tensor(0.3132, device='cuda:0')
                 """
 
-            print(x_float_q.unique(), torch.unique(x_float_q).numel())
-            print(x_float_q.min(), x_float_q.max())
+            # print(x_float_q.unique(), torch.unique(x_float_q).numel())
+            # print(x_float_q.min(), x_float_q.max())
 
             # 여기 분모 키우면 acc 높아짐.
-            s_x = x_float_q.max() / (self.n_levels - 1)
-            x_q = round_ste.apply(x_float_q / s_x)
-            print(x_q.min(), x_q.max(), x_q.unique(), torch.unique(x_q).numel())
+            # s_x = x_float_q.max() / (self.n_levels - 1)
+            s_x = 1 / self.n_levels / factor
+            # x_q = round_ste.apply(x_float_q / s_x)
+            # print(x_q.min(), x_q.max(), x_q.unique(), torch.unique(x_q).numel())
             print("out scaler", s_x)
             print()
-            return x_q * s_x, s_x
+            return x_power_2 * s_x, s_x
+            # dja = 1 / self.n_levels / factor
+            # return x_power_2 * dja, dja
         else:
             return x_hat, s_x
 
