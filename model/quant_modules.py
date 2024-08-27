@@ -559,13 +559,12 @@ class log_sqrt_2_quantizer(nn.Module):
                     0 <= x_hat.min() and x_hat.max() <= 1
                 ), f"{x_hat.min()} {x_hat.max()}"
 
-            caseNum = 0
+            caseNum = 1
 
             x_int = x_hat / s_x
             factor = 3
 
             if caseNum == 0:
-
                 # x_int = torch.round(-1 * (x_int / x_int.max() * 3).log2() * 2)
                 x_quant = -2 * (
                     x_int.log2().round()
@@ -578,12 +577,8 @@ class log_sqrt_2_quantizer(nn.Module):
                 print(x_quant.unique(), torch.unique(x_quant).numel())
 
                 odd_mask = (x_quant % 2) * (math.sqrt(2) - 1) + 1
-                x_float_q = (
-                    2 ** (-1 * torch.ceil(x_quant / 2))
-                    * odd_mask
-                    * (x_int * s_x).max()
-                    / factor
-                )
+                s_x = odd_mask * (x_int * s_x).max() / factor
+                x_float_q = 2 ** (-1 * torch.ceil(x_quant / 2)) * s_x
                 # x_float_q[x_float_q <= 2 ** (-self.n_levels)] = (
                 #     0  # 2 ** (-self.n_levels) 보다 작은 값은 0으로 처리
                 # ) # 둘 차이 없음. 최솟값이 0.0000이냐 0.0017이냐 차이
@@ -601,7 +596,8 @@ class log_sqrt_2_quantizer(nn.Module):
                 x_quant = torch.clamp(x_quant, 0, self.n_levels - 1)
                 print(x_quant.unique(), torch.unique(x_quant).numel())
 
-                x_float_q = 2 ** (-x_quant) * (x_int * s_x).max() / factor
+                s_x = (x_int * s_x).max() / factor
+                x_float_q = 2 ** (-x_quant) * s_x
 
                 # x_float_q[mask] = 0  # 2 ** (-self.n_levels) 보다 작은 값은 0으로 처리
                 x_float_q[x_float_q <= 2 ** (-self.n_levels)] = (
