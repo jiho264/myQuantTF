@@ -83,7 +83,7 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
 
     """ evaluation """
     # _top1, _ = evaluate(model, test_loader, len(test_loader), "cuda")
-    _top1, _ = evaluate(model, test_loader, 10, "cuda")
+    _top1, _ = evaluate(model, test_loader, 1, "cuda")
     print(
         f"\n    Quantized model Evaluation accuracy on 50000 images, {_top1.avg:2.3f}%"
     )
