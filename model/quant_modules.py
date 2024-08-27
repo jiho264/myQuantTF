@@ -413,14 +413,14 @@ class IntGELU(nn.Module):
             -x_int_max, scaling_factor_sig
         )  # e^(-x_max)
         exp_int_sum = exp_int + exp_int_max
-        print(
-            "gelu    max bit length: ",
-            bits_required(exp_int.max()),
-            torch.unique(exp_int).numel(),
-            bits_required(exp_int_sum.max()),
-            torch.unique(exp_int_sum).numel(),
-        )
-        print("")
+        # print(
+        #     "gelu    max bit length: ",
+        #     bits_required(exp_int.max()),
+        #     torch.unique(exp_int).numel(),
+        #     bits_required(exp_int_sum.max()),
+        #     torch.unique(exp_int_sum).numel(),
+        # )
+        # print("")
         exp_int_sum.clamp_max_(2**31 - 1)
         factor = floor_ste.apply((2**31 - 1) / exp_int_sum)
         sigmoid_int = floor_ste.apply(exp_int * factor / 2 ** (31 - self.sigmoid_bit_width + 1))
@@ -484,13 +484,13 @@ class IntSoftMax(nn.Module):
 
         exp_int, _ = self.int_exp_shift(x_int, scaling_factor)
         exp_int_sum = exp_int.sum(dim=-1, keepdim=True)
-        print(
-            "softmax max bit length: ",
-            bits_required(exp_int.max()),
-            torch.unique(exp_int).numel(),
-            bits_required(exp_int_sum.max()),
-            torch.unique(exp_int_sum).numel(),
-        )
+        # print(
+        #     "softmax max bit length: ",
+        #     bits_required(exp_int.max()),
+        #     torch.unique(exp_int).numel(),
+        #     bits_required(exp_int_sum.max()),
+        #     torch.unique(exp_int_sum).numel(),
+        # )
 
         exp_int_sum.clamp_max_(2**31 - 1)
         factor = floor_ste.apply((2**31 - 1) / exp_int_sum)

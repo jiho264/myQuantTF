@@ -31,7 +31,7 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     args_gelu = {"sigmoid_bit_width": 8, "left_shift_for_exp": 23}  # I-ViT default
     args_softmax = {"bit_width": 16, "left_shift_for_exp": 15}  # I-ViT default
     args_ln = {
-        "None": None,
+        "using": True,
     }  # FIXME layer norm bit width is no matter. have to change another setting method
 
     calib_len = args_a.get("batches", 16)
@@ -67,10 +67,10 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     train_loader, test_loader = GetDataset(batch_size=_batch_size)
 
     """ 여기 지우고 돌리면 dynamic act quantization """
-    # if args_a != {}:
-    #     """calibration for activation"""
-    #     _, _ = evaluate(model, test_loader, calib_len, "cuda")
-    #     print("Activation calibration is done.\n")
+    if args_a != {}:
+        """calibration for activation"""
+        _, _ = evaluate(model, test_loader, calib_len, "cuda")
+        print("Activation calibration is done.\n")
 
     if args_w.get("AdaRound", None):
         scheme = args_w.get("AdaRound")
@@ -78,8 +78,8 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         print(f"AdaRound for {scheme} weights is done.")
 
     """ evaluation """
-    # _top1, _ = evaluate(model, test_loader, len(test_loader), "cuda")
-    _top1, _ = evaluate(model, test_loader, 1, "cuda")
+    _top1, _ = evaluate(model, test_loader, len(test_loader), "cuda")
+    # _top1, _ = evaluate(model, test_loader, 1, "cuda")
     print(
         f"\n    Quantized model Evaluation accuracy on 50000 images, {_top1.avg:2.3f}%"
     )
