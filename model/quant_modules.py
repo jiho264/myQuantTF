@@ -596,6 +596,31 @@ class log_sqrt_2_quantizer(nn.Module):
 
             else:
                 """case1 log2"""
+
+                """
+                self.bit_width = 6 / factor = 2
+                1
+                tensor([-1., -0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12.,
+                        13., 14., 15., inf], device='cuda:0') 18
+                tensor([ 0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12., 13.,
+                        14., 15., 63.], device='cuda:0') 17
+                tensor([ 0.,  1.,  2.,  4.,  8., 16., 32., 63.], device='cuda:0') 8
+                out scaler 0.0078125
+
+                    Quantized model Evaluation accuracy on 50000 images, 81.250%
+                
+                
+                self.bit_width = 4 / factor = 4
+                1
+                tensor([-2., -1., -0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11.,
+                        12., 13., 14., inf], device='cuda:0') 18
+                tensor([ 0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12., 13.,
+                        14., 15.], device='cuda:0') 16
+                tensor([ 0.,  1.,  2.,  4.,  8., 15.], device='cuda:0') 6
+                out scaler 0.015625
+                
+                    Quantized model Evaluation accuracy on 50000 images, 71.875%
+                """
                 # x_int = torch.round(-1 * (x_int / x_int.max() * 3).log2())
 
                 ## >>> 여기서 log 도메인으로 한 번 보냈으면
@@ -610,7 +635,7 @@ class log_sqrt_2_quantizer(nn.Module):
 
                 ## >>> 다시 linear 도메인으로 꼭 돌아와야함. log 도메인 값 직접 쓸 순 없음.
                 x_power_2 = (2 ** (-x_int_log) * (self.n_levels - 1)).round()
-                print(x_power_2.min(), x_power_2.max(), x_power_2.unique())
+                print(x_power_2.unique(), torch.unique(x_power_2).numel())
 
             s_x = 1 / (self.n_levels) / factor
 
