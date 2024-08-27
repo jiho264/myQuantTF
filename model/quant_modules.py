@@ -559,7 +559,7 @@ class log_sqrt_2_quantizer(nn.Module):
                     0 <= x_hat.min() and x_hat.max() <= 1
                 ), f"{x_hat.min()} {x_hat.max()}"
 
-            caseNum = 1
+            caseNum = 0
 
             x_int = x_hat / s_x
             factor = 3
@@ -610,15 +610,14 @@ class log_sqrt_2_quantizer(nn.Module):
                 x_float_q = 2 ** (-x_quant) * s_x
 
                 # x_float_q[mask] = 0  # 2 ** (-self.n_levels) 보다 작은 값은 0으로 처리
-                # x_float_q[x_float_q <= 2 ** (-self.n_levels)] = (
-                #     0  # 2 ** (-self.n_levels) 보다 작은 값은 0으로 처리  # 둘 차이 없음. 여기선 완벽히 동일
-                # )
+                # 2 ** (-self.n_levels) 보다 작은 값은 0으로 처리  # 둘 차이 없음. 여기선 완벽히 동일
+                x_float_q[x_float_q <= 2 ** (-self.n_levels)] = 0
                 """last softmax
                 tensor([-2., -1., -0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11.,
                         12., 13., 14., inf], device='cuda:0') 18
                 tensor([ 0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12., 13.,
                         14., 15.], device='cuda:0') 16
-                tensor([9.5591e-06, 1.9118e-05, 3.8236e-05, 7.6473e-05, 1.5295e-04, 3.0589e-04,
+                tensor([0.0000e+00, 1.9118e-05, 3.8236e-05, 7.6473e-05, 1.5295e-04, 3.0589e-04,
                         6.1178e-04, 1.2236e-03, 2.4471e-03, 4.8943e-03, 9.7885e-03, 1.9577e-02,
                         3.9154e-02, 7.8308e-02, 1.5662e-01, 3.1323e-01], device='cuda:0') 16
                 tensor(9.5591e-06, device='cuda:0') tensor(0.3132, device='cuda:0')
