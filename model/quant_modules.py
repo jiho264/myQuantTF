@@ -648,6 +648,7 @@ class log_sqrt_2_quantizer(nn.Module):
 
             # print("out scaler", s_x)
             # print()
+            print((x_power_2 * s_x).shape, (x_power_2 * s_x).unique().numel())
             return x_power_2 * s_x, s_x
         else:
             return x_hat, s_x
