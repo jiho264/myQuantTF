@@ -533,6 +533,23 @@ class log_sqrt_2_quantizer(nn.Module):
         self.n_levels = 2**self.bit_width
         # self.bit_width = args_a.get("bit_width")
         print(f"Int log_sqrt_2 quantizer | output bit : {self.bit_width}")
+        """
+        위에꺼랑 아래꺼랑 log2, log(sqrt(2)) 차이인데, 결과 완벽하게 동일함
+        근데 x_quant가
+        
+        log2는 
+        tensor([-2., -1., -0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11.,
+                12., 13., 14., inf], device='cuda:0')
+        tensor([ 0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12., 13.,
+                14., 15.], device='cuda:0')
+        log(sqrt(2))는 
+        tensor([-4., -2., -0.,  2.,  4.,  6.,  8., 10., 12., 14., 16., 18., 20., 22.,
+                24., 26., 28., inf], device='cuda:0')
+        tensor([ 0.,  2.,  4.,  6.,  8., 10., 12., 14., 15.], device='cuda:0')
+
+        인데 둘다 첫 배치에서 69.531나옴
+        10개도 둘다   70.234%
+        """
 
     def _quantize(self, x_hat, s_x):
         """Verify under INT8 input"""
@@ -561,19 +578,10 @@ class log_sqrt_2_quantizer(nn.Module):
         odd_mask = (x_quant % 2) * (math.sqrt(2) - 1) + 1
         x_float_q = 2 ** (-1 * torch.ceil(x_quant / 2)) * odd_mask * s_logx
         x_float_q[mask] = 0
+        print(x_float_q.unique(), torch.unique(x_float_q).numel())
+        print(x_float_q.min(), x_float_q.max())
         print()
         return x_float_q
-
-        """
-        위에꺼랑 아래꺼랑 log2, log(sqrt(2)) 차이인데, 결과 완벽하게 동일함
-        근데 x_quant가
-        log2는 tensor([ 0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12., 13.,
-                14., 15.], device='cuda:0')
-        log(sqrt(2))는 tensor([ 0.,  2.,  4.,  6.,  8., 10., 12., 14., 15.], device='cuda:0')
-
-        인데 둘다 첫 배치에서 69.531나옴
-        10개도 둘다   70.234%
-        """
 
     # def _quantize(self, x_hat, s_x):
     #     """Verify under INT8 input"""
@@ -592,17 +600,18 @@ class log_sqrt_2_quantizer(nn.Module):
     #         - x_int.max().log2().round()
     #         + torch.tensor(factor).log2().round()
     #     )
-    #     print(x_int.unique())
-    #     print(torch.unique(x_int).numel())
+    #     print(x_int.unique(), torch.unique(x_int).numel())
     #     # print(torch.unique(x_int))
     #     mask = x_int >= self.n_levels
     #     x_quant = torch.clamp(x_int, 0, self.n_levels - 1)
-    #     print(x_quant.unique())
+    #     print(x_quant.unique(), torch.unique(x_quant).numel())
 
     #     # odd_mask = (x_quant % 2) * (math.sqrt(2) - 1) + 1
     #     # x_float_q = 2 ** (-1 * torch.ceil(x_quant / 2)) * odd_mask * s_logx
     #     x_float_q = 2 ** (-x_quant) * s_logx
     #     x_float_q[mask] = 0
+    #     print(x_float_q.unique(), torch.unique(x_float_q).numel())
+    #     print(x_float_q.min(), x_float_q.max())
     #     print()
     #     return x_float_q
 
