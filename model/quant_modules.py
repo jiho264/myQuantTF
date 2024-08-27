@@ -4,7 +4,7 @@ import torch.nn.functional as F
 from collections import OrderedDict
 from torch import Tensor
 from typing import Optional, Tuple
-
+import numpy as np
 from torch.autograd import Function
 
 
@@ -504,6 +504,7 @@ class IntSoftMax(nn.Module):
         scaling_factor = torch.Tensor([1 / 2 ** (self.bit_width - 1)]).cuda()
 
         assert exp_int.min() >= 0
+        # print("softmax out_int")
         # print(exp_int.min(), exp_int.max())
         return exp_int * scaling_factor, scaling_factor
 
@@ -552,9 +553,9 @@ class log_sqrt_2_quantizer(nn.Module):
 
     def forward(self, x_hat: torch.Tensor, s_x: torch.Tensor):
         if self.do_quant:
-            delta = x_hat.max() / self.n_levels
+            delta = x_hat.max() / 3  # (self.n_levels - 1)
             x_dequant = self._quantize(x_hat, delta)
-            s_x = x_dequant.max() / self.n_levels
+            s_x = x_dequant.max() / (self.n_levels - 1)
             return x_dequant, s_x
         else:
             return x_hat, s_x

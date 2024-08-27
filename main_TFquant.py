@@ -31,9 +31,8 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     args_gelu = {"sigmoid_bit_width": 8, "left_shift_for_exp": 23}  # I-ViT default
     ## bit width : INT arithmetic으로 exp를 구하는 과정에서, e / (e + e.max)인 항이 있는데, 여기서 반환 값을 몇 비트로 펼칠 것인지 결정하는 숫자.
 
-    args_softmax = {"bit_width": 16, "left_shift_for_exp": 15}  # I-ViT default
+    args_softmax = {"bit_width": 17, "left_shift_for_exp": 15}  # I-ViT default
     ## bit width : softmax의 out이 0~1인데, 이 값을 몇 비트에 펼쳐서 반환할 것인지 결정하는 숫자
-    ## 만약 너무 큰 숫자로 하면, 다른 MatMul에서 overflow가 발생할 수 있음. 여기는 16으로 고정.
 
     args_ln = {
         "using": True,
