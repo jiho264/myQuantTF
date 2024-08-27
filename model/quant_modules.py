@@ -566,79 +566,57 @@ class log_sqrt_2_quantizer(nn.Module):
             print(caseNum)
             if caseNum == 0:
                 """case0 log(sqrt(2))"""
+                pass
                 # x_int = torch.round(-1 * (x_int / x_int.max() * 3).log2() * 2)
-                x_int_log = -2 * (
-                    x_int.log2().round()
-                    - x_int.max().log2().round()
-                    + torch.tensor(factor).log2().round()
-                )
-                print(x_int_log.unique(), torch.unique(x_int_log).numel())
-                mask = x_int_log >= self.n_levels
-                x_int_log = torch.clamp(x_int_log, 0, self.n_levels - 1)
-                print(x_int_log.unique(), torch.unique(x_int_log).numel())
+                # x_int_log = -2 * (
+                #     x_int.log2().round()
+                #     - x_int.max().log2().round()
+                #     + torch.tensor(factor).log2().round()
+                # )
+                # print(x_int_log.unique(), torch.unique(x_int_log).numel())
+                # mask = x_int_log >= self.n_levels
+                # x_int_log = torch.clamp(x_int_log, 0, self.n_levels - 1)
+                # print(x_int_log.unique(), torch.unique(x_int_log).numel())
 
-                odd_mask = (x_int_log % 2) * (math.sqrt(2) - 1) + 1
-                s_x = odd_mask * (x_int * s_x).max() / factor
-                x_float_q = 2 ** (-1 * torch.ceil(x_int_log / 2)) * s_x
-                # x_float_q[x_float_q <= 2 ** (-self.n_levels)] = (
-                #     0  # 2 ** (-self.n_levels) 보다 작은 값은 0으로 처리
-                # ) # 둘 차이 없음. 최솟값이 0.0000이냐 0.0017이냐 차이
-                x_float_q[mask] = 0  # 2 ** (-self.n_levels) 보다 작은 값은 0으로 처리
-                """last softmax
-                tensor([-4., -2., -0.,  2.,  4.,  6.,  8., 10., 12., 14., 16., 18., 20., 22.,
-                        24., 26., 28., inf], device='cuda:0') 18
-                tensor([ 0.,  2.,  4.,  6.,  8., 10., 12., 14., 15.], device='cuda:0') 9
-                tensor([0.0000, 0.0024, 0.0049, 0.0098, 0.0196, 0.0392, 0.0783, 0.1566, 0.3132],
-                    device='cuda:0') 9
-                tensor(0., device='cuda:0') tensor(0.3132, device='cuda:0')
-                """
+                # odd_mask = (x_int_log % 2) * (math.sqrt(2) - 1) + 1
+                # s_x = odd_mask * (x_int * s_x).max() / factor
+                # x_float_q = 2 ** (-1 * torch.ceil(x_int_log / 2)) * s_x
+                # # x_float_q[x_float_q <= 2 ** (-self.n_levels)] = (
+                # #     0  # 2 ** (-self.n_levels) 보다 작은 값은 0으로 처리
+                # # ) # 둘 차이 없음. 최솟값이 0.0000이냐 0.0017이냐 차이
+                # x_float_q[mask] = 0  # 2 ** (-self.n_levels) 보다 작은 값은 0으로 처리
+                # """last softmax
+                # tensor([-4., -2., -0.,  2.,  4.,  6.,  8., 10., 12., 14., 16., 18., 20., 22.,
+                #         24., 26., 28., inf], device='cuda:0') 18
+                # tensor([ 0.,  2.,  4.,  6.,  8., 10., 12., 14., 15.], device='cuda:0') 9
+                # tensor([0.0000, 0.0024, 0.0049, 0.0098, 0.0196, 0.0392, 0.0783, 0.1566, 0.3132],
+                #     device='cuda:0') 9
+                # tensor(0., device='cuda:0') tensor(0.3132, device='cuda:0')
+                # """
 
             else:
                 """case1 log2"""
                 # x_int = torch.round(-1 * (x_int / x_int.max() * 3).log2())
+
+                ## >>> 여기서 log 도메인으로 한 번 보냈으면
                 x_int_log = -1 * (
                     x_int.log2().round()
                     - x_int.max().log2().round()
                     + torch.tensor(factor).log2().round()
                 )
                 print(x_int_log.unique(), torch.unique(x_int_log).numel())
-                mask = x_int_log >= self.n_levels
                 x_int_log = torch.clamp(x_int_log, 0, self.n_levels - 1)
                 print(x_int_log.unique(), torch.unique(x_int_log).numel())
 
-                s_x = (x_int * s_x).max() / factor
-                x_float_q = 2 ** (-x_int_log) * s_x
-
+                ## >>> 다시 linear 도메인으로 꼭 돌아와야함. log 도메인 값 직접 쓸 순 없음.
                 x_power_2 = (2 ** (-x_int_log) * (self.n_levels - 1)).round()
-                print("fsdfdssd")
                 print(x_power_2.min(), x_power_2.max(), x_power_2.unique())
-                # x_float_q[mask] = 0  # 2 ** (-self.n_levels) 보다 작은 값은 0으로 처리
-                # 2 ** (-self.n_levels) 보다 작은 값은 0으로 처리  # 둘 차이 없음. 여기선 완벽히 동일
-                # x_float_q[x_float_q <= 2 ** (-self.n_levels)] = 0
-                """last softmax
-                tensor([-2., -1., -0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11.,
-                        12., 13., 14., inf], device='cuda:0') 18
-                tensor([ 0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12., 13.,
-                        14., 15.], device='cuda:0') 16
-                tensor([0.0000e+00, 1.9118e-05, 3.8236e-05, 7.6473e-05, 1.5295e-04, 3.0589e-04,
-                        6.1178e-04, 1.2236e-03, 2.4471e-03, 4.8943e-03, 9.7885e-03, 1.9577e-02,
-                        3.9154e-02, 7.8308e-02, 1.5662e-01, 3.1323e-01], device='cuda:0') 16
-                tensor(9.5591e-06, device='cuda:0') tensor(0.3132, device='cuda:0')
-                """
 
-            # print(x_float_q.unique(), torch.unique(x_float_q).numel())
-            # print(x_float_q.min(), x_float_q.max())
+            s_x = 1 / (self.n_levels) / factor
 
-            # 여기 분모 키우면 acc 높아짐.
-            # s_x = x_float_q.max() / (self.n_levels - 1)
-            s_x = 1 / self.n_levels / factor
-            # x_q = round_ste.apply(x_float_q / s_x)
-            # print(x_q.min(), x_q.max(), x_q.unique(), torch.unique(x_q).numel())
             print("out scaler", s_x)
             print()
             return x_power_2 * s_x, s_x
-            # dja = 1 / self.n_levels / factor
-            # return x_power_2 * dja, dja
         else:
             return x_hat, s_x
 
