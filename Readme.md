@@ -8,28 +8,28 @@
 - torch base : 81.072%
 - my quantization implementation for torch ViT-B model 
 
-| [W]              | [A]    | W   | A   | SoftMax | GELU    | LN    | IdAdd | Acc @ 1 |
-| ---------------- | ------ | --- | --- | ------- | ------- | ----- | ----- | ------- |
-| Base             | Base   | 32  | 32  | FP      | FP      | FP    | FP    | 81.068% |
-| [W]Abs           | -      | 8   | 32  | FP      | FP      | FP    | FP    | 81.074% |
-| [W]Abs           | -      | 4   | 32  | FP      | FP      | FP    | FP    | 79.794% |
-| [W]Abs           | [A]Mov | 8   | 8   | FP      | FP      | FP    | FP    | 78.406% |
-| [W]Abs           | [A]Mov | 8   | 8   | I[16]-8 | I[8]-8  | I[]-8 | 16    | 77.064% |
-| [W]AdaR(Layer)   | [A]Mov | 8   | 8   | I[16]-8 | I[8]-8  | I[]-8 | 16    | 77.772% |
-| [W]AdaR(Block)   | [A]Mov | 8   | 8   | I[16]-8 | I[8]-8  | I[]-8 | 16    | 77.674% |
-| [W]AdaR(Encoder) | [A]Mov | 8   | 8   | I[16]-8 | I[8]-8  | I[]-8 | 16    | 78.782% |
-| [W]Abs           | [A]Mov | 4   | 8   | FP      | FP      | FP    | FP    | 76.894% |
-| [W]Abs           | [A]Mov | 4   | 8   | I[16]-8 | I[8]-8  | I[]-8 | 16    | 72.964% |
-| [W]Abs           | [A]Mov | 4   | 8   | I[16]-8 | I[16]-8 | I[]-8 | 16    | 66.870% |
-| [W]Abs           | [A]Mov | 4   | 8   | I[16]-8 | I[6]-8  | I[]-8 | 16    | 76.204% |
-| [W]AdaR(Layer)   | [A]Mov | 4   | 8   | I[16]-8 | I[6]-8  | I[]-8 | 16    | 79.546% |
-| [W]AdaR(Layer)   | [A]Mov | 4   | 8   | I[16]-8 | I[8]-8  | I[]-8 | 16    | 79.076% |
-| [W]AdaR(Block)   | [A]Mov | 4   | 8   | I[16]-8 | I[8]-8  | I[]-8 | 16    | 78.484% |
-| [W]AdaR(Encoder) | [A]Mov | 4   | 8   | I[16]-8 | I[8]-8  | I[]-8 | 16    | 78.782% |
-| [W]Abs           | [A]Mov | 4   | 4   | I[16]-8 | I[8]-8  | I[]-8 | 16    | 0.134%  |
+| [W]              | [A]    | W   | A   | SoftMax      | GELU         | LN    | IdAdd | Acc @ 1 |
+| ---------------- | ------ | --- | --- | ------------ | ------------ | ----- | ----- | ------- |
+| Base             | Base   | 32  | 32  | FP           | FP           | FP    | FP    | 81.068% |
+| [W]Abs           | -      | 8   | 32  | FP           | FP           | FP    | FP    | 81.074% |
+| [W]Abs           | -      | 4   | 32  | FP           | FP           | FP    | FP    | 79.794% |
+| [W]Abs           | [A]Mov | 8   | 8   | FP           | FP           | FP    | FP    | 78.406% |
+| [W]Abs           | [A]Mov | 8   | 8   | I[b16,n15]-8 | I[b8,n17]-8  | I[]-8 | 16    | 77.064% |
+| [W]AdaR(Layer)   | [A]Mov | 8   | 8   | I[b16,n15]-8 | I[b8,n17]-8  | I[]-8 | 16    | 77.772% |
+| [W]AdaR(Block)   | [A]Mov | 8   | 8   | I[b16,n15]-8 | I[b8,n17]-8  | I[]-8 | 16    | 77.674% |
+| [W]AdaR(Encoder) | [A]Mov | 8   | 8   | I[b16,n15]-8 | I[b8,n17]-8  | I[]-8 | 16    | 78.782% |
+| [W]Abs           | [A]Mov | 4   | 8   | FP           | FP           | FP    | FP    | 76.894% |
+| [W]Abs           | [A]Mov | 4   | 8   | I[b16,n15]-8 | I[b8,n17]-8  | I[]-8 | 16    | 72.964% |
+| [W]Abs           | [A]Mov | 4   | 8   | I[b16,n15]-8 | I[b16,n17]-8 | I[]-8 | 16    | 66.870% |
+| [W]Abs           | [A]Mov | 4   | 8   | I[b16,n15]-8 | I[b6,n17]-8  | I[]-8 | 16    | 76.204% |
+| [W]AdaR(Layer)   | [A]Mov | 4   | 8   | I[b16,n15]-8 | I[b6,n17]-8  | I[]-8 | 16    | 79.546% |
+| [W]AdaR(Layer)   | [A]Mov | 4   | 8   | I[b16,n15]-8 | I[b8,n17]-8  | I[]-8 | 16    | 79.076% |
+| [W]AdaR(Block)   | [A]Mov | 4   | 8   | I[b16,n15]-8 | I[b8,n17]-8  | I[]-8 | 16    | 78.484% |
+| [W]AdaR(Encoder) | [A]Mov | 4   | 8   | I[b16,n15]-8 | I[b8,n17]-8  | I[]-8 | 16    | 78.782% |
+| [W]Abs           | [A]Mov | 4   | 4   | I[b16,n15]-8 | I[b8,n17]-8  | I[]-8 | 16    | 0.134%  |
 
-- I[n] : I-ViT's INT approx. method with n with activation quantization.
-- The I-ViT's INT LN does not have n bit setting. so computed by input's precision.
+- I[b,n] : I-ViT's INT approx. method with b with activation quantization and n bits left shfting.
+- The I-ViT's INT LN does not have b bit setting. so computed by input's precision.
   
 ## Table 1 from RepQuant 
 - Li, Zhikai, et al. "RepQuant: Towards Accurate Post-Training Quantization of Large Transformer Models via Scale Reparameterization." arXiv preprint arXiv:2402.05628 (2024).
