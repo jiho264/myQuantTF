@@ -520,6 +520,71 @@ class IntSoftMax(nn.Module):
             return F.softmax(input, dim=dim), s_pre
 
 
+# class log_sqrt_2_quantizer(nn.Module):
+#     def __init__(self, args_a):
+#         super().__init__()
+#         """ log sqrt 2 quantizer for attention map """
+#         self.do_quant = True
+#         if args_a == {}:
+#             # do not quantize
+#             return
+
+#         self.bit_width = 4
+#         self.n_levels = 2**self.bit_width
+#         # self.bit_width = args_a.get("bit_width")
+#         print(f"Int log_sqrt_2 quantizer | output bit : {self.bit_width}")
+
+#     def _quantize(self, x_hat, s_x):
+#         """Verify under INT8 input"""
+#         with torch.no_grad():
+#             assert 0 <= x_hat.min() and x_hat.max() <= 1, f"{x_hat.min()} {x_hat.max()}"
+#         # print((x_hat / s_x).min(), (x_hat / s_x).max())
+#         # x_int = torch.round(-1 * (x_hat / s_x).log2() * 2)
+#         x_int = x_hat / s_x
+
+#         s_logx = x_hat.max() / 3
+
+#         # x_int = torch.round(-1 * (x_int / x_int.max() * 3).log2() * 2)
+#         x_int = -2 * (
+#             x_int.log2().round()
+#             - x_int.max().log2().round()
+#             + torch.tensor(3).log2().round()
+#         )
+#         print(x_int.unique())
+#         print(torch.unique(x_int).numel())
+#         # print(torch.unique(x_int))
+#         mask = x_int >= self.n_levels
+#         x_quant = torch.clamp(x_int, 0, self.n_levels - 1)
+#         print(x_quant.unique())
+
+#         odd_mask = (x_quant % 2) * (math.sqrt(2) - 1) + 1
+#         x_float_q = 2 ** (-1 * torch.ceil(x_quant / 2)) * odd_mask * s_logx
+#         x_float_q[mask] = 0
+#         print()
+#         return x_float_q
+
+#     def forward(self, x_hat: torch.Tensor, s_x: torch.Tensor):
+#         if self.do_quant:
+
+#             x_dequant = self._quantize(x_hat, s_x)
+#             s_x = x_dequant.max() / (self.n_levels - 1)
+#             return x_dequant, s_x
+#         else:
+#             return x_hat, s_x
+
+
+"""
+위에꺼랑 아래꺼랑 log2, log(sqrt(2)) 차이인데, 결과 완벽하게 동일함
+근데 x_quant가
+log2는 tensor([ 0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12., 13.,
+        14., 15.], device='cuda:0')
+log(sqrt(2))는 tensor([ 0.,  2.,  4.,  6.,  8., 10., 12., 14., 15.], device='cuda:0')
+
+인데 둘다 첫 배치에서 69.531나옴
+10개도 둘다   70.234%
+"""
+
+
 class log_sqrt_2_quantizer(nn.Module):
     def __init__(self, args_a):
         super().__init__()
@@ -539,22 +604,35 @@ class log_sqrt_2_quantizer(nn.Module):
         with torch.no_grad():
             assert 0 <= x_hat.min() and x_hat.max() <= 1, f"{x_hat.min()} {x_hat.max()}"
         # print((x_hat / s_x).min(), (x_hat / s_x).max())
-        x_int = torch.round(-1 * (x_hat / s_x).log2() * 2)
-        # print(torch.unique(x_int).numel())
+        # x_int = torch.round(-1 * (x_hat / s_x).log2() * 2)
+        x_int = x_hat / s_x
+
+        s_logx = x_hat.max() / 3
+
+        # x_int = torch.round(-1 * (x_int / x_int.max() * 3).log2() * 2)
+        x_int = -1 * (
+            x_int.log2().round()
+            - x_int.max().log2().round()
+            + torch.tensor(3).log2().round()
+        )
+        print(x_int.unique())
+        print(torch.unique(x_int).numel())
         # print(torch.unique(x_int))
         mask = x_int >= self.n_levels
         x_quant = torch.clamp(x_int, 0, self.n_levels - 1)
+        print(x_quant.unique())
 
-        odd_mask = (x_quant % 2) * (math.sqrt(2) - 1) + 1
-        x_float_q = 2 ** (-1 * torch.ceil(x_quant / 2)) * odd_mask * s_x
+        # odd_mask = (x_quant % 2) * (math.sqrt(2) - 1) + 1
+        # x_float_q = 2 ** (-1 * torch.ceil(x_quant / 2)) * odd_mask * s_logx
+        x_float_q = 2 ** (-x_quant) * s_logx
         x_float_q[mask] = 0
-
+        print()
         return x_float_q
 
     def forward(self, x_hat: torch.Tensor, s_x: torch.Tensor):
         if self.do_quant:
-            delta = x_hat.max() / 3  # (self.n_levels - 1)
-            x_dequant = self._quantize(x_hat, delta)
+
+            x_dequant = self._quantize(x_hat, s_x)
             s_x = x_dequant.max() / (self.n_levels - 1)
             return x_dequant, s_x
         else:
