@@ -510,6 +510,10 @@ class IntSoftMax(nn.Module):
 
     def forward(self, input, s_pre, dim: int = -1):
         if self.do_quant:
+            """ when other's non quantize """
+            if s_pre == 0:
+                return self.int_forward(input, torch.tensor(1).to("cuda"))
+            
             """Verify under INT8 input"""
             with torch.no_grad():
                 _test_input_int = (input / s_pre).round()
@@ -521,15 +525,15 @@ class IntSoftMax(nn.Module):
 
 
 class log_sqrt_2_quantizer(nn.Module):
-    def __init__(self, args_a):
+    def __init__(self, args_softmax):
         super().__init__()
         """ log sqrt 2 quantizer for attention map """
         self.do_quant = True
-        if args_a == {}:
+        if args_softmax == {}:
             # do not quantize
             return
 
-        self.bit_width = 4
+        self.bit_width = 6
         self.n_levels = 2**self.bit_width
         # self.bit_width = args_a.get("bit_width")
         print(f"Int log_sqrt_2 quantizer | output bit : {self.bit_width}")
@@ -553,6 +557,9 @@ class log_sqrt_2_quantizer(nn.Module):
 
     def forward(self, x_hat: torch.Tensor, s_x: torch.Tensor):
         if self.do_quant:
+            if s_x == 0:
+                """ when other's non quantize """
+                return x_hat, s_x
             """Verify under INT8 input"""
             with torch.no_grad():
                 assert (
@@ -562,7 +569,7 @@ class log_sqrt_2_quantizer(nn.Module):
             caseNum = 1
 
             x_int = x_hat / s_x
-            factor = 4
+            factor = 2
             print(caseNum)
             if caseNum == 0:
                 """case0 log(sqrt(2))"""

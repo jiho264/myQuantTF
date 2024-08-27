@@ -13,30 +13,30 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         "num_samples": 1024,
     }
 
-    args_w = {"scheme": "AbsMaxQuantizer", "bit_width": 4, "per_channel": True}
+    # args_w = {"scheme": "AbsMaxQuantizer", "bit_width": 4, "per_channel": True}
     # args_w.update({"AdaRound": "PerLayer"})
 
     """NOW IS ONLY FOR WEIGHTS"""
 
-    args_a = {
-        "scheme": "MovAvgAbsMaxQuantizer",
-        "bit_width": 8,
-        "idadd_bit_width": 16,
-        "per_channel": False,
-        # below values are default in the class
-        "momentum": 0.95,
-        "batches": 16,
-        # "batches": 4,
-    }
-    args_gelu = {"sigmoid_bit_width": 8, "left_shift_for_exp": 23}  # I-ViT default
-    ## bit width : INT arithmetic으로 exp를 구하는 과정에서, e / (e + e.max)인 항이 있는데, 여기서 반환 값을 몇 비트로 펼칠 것인지 결정하는 숫자.
+    # args_a = {
+    #     "scheme": "MovAvgAbsMaxQuantizer",
+    #     "bit_width": 8,
+    #     "idadd_bit_width": 16,
+    #     "per_channel": False,
+    #     # below values are default in the class
+    #     "momentum": 0.95,
+    #     "batches": 16,
+    #     # "batches": 4,
+    # }
+    # args_gelu = {"sigmoid_bit_width": 8, "left_shift_for_exp": 23}  # I-ViT default
+    # ## bit width : INT arithmetic으로 exp를 구하는 과정에서, e / (e + e.max)인 항이 있는데, 여기서 반환 값을 몇 비트로 펼칠 것인지 결정하는 숫자.
 
     args_softmax = {"bit_width": 17, "left_shift_for_exp": 15}  # I-ViT default
-    ## bit width : softmax의 out이 0~1인데, 이 값을 몇 비트에 펼쳐서 반환할 것인지 결정하는 숫자
+    # # bit width : softmax의 out이 0~1인데, 이 값을 몇 비트에 펼쳐서 반환할 것인지 결정하는 숫자
 
-    args_ln = {
-        "using": True,
-    }  # FIXME layer norm bit width is no matter. have to change another setting method
+    # args_ln = {
+    #     "using": True,
+    # }  # FIXME layer norm bit width is no matter. have to change another setting method
 
     calib_len = args_a.get("batches", 16)
 
