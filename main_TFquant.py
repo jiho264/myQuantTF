@@ -29,7 +29,12 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         # "batches": 4,
     }
     args_gelu = {"sigmoid_bit_width": 8, "left_shift_for_exp": 23}  # I-ViT default
+    ## bit width : INT arithmetic으로 exp를 구하는 과정에서, e / (e + e.max)인 항이 있는데, 여기서 반환 값을 몇 비트로 펼칠 것인지 결정하는 숫자.
+
     args_softmax = {"bit_width": 16, "left_shift_for_exp": 15}  # I-ViT default
+    ## bit width : softmax의 out이 0~1인데, 이 값을 몇 비트에 펼쳐서 반환할 것인지 결정하는 숫자
+    ## 만약 너무 큰 숫자로 하면, 다른 MatMul에서 overflow가 발생할 수 있음. 여기는 16으로 고정.
+
     args_ln = {
         "using": True,
     }  # FIXME layer norm bit width is no matter. have to change another setting method
@@ -67,10 +72,10 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     train_loader, test_loader = GetDataset(batch_size=_batch_size)
 
     """ 여기 지우고 돌리면 dynamic act quantization """
-    if args_a != {}:
-        """calibration for activation"""
-        _, _ = evaluate(model, test_loader, calib_len, "cuda")
-        print("Activation calibration is done.\n")
+    # if args_a != {}:
+    #     """calibration for activation"""
+    #     _, _ = evaluate(model, test_loader, calib_len, "cuda")
+    #     print("Activation calibration is done.\n")
 
     if args_w.get("AdaRound", None):
         scheme = args_w.get("AdaRound")
@@ -78,8 +83,8 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         print(f"AdaRound for {scheme} weights is done.")
 
     """ evaluation """
-    _top1, _ = evaluate(model, test_loader, len(test_loader), "cuda")
-    # _top1, _ = evaluate(model, test_loader, 1, "cuda")
+    # _top1, _ = evaluate(model, test_loader, len(test_loader), "cuda")
+    _top1, _ = evaluate(model, test_loader, 1, "cuda")
     print(
         f"\n    Quantized model Evaluation accuracy on 50000 images, {_top1.avg:2.3f}%"
     )

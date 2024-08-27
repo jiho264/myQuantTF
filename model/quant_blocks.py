@@ -6,13 +6,7 @@ from collections import OrderedDict
 from torch import Tensor
 from typing import Optional, Tuple
 
-from .quant_modules import (
-    QuantAct,
-    QuantLinearWithWeight,
-    IntGELU,
-    IntSoftMax,
-    QuantMatMul,
-)
+from .quant_modules import *
 
 
 class QuantMLP(nn.Module):
@@ -88,6 +82,7 @@ class QuantMSA(nn.Module):
 
         # [3] Softmax(16bit) -> return INT8
         self.softmax = IntSoftMax(args_softmax=args_softmax)
+        # self.softmax_log_act = log_sqrt_2_quantizer(args_a=args_a)
         self.softmax_act = QuantAct(args_a=args_a, which="softmax_act")
 
         # [4] Softmaxed @ V (INT8 GEMM -> return INT32 -> return INT8)
@@ -138,6 +133,7 @@ class QuantMSA(nn.Module):
 
         """ [3] INT8 -> return log softmax INT16 -> return INT8 (UINT7) """
         attn_map_hat_int16, s_amap = self.softmax(qk_hat_int8, s_qk, dim=-1)
+        # attn_map_hat_int8, s_amap = self.softmax_log_act(attn_map_hat_int16, s_amap)
         attn_map_hat_int8, s_amap = self.softmax_act(attn_map_hat_int16, s_amap)
         ## >> torch.Size([128, 12, 197, 197])
 

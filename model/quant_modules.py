@@ -383,7 +383,9 @@ class IntGELU(nn.Module):
         # The minimum value for ensuring accuracy (varies depending on models)
         self.gelu_act = QuantAct(args_a=args_a)
 
-        print(f"IntGELU    | sigmoid bit: {self.sigmoid_bit_width}, exp Lshift: {self.n}")
+        print(
+            f"IntGELU    | sigmoid bit: {self.sigmoid_bit_width}, exp Lshift: {self.n}"
+        )
 
     def int_exp_shift(self, x_int, scaling_factor):
         x_int = x_int + floor_ste.apply(x_int / 2) - floor_ste.apply(x_int / 2**4)
@@ -423,8 +425,12 @@ class IntGELU(nn.Module):
         # print("")
         exp_int_sum.clamp_max_(2**31 - 1)
         factor = floor_ste.apply((2**31 - 1) / exp_int_sum)
-        sigmoid_int = floor_ste.apply(exp_int * factor / 2 ** (31 - self.sigmoid_bit_width + 1))
-        sigmoid_scaling_factor = torch.Tensor([1 / 2 ** (self.sigmoid_bit_width - 1)]).cuda()
+        sigmoid_int = floor_ste.apply(
+            exp_int * factor / 2 ** (31 - self.sigmoid_bit_width + 1)
+        )
+        sigmoid_scaling_factor = torch.Tensor(
+            [1 / 2 ** (self.sigmoid_bit_width - 1)]
+        ).cuda()
         assert sigmoid_int.min() >= 0
 
         x_int = pre_x_int * sigmoid_int
@@ -433,7 +439,7 @@ class IntGELU(nn.Module):
 
     def forward(self, input, s_pre):
         if self.do_quant:
-            """ Verify under INT8 input """
+            """Verify under INT8 input"""
             with torch.no_grad():
                 _test_input_int = (input / s_pre).round()
                 assert -128 <= _test_input_int.min() and _test_input_int.max() <= 127
@@ -498,12 +504,12 @@ class IntSoftMax(nn.Module):
         scaling_factor = torch.Tensor([1 / 2 ** (self.bit_width - 1)]).cuda()
 
         assert exp_int.min() >= 0
-        
+        # print(exp_int.min(), exp_int.max())
         return exp_int * scaling_factor, scaling_factor
 
     def forward(self, input, s_pre, dim: int = -1):
         if self.do_quant:
-            """ Verify under INT8 input """
+            """Verify under INT8 input"""
             with torch.no_grad():
                 _test_input_int = (input / s_pre).round()
                 assert -128 <= _test_input_int.min() and _test_input_int.max() <= 127
@@ -511,6 +517,47 @@ class IntSoftMax(nn.Module):
         else:
             # print("FP Softmax")
             return F.softmax(input, dim=dim), s_pre
+
+
+class log_sqrt_2_quantizer(nn.Module):
+    def __init__(self, args_a):
+        super().__init__()
+        """ log sqrt 2 quantizer for attention map """
+        self.do_quant = True
+        if args_a == {}:
+            # do not quantize
+            return
+
+        self.bit_width = 4
+        self.n_levels = 2**self.bit_width
+        # self.bit_width = args_a.get("bit_width")
+        print(f"Int log_sqrt_2 quantizer | output bit : {self.bit_width}")
+
+    def _quantize(self, x_hat, s_x):
+        """Verify under INT8 input"""
+        with torch.no_grad():
+            assert 0 <= x_hat.min() and x_hat.max() <= 1, f"{x_hat.min()} {x_hat.max()}"
+        # print((x_hat / s_x).min(), (x_hat / s_x).max())
+        x_int = torch.round(-1 * (x_hat / s_x).log2() * 2)
+        # print(torch.unique(x_int).numel())
+        # print(torch.unique(x_int))
+        mask = x_int >= self.n_levels
+        x_quant = torch.clamp(x_int, 0, self.n_levels - 1)
+
+        odd_mask = (x_quant % 2) * (math.sqrt(2) - 1) + 1
+        x_float_q = 2 ** (-1 * torch.ceil(x_quant / 2)) * odd_mask * s_x
+        x_float_q[mask] = 0
+
+        return x_float_q
+
+    def forward(self, x_hat: torch.Tensor, s_x: torch.Tensor):
+        if self.do_quant:
+            delta = x_hat.max() / self.n_levels
+            x_dequant = self._quantize(x_hat, delta)
+            s_x = x_dequant.max() / self.n_levels
+            return x_dequant, s_x
+        else:
+            return x_hat, s_x
 
 
 class IntLayerNorm(nn.Module):
