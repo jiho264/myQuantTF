@@ -570,7 +570,7 @@ class log_sqrt_2_quantizer(nn.Module):
 
             x_int = x_hat / s_x
             factor = 2
-            print(caseNum)
+            # print(caseNum)
             if caseNum == 0:
                 """case0 log(sqrt(2))"""
                 pass
@@ -636,9 +636,9 @@ class log_sqrt_2_quantizer(nn.Module):
                     - x_int.max().log2().round()
                     + torch.tensor(factor).log2().round()
                 )
-                print(x_int_log.unique(), torch.unique(x_int_log).numel())
+                # print(x_int_log.unique(), torch.unique(x_int_log).numel())
                 x_int_log = torch.clamp(x_int_log, 0, self.n_levels - 1)
-                print(x_int_log.unique(), torch.unique(x_int_log).numel())
+                # print(x_int_log.unique(), torch.unique(x_int_log).numel())
 
                 ## >>> 다시 linear 도메인으로 꼭 돌아와야함. log 도메인 값 직접 쓸 순 없음.
                 x_power_2 = (2 ** (-x_int_log) * (self.n_levels - 1)).round()
@@ -646,8 +646,8 @@ class log_sqrt_2_quantizer(nn.Module):
 
             s_x = 1 / (self.n_levels) / factor
 
-            print("out scaler", s_x)
-            print()
+            # print("out scaler", s_x)
+            # print()
             return x_power_2 * s_x, s_x
         else:
             return x_hat, s_x
