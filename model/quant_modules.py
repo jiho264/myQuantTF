@@ -86,7 +86,7 @@ class QuantAct(nn.Module):
 
         if which == "idAdd":
             self.bit_width = args_a.get("idadd_bit_width")
-            print(f"Int Activation {self.bit_width} for {which} for identity add")
+            # print(f"Int Activation {self.bit_width} for {which} for identity add")
         elif which == "softmax_act":
             # 24.08.26 INT9 == UINT8 for non negative values
             self.bit_width = args_a.get("bit_width") + 1
@@ -357,6 +357,16 @@ class QuantLinearWithWeight(nn.Module):
             )
 
 
+def bits_required(x_int):
+    # 절대값을 취하고 이진수 변환 후, 부호 비트 포함해서 비트 수 계산
+    x_int = int(x_int.item())  # 텐서에서 파이썬 정수로 변환
+    if x_int == 0:
+        return 1  # 0은 1비트로 표현 가능
+    return (
+        len(bin(abs(x_int))) - 2 + 1
+    )  # bin()은 '0b'로 시작하기 때문에 -2, 부호 비트 포함
+
+
 class IntGELU(nn.Module):
     def __init__(self, args_gelu, args_a):
         super().__init__()
@@ -367,11 +377,13 @@ class IntGELU(nn.Module):
 
         self.sigmoid_bit_width = args_gelu.get("sigmoid_bit_width")
 
-        self.n = 17  # sufficiently large integer
+        self.n = args_gelu.get("left_shift_for_exp", 23)
+        # 23 is an I-ViT's default value
+        # sufficiently large integer
         # The minimum value for ensuring accuracy (varies depending on models)
         self.gelu_act = QuantAct(args_a=args_a)
 
-        print(f"IntGELU bit: {self.sigmoid_bit_width}")
+        print(f"IntGELU    | sigmoid bit: {self.sigmoid_bit_width}, exp Lshift: {self.n}")
 
     def int_exp_shift(self, x_int, scaling_factor):
         x_int = x_int + floor_ste.apply(x_int / 2) - floor_ste.apply(x_int / 2**4)
@@ -401,6 +413,14 @@ class IntGELU(nn.Module):
             -x_int_max, scaling_factor_sig
         )  # e^(-x_max)
         exp_int_sum = exp_int + exp_int_max
+        # print(
+        #     "gelu    max bit length: ",
+        #     bits_required(exp_int.max()),
+        #     torch.unique(exp_int).numel(),
+        #     bits_required(exp_int_sum.max()),
+        #     torch.unique(exp_int_sum).numel(),
+        # )
+        # print("")
         exp_int_sum.clamp_max_(2**31 - 1)
         factor = floor_ste.apply((2**31 - 1) / exp_int_sum)
         sigmoid_int = floor_ste.apply(exp_int * factor / 2 ** (31 - self.sigmoid_bit_width + 1))
@@ -436,10 +456,12 @@ class IntSoftMax(nn.Module):
 
         self.bit_width = args_softmax.get("bit_width")
 
-        self.n = 15  # sufficiently large integer
+        self.n = args_softmax.get("left_shift_for_exp", 15)
+        # 15 is an I-ViT's default value
+        # sufficiently large integer
         # The minimum value for ensuring accuracy (varies depending on models)
 
-        print(f"IntSoftMax {self.bit_width}")
+        print(f"IntSoftMax | output bit : {self.bit_width}, exp Lshift : {self.n}")
 
     def int_exp_shift(self, x_int, scaling_factor):
         x_int = x_int + floor_ste.apply(x_int / 2) - floor_ste.apply(x_int / 2**4)
@@ -462,6 +484,13 @@ class IntSoftMax(nn.Module):
 
         exp_int, _ = self.int_exp_shift(x_int, scaling_factor)
         exp_int_sum = exp_int.sum(dim=-1, keepdim=True)
+        # print(
+        #     "softmax max bit length: ",
+        #     bits_required(exp_int.max()),
+        #     torch.unique(exp_int).numel(),
+        #     bits_required(exp_int_sum.max()),
+        #     torch.unique(exp_int_sum).numel(),
+        # )
 
         exp_int_sum.clamp_max_(2**31 - 1)
         factor = floor_ste.apply((2**31 - 1) / exp_int_sum)

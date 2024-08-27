@@ -28,10 +28,10 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         "batches": 16,
         # "batches": 4,
     }
-    args_gelu = {"sigmoid_bit_width": 6}
-    args_softmax = {"bit_width": 16}
+    args_gelu = {"sigmoid_bit_width": 8, "left_shift_for_exp": 23}  # I-ViT default
+    args_softmax = {"bit_width": 16, "left_shift_for_exp": 15}  # I-ViT default
     args_ln = {
-        "None": None,
+        "using": True,
     }  # FIXME layer norm bit width is no matter. have to change another setting method
 
     calib_len = args_a.get("batches", 16)
@@ -79,7 +79,7 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
 
     """ evaluation """
     _top1, _ = evaluate(model, test_loader, len(test_loader), "cuda")
-    # # _top1, _ = evaluate(model, test_loader, 1, "cuda")
+    # _top1, _ = evaluate(model, test_loader, 1, "cuda")
     print(
         f"\n    Quantized model Evaluation accuracy on 50000 images, {_top1.avg:2.3f}%"
     )
