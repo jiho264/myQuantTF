@@ -510,7 +510,7 @@ class IntSoftMax(nn.Module):
 
     def forward(self, input, s_pre, dim: int = -1):
         if self.do_quant:
-            """ when other's non quantize """
+            """when other's non quantize"""
             if s_pre == 0:
                 return self.int_forward(input, torch.tensor(1).to("cuda"))
 
@@ -534,22 +534,53 @@ class LogSqrt2Quantizer(nn.Module):
             return
 
         self.bit_width = args_softmax.get("logquantbit")
-        # self.factor = args_softmax.get("logquantfactor")
         self.factor = None
         self.n_levels = 2**self.bit_width
-        # self.bit_width = args_a.get("bit_width")
+
         print(f"Int log_sqrt_2 quantizer | output bit : {self.bit_width}")
 
-    def logquant(self, x_hat, s_x, factor):
+    def _init_factor(self, x_hat, s_x):
+        """
+        log2(1) = 0
+        log2(2) = 1
+        log2(3) = 1.5849625007 = 2
+        log2(4) = 2
+        log2(5) = 2.32192809489 = 2
+        log2(6) = 2.58496250072 = 3
+        log2(8) = 3
+        log2(9) = 3.16992500144 = 3
+        log2(11) = 3.45943161864 = 3
+        log2(12) = 3.58496250072 = 4
+        log2(13) = 3.70043971814 = 4
+        log2(15) = 3.90689059561 = 4
+        log2(16) = 4
+        log2(17) = 4.08746284125 = 4
+        log2(31) = 4.95419631039 = 5
+        log2(32) = 5
+
+        이거 clamp range 를 sliding window로 찾는거나
+        log2에 식에 b곱해서 +log2(b)하는거나 원리가 아예 똑같음.
+        애초에 x_log 식의 계산결과에 직접적으로 정수 단위로 움직이는 것임.
+        """
+        best_score = 99999
+        best_factor = 0
+        for i in range(0, 31):
+            factor = 2**i
+            out, _ = self._logquant(x_hat, s_x, factor)
+            score = torch.norm(x_hat - out).item()
+
+            if score < best_score:
+                best_score = score
+                best_factor = factor
+
+        self.factor = best_factor
+        print(f"Best factor: {best_factor}, with score: {best_score}")
+
+    def _logquant(self, x_hat, s_x, factor):
         x_int = x_hat / s_x
+
         if factor == 0:
-            x_int_log = (
-                -1
-                * (
-                    x_int.log2().round()
-                    - x_int.max().log2().round()
-                ).round()
-            )
+            x_int_log = -1 * (x_int.log2().round() - x_int.max().log2().round()).round()
         else:
             x_int_log = (
                 -1
@@ -567,113 +598,34 @@ class LogSqrt2Quantizer(nn.Module):
         #         11., 12., 13., inf], device='cuda:0') 18
         x_int_log = x_int_log.clamp(0, self.n_levels - 1)
 
-        # [2] clamped  >> [0, 15]
-        # _max = x_int_log[x_int_log != float("inf")].max()
-        # _Lshift = (_max - 1 - x_int_log).to(torch.int32) 
-        """
-        Best factor: 1, with score: 18.125041961669922
-        Best factor: 1, with score: 21.528587341308594
-        Best factor: 1, with score: 45.12434768676758
-        Best factor: 1, with score: 40.94997024536133
-        Best factor: 1, with score: 28.58502769470215
-        Best factor: 1, with score: 23.167654037475586
-        Best factor: 1, with score: 26.552051544189453
-        Best factor: 1, with score: 21.345569610595703
-        Best factor: 1, with score: 18.197187423706055
-        Best factor: 1, with score: 14.477062225341797
-        Best factor: 2, with score: 13.706231117248535
-        Best factor: 1, with score: 15.561084747314453
-        # >> max==15이고 xlog==15일때 -1
-        # >> max==15이고 xlog==0일때 14
-        # >> max==14이고 xlog==14일때 -1
-        # >> max==14이고 xlog==0일때 13
-            Quantized model Evaluation accuracy on 50000 images, 80.750%, 95.142%
-        """
-
-        _Lshift = (self.n_levels - 1  - x_int_log).to(torch.int32) 
-        
-        """
-        # >> 14 - x_int_log >> 출현 가능 [0, 15]
-        Best factor: 1, with score: 18.125041961669922
-        Best factor: 1, with score: 21.528587341308594
-        Best factor: 1, with score: 45.12434768676758
-        Best factor: 1, with score: 40.94997024536133
-        Best factor: 1, with score: 28.58502769470215
-        Best factor: 1, with score: 23.167654037475586
-        Best factor: 1, with score: 26.552051544189453
-        Best factor: 1, with score: 21.345569610595703
-        Best factor: 1, with score: 18.197187423706055
-        Best factor: 1, with score: 14.477062225341797
-        Best factor: 1, with score: 13.706607818603516
-        Best factor: 1, with score: 15.560178756713867
-            Quantized model Evaluation accuracy on 50000 images, 80.760%, 95.152%
-        """
+        # print("[2] clamped\n", x_int_log.unique(), torch.unique(x_int_log).numel())
+        _Lshift = (self.n_levels - 1 - x_int_log).to(torch.int32)
 
         x_power_2 = torch.tensor(2, dtype=torch.int32).bitwise_left_shift(_Lshift)
 
         # print("[3] encoded\n", x_power_2.unique(), torch.unique(x_power_2).numel())
-        # print((x_power_2 * s_x).unique(), torch.unique(x_power_2 * s_x).numel())
-        # 1 뺀 경우.
-        # tensor([    1,     3,     7,    15,    31,    63,   127,   255,   511,  1023,
-        #         2047,  4095,  8191, 16383, 32767, 65535], device='cuda:0',
-        #     dtype=torch.int32) 16
+        s_x = 1 / (2**self.n_levels + 1)
 
-        s_x = 1 / 2**self.n_levels
-        # print()
-        return x_power_2 * s_x, s_x
+        """ Verify softmax output """
+        x_hat = x_power_2 * s_x
+        assert 0 <= x_hat.min(), f"{x_hat.min()}"
+        assert x_hat.max() < 1, f"{x_hat.max()}"
+
+        return x_hat, s_x
 
     def forward(self, x_hat: torch.Tensor, s_x: torch.Tensor):
         if self.do_quant:
             if s_x == 0:
-                """ when other's non quantize """
+                """when other's non quantize"""
                 return x_hat, s_x
+
             """Verify under INT8 input"""
-            with torch.no_grad():
-                assert (
-                    0 <= x_hat.min() and x_hat.max() <= 1
-                ), f"{x_hat.min()} {x_hat.max()}"
+            assert 0 <= x_hat.min() and x_hat.max() <= 1, f"{x_hat.min()} {x_hat.max()}"
 
-            if self.factor is None :
-                """
-                log2(1) = 0
-                log2(2) = 1
-                log2(3) = 1.5849625007 = 2
-                log2(4) = 2
-                log2(5) = 2.32192809489 = 2
-                log2(6) = 2.58496250072 = 3
-                log2(8) = 3
-                log2(9) = 3.16992500144 = 3
-                log2(11) = 3.45943161864 = 3
-                log2(12) = 3.58496250072 = 4
-                log2(13) = 3.70043971814 = 4
-                log2(15) = 3.90689059561 = 4
-                log2(16) = 4
-                log2(17) = 4.08746284125 = 4
-                log2(31) = 4.95419631039 = 5
-                log2(32) = 5
-                
-                이거 clamp range 를 sliding window로 찾는거나
-                log2에 식에 b곱해서 +log2(b)하는거나 원리가 아예 똑같음.
-                애초에 x_log 식의 계산결과에 직접적으로 정수 단위로 움직이는 것임.
-                """
-                best_score = 99999
-                best_factor = 0
-                for i in range(0, 31):
-                    factor = 2**i
-                    out, s_x = self.logquant(x_hat, s_x, factor)
-                    score = torch.norm(x_hat - out).item()
-                    # print(i, score)
-                    if score < best_score:
-                        best_score = score
-                        best_factor = factor
+            if self.factor is None:
+                self._init_factor(x_hat, s_x)
 
-                self.factor = best_factor
-                print(f"Best factor: {best_factor}, with score: {best_score}")
-
-            x_hat, s_x = self.logquant(x_hat, s_x, self.factor)
-            assert 0 <= x_hat.min(), f"{x_hat.min()}"
-            # assert x_hat.max() < 1, f"{x_hat.max()}"
-            return x_hat, s_x
+            return self._logquant(x_hat, s_x, self.factor)
         else:
             return x_hat, s_x
 
