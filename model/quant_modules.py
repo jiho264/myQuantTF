@@ -552,42 +552,8 @@ class log_sqrt_2_quantizer(nn.Module):
                 ), f"{x_hat.min()} {x_hat.max()}"
 
             x_int = x_hat / s_x
-
-            """case1 log2
-            [[ first batch ]]
             
-            softmaxoutput exp resolution 32bit
-            self.bit_width = 6 / factor = 2
-            ver 1 fp code : 92.188%
-            tensor([-1., -0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12.,
-                    13., 14., 15., 16., 17., 18., 19.], device='cuda:0') 21
-            tensor([ 0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12., 13.,
-                    14., 15., 16., 17., 18., 19.], device='cuda:0') 20
-            tensor([ 0.,  1.,  2.,  4.,  8., 16., 32., 63.], device='cuda:0') 8
-            out scaler 0.0078125
 
-            0%|                                                             | 0/391 [00:03<?, ?it/s]
-
-                Quantized model Evaluation accuracy on 50000 images, 92.188%
-            
-            IntSoftMax | output bit : 17, exp Lshift : 15
-            Int log_sqrt_2 quantizer | output bit : 4
-            [1] log2
-            tensor([-3., -2., -1., -0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10.,
-                    11., 12., 13., inf], device='cuda:0') 18
-            [2] clamped
-            tensor([ 0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12., 13.,
-                    15.], device='cuda:0') 15
-            [3] encoded
-            tensor([ 0,  1,  3,  7, 15, 30], device='cuda:0', dtype=torch.int32) 6
-            [4] out scaler 0.00625 outbit 4 factor 10
-
-                Quantized model Evaluation accuracy on 128 images, 90.625%
-                Quantized model Evaluation accuracy on 50000 images, 72.192%
-            """
-            # x_int = torch.round(-1 * (x_int / x_int.max() * 3).log2())
-
-            ## >>> 여기서 log 도메인으로 한 번 보냈으면
             x_int_log = -1 * (
                 x_int.log2().round()
                 - x_int.max().log2().round()
@@ -595,39 +561,34 @@ class log_sqrt_2_quantizer(nn.Module):
             ).round()
 
             print("[1] log2\n", x_int_log.unique(), torch.unique(x_int_log).numel())
-
-            # _max = x_int_log[x_int_log != float("inf")].max()
-            # x_int_log = torch.clamp(x_int_log, max= _max + 1)
-            # while x_int_log.max() != 15:
-            #     x_int_log = x_int_log + 1
-            x_int_log = torch.clamp(x_int_log, -2, 13)
-            print("[2] clamped\n", x_int_log.unique(), torch.unique(x_int_log).numel())
             ## Big INT --------------------------------------------- Small INT
-            ## >>> [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-            ## >>> 다시 linear 도메인으로 꼭 돌아와야함. log 도메인 값 직접 쓸 순 없음.
-            # ver 1
-            # x_power_2 = (2 ** (-x_int_log) * (self.n_levels - 1)).round()
+            # [1] log2
+            # tensor([-3., -2., -1., -0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10.,
+            #         11., 12., 13., inf], device='cuda:0') 18
+            _max = x_int_log[x_int_log != float("inf")].max()
+            x_int_log = x_int_log.clamp(_max - self.n_levels + 1, _max)
 
-            # ver 2 bitshift
-            suf_n = self.n_levels - 4
-            x_power_2 = torch.tensor(2, dtype=torch.int32).bitwise_left_shift(suf_n - x_int_log.to(torch.int32))
-            # Small INT --------------------------------------------- Big INT
-            # [    2,     4,     8,    16,    32,    64,   128,   256,   512,  1024, 2048,  4096,  8192, 16384, 32768, 65536]
+
+            print("[2] clamped\n", x_int_log.unique(), torch.unique(x_int_log).numel())
+            # [2] clamped
+            #  tensor([-2., -1., -0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11.,
+            #         12., 13.], device='cuda:0') 16
+            # tensor([    0,     2,     4,     8,    16,    32,    64,   128,   256,   512,
+            #          1024,  2048,  4096,  8192, 16384, 32768], device='cuda:0',
+            #        dtype=torch.int32)
+            _Lshift = (_max -1 - x_int_log).to(torch.int32)
+            x_power_2 = torch.tensor(2, dtype=torch.int32).bitwise_left_shift(_Lshift)
             print(x_power_2.unique())
-            # x_power_2 = (x_power_2 * (self.n_levels))
-            # # Small INT --------------------------------------------- Big INT
-            # # [    30,     60,    120,    240,    480,    960,   1920,   3840,   7680, 15360,  30720,  61440, 122880, 245760, 491520, 983040],
-            # print(x_power_2.unique())
-            # x_power_2 = x_power_2.bitwise_right_shift(suf_n -1)
-            # #tensor([  0,   1,   3,   7,  15,  30,  60, 120], device='cuda:0',dtype=torch.int32)
-
+            
+            
             print("[3] encoded\n", x_power_2.unique(), torch.unique(x_power_2).numel())
+            # [3] encoded
+            # tensor([    0,     2,     4,     8,    16,    32,    64,   128,   256,   512,
+            #         1024,  2048,  4096,  8192, 16384, 32768], device='cuda:0',
+            #     dtype=torch.int32) 16
 
-            # s_x = 1 / (self.n_levels) / self.factor / 2
             s_x = 1 / 2**self.n_levels 
-
-            # print("[4] out scaler", s_x, "outbit", self.bit_width, "factor", self.factor)
-            # print()
+            print()
             return x_power_2 * s_x, s_x
         else:
             return x_hat, s_x

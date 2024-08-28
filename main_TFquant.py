@@ -35,7 +35,7 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         "bit_width": 17,
         "left_shift_for_exp": 15,
         "logquantbit": 4,
-        "logquantfactor": 10,
+        "logquantfactor": 2**3,
     }  # I-ViT default
     # # bit width : softmax의 out이 0~1인데, 이 값을 몇 비트에 펼쳐서 반환할 것인지 결정하는 숫자
 
@@ -87,8 +87,8 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         print(f"AdaRound for {scheme} weights is done.")
 
     """ evaluation """
-    _top1, _ = evaluate(model, test_loader, len(test_loader), "cuda")
-    # _top1, _ = evaluate(model, test_loader, 1, "cuda")
+    # _top1, _ = evaluate(model, test_loader, len(test_loader), "cuda")
+    _top1, _ = evaluate(model, test_loader, 1, "cuda")
     print(
         f"\n    Quantized model Evaluation accuracy on 50000 images, {_top1.avg:2.3f}%"
     )
