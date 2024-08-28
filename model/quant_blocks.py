@@ -19,8 +19,11 @@ class QuantMLP(nn.Module):
         )
 
         # [2] GELU(approximate='none')
-        self.gelu = IntGELU(args_gelu=args_gelu, args_a=args_a)
-
+        self.gelu = IntGELU(args_gelu=args_gelu)
+        if args_gelu.get("act_quant_bit_width", None) == 4:
+            self.gelu_act = LogSqrt2Quantizer(args_any=args_gelu)
+        else:
+            self.gelu_act = QuantAct(args_a=args_a)
         self.dropout_1 = orgModule.get_submodule("2")
         # Dropout(p=0.0, inplace=False)
 
@@ -38,6 +41,7 @@ class QuantMLP(nn.Module):
 
         # [2]
         x_hat_int8, s_x = self.gelu(x_hat_int8, s_x)
+        x_hat_int8, s_x = self.gelu_act(x_hat_int8, s_x)
         x_hat_int8 = self.dropout_1(x_hat_int8)
 
         # [3]
@@ -82,8 +86,11 @@ class QuantMSA(nn.Module):
 
         # [3] Softmax(16bit) -> return INT8
         self.softmax = IntSoftMax(args_softmax=args_softmax)
-        self.softmax_log_act = LogSqrt2Quantizer(args_softmax=args_softmax)
-        # self.softmax_act = QuantAct(args_a=args_a, which="softmax_act")
+
+        if args_softmax.get("act_quant_bit_width", None) == 4:
+            self.softmax_act = LogSqrt2Quantizer(args_any=args_softmax)
+        else:
+            self.softmax_act = QuantAct(args_a=args_a, which="softmax_act")
 
         # [4] Softmaxed @ V (INT8 GEMM -> return INT32 -> return INT8)
         self.attnout_mm = QuantMatMul()
@@ -133,8 +140,14 @@ class QuantMSA(nn.Module):
 
         """ [3] INT8 -> return log softmax INT16 -> return INT8 (UINT7) """
         attn_map_hat_int16, s_amap = self.softmax(qk_hat_int8, s_qk, dim=-1)
-        attn_map_hat_int8, s_amap = self.softmax_log_act(attn_map_hat_int16, s_amap)
-        # attn_map_hat_int8, s_amap = self.softmax_act(attn_map_hat_int16, s_amap)
+        assert 0 <= attn_map_hat_int16.min() and attn_map_hat_int16.max() < 1
+        attn_map_hat_int8, s_amap = self.softmax_act(attn_map_hat_int16, s_amap)
+        if isinstance(self.softmax_act, LogSqrt2Quantizer):
+            # contain 1.00 for preserving Acc..
+            assert 0 <= attn_map_hat_int8.min() and attn_map_hat_int8.max() <= 1
+        else:
+            assert 0 <= attn_map_hat_int8.min() and attn_map_hat_int8.max() < 1
+        assert 0 <= attn_map_hat_int8.min()
         ## >> torch.Size([128, 12, 197, 197])
 
         """ [4] INT GEMM -> return INT32 -> return INT8 """

@@ -368,7 +368,7 @@ def bits_required(x_int):
 
 
 class IntGELU(nn.Module):
-    def __init__(self, args_gelu, args_a):
+    def __init__(self, args_gelu):
         super().__init__()
         self.do_quant = False
         if args_gelu == {}:
@@ -381,7 +381,6 @@ class IntGELU(nn.Module):
         # 23 is an I-ViT's default value
         # sufficiently large integer
         # The minimum value for ensuring accuracy (varies depending on models)
-        self.gelu_act = QuantAct(args_a=args_a)
 
         print(
             f"IntGELU    | sigmoid bit: {self.sigmoid_bit_width}, exp Lshift: {self.n}"
@@ -444,9 +443,7 @@ class IntGELU(nn.Module):
                 _test_input_int = (input / s_pre).round()
                 assert -128 <= _test_input_int.min() and _test_input_int.max() <= 127
 
-            gelu_hat, s_x = self.int_forward(input, s_pre)
-
-            return self.gelu_act(gelu_hat, s_x)
+            return self.int_forward(input, s_pre)
         else:
             # print("FP GELU")
             return F.gelu(input), s_pre
@@ -525,15 +522,15 @@ class IntSoftMax(nn.Module):
 
 
 class LogSqrt2Quantizer(nn.Module):
-    def __init__(self, args_softmax):
+    def __init__(self, args_any):
         super().__init__()
         """ log sqrt 2 quantizer for attention map """
         self.do_quant = True
-        if args_softmax == {}:
+        if args_any == {}:
             # do not quantize
             return
 
-        self.bit_width = args_softmax.get("logquantbit")
+        self.bit_width = args_any.get("act_quant_bit_width")
         self.factor = None
         self.n_levels = 2**self.bit_width
 
@@ -609,7 +606,7 @@ class LogSqrt2Quantizer(nn.Module):
         """ Verify softmax output """
         x_hat = x_power_2 * s_x
         assert 0 <= x_hat.min(), f"{x_hat.min()}"
-        assert x_hat.max() < 1, f"{x_hat.max()}"
+        # assert x_hat.max() < 1, f"{x_hat.max()}"
 
         return x_hat, s_x
 

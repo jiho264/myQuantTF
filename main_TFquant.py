@@ -28,13 +28,19 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     #     "batches": 16,
     #     # "batches": 4,
     # }
-    # args_gelu = {"sigmoid_bit_width": 8, "left_shift_for_exp": 23}  # I-ViT default
+    # args_gelu = {
+    #     "sigmoid_bit_width": 8,
+    #     "left_shift_for_exp": 23,
+    #     "act_quant_bit_width": 4,  # LogSqrt2Quantizer
+    #     # "act_quant_bit_width": 8,  # QuantAct
+    # }  # I-ViT default
     # ## bit width : INT arithmetic으로 exp를 구하는 과정에서, e / (e + e.max)인 항이 있는데, 여기서 반환 값을 몇 비트로 펼칠 것인지 결정하는 숫자.
 
     args_softmax = {
-        "bit_width": 17,  # UINT16
+        "bit_width": 17,  # UINT16 of softmax output
         "left_shift_for_exp": 15,
-        "logquantbit": 4,
+        "act_quant_bit_width": 4,  # LogSqrt2Quantizer
+        # "act_quant_bit_width": 8,  # QuantAct
     }  # I-ViT default
     # # bit width : softmax의 out이 0~1인데, 이 값을 몇 비트에 펼쳐서 반환할 것인지 결정하는 숫자
 
