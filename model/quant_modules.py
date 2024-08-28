@@ -581,7 +581,8 @@ class log_sqrt_2_quantizer(nn.Module):
             tensor([ 0,  1,  3,  7, 15, 30], device='cuda:0', dtype=torch.int32) 6
             [4] out scaler 0.00625 outbit 4 factor 10
 
-                Quantized model Evaluation accuracy on 50000 images, 90.625%
+                Quantized model Evaluation accuracy on 128 images, 90.625%
+                Quantized model Evaluation accuracy on 50000 images, 72.192%
             """
             # x_int = torch.round(-1 * (x_int / x_int.max() * 3).log2())
 
@@ -591,26 +592,28 @@ class log_sqrt_2_quantizer(nn.Module):
                 - x_int.max().log2().round()
                 + torch.tensor(self.factor).log2().round()
             ).round()
-            print("[1] log2\n", x_int_log.unique(), torch.unique(x_int_log).numel())
+            # print("[1] log2\n", x_int_log.unique(), torch.unique(x_int_log).numel())
             x_int_log = torch.clamp(x_int_log, 0, self.n_levels - 1)
-            print("[2] clamped\n", x_int_log.unique(), torch.unique(x_int_log).numel())
+            # print("[2] clamped\n", x_int_log.unique(), torch.unique(x_int_log).numel())
 
             ## >>> 다시 linear 도메인으로 꼭 돌아와야함. log 도메인 값 직접 쓸 순 없음.
             # ver 1
             # x_power_2 = (2 ** (-x_int_log) * (self.n_levels - 1)).round()
 
             # ver 2 bitshift
-            suf_n = x_int_log.max().to(torch.int32) -1
+            suf_n = self.n_levels - 1
             x_power_2 = torch.tensor(2, dtype=torch.int32).bitwise_left_shift(suf_n - x_int_log.to(torch.int32))
+            # print(x_power_2.unique())
             x_power_2 = (x_power_2 * (self.n_levels-1))
+            # print(x_power_2.unique())
             x_power_2 = x_power_2.bitwise_right_shift(suf_n)
 
-            print("[3] encoded\n", x_power_2.unique(), torch.unique(x_power_2).numel())
+            # print("[3] encoded\n", x_power_2.unique(), torch.unique(x_power_2).numel())
 
             s_x = 1 / (self.n_levels) / self.factor
 
-            print("[4] out scaler", s_x, "outbit", self.bit_width, "factor", self.factor)
-            print()
+            # print("[4] out scaler", s_x, "outbit", self.bit_width, "factor", self.factor)
+            # print()
             return x_power_2 * s_x, s_x
         else:
             return x_hat, s_x
