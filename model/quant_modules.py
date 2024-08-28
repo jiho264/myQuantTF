@@ -604,7 +604,7 @@ class LogSqrt2Quantizer(nn.Module):
         x_power_2 = torch.tensor(2, dtype=torch.int32).bitwise_left_shift(_Lshift)
 
         # print("[3] encoded\n", x_power_2.unique(), torch.unique(x_power_2).numel())
-        s_x = 1 / (2**self.n_levels + 1)
+        s_x = 1 / (2**self.n_levels)
 
         """ Verify softmax output """
         x_hat = x_power_2 * s_x
