@@ -536,12 +536,11 @@ class log_sqrt_2_quantizer(nn.Module):
         self.bit_width = args_softmax.get("logquantbit")
         # self.factor = args_softmax.get("logquantfactor")
         self.factor = None
-        self.clamp_tuple = None
         self.n_levels = 2**self.bit_width
         # self.bit_width = args_a.get("bit_width")
         print(f"Int log_sqrt_2 quantizer | output bit : {self.bit_width}")
 
-    def logquant(self, x_hat, s_x, factor, clamp_tuple):
+    def logquant(self, x_hat, s_x, factor):
         x_int = x_hat / s_x
         if factor == 0:
             x_int_log = (
@@ -568,8 +567,7 @@ class log_sqrt_2_quantizer(nn.Module):
         #         11., 12., 13., inf], device='cuda:0') 18
         _max = x_int_log[x_int_log != float("inf")].max()
         # x_int_log = x_int_log.clamp(-2, 13)
-        x_int_log = x_int_log.clamp(clamp_tuple[0], clamp_tuple[1])
-        # x_int_log = x_int_log.clamp(0, 15)
+        x_int_log = x_int_log.clamp(0, self.n_levels - 1)
 
         # x_int_log = x_int_log.clamp(_max - self.n_levels + 1, _max)
 
@@ -606,7 +604,7 @@ class log_sqrt_2_quantizer(nn.Module):
                     0 <= x_hat.min() and x_hat.max() <= 1
                 ), f"{x_hat.min()} {x_hat.max()}"
 
-            if self.factor is None and self.clamp_tuple == None:
+            if self.factor is None :
                 """
                 log2(1) = 0
                 log2(2) = 1
@@ -631,23 +629,19 @@ class log_sqrt_2_quantizer(nn.Module):
                 """
                 best_score = 99999
                 best_factor = 0
-                best_clamp_tuple = (0, 0)
-                for i in range(0, 6):
-                    for c_min, c_max  in [(3, 18), (2, 17), (1, 16), (0, 15), (-1, 14), (-2, 13), (-3, 12)]:
-                        factor = 2**i
-                        out, s_x = self.logquant(x_hat, s_x, factor, (c_min, c_max))
-                        score = torch.norm(x_hat - out).item()
-                        # print(i, score)
-                        if score < best_score:
-                            best_score = score
-                            best_factor = factor
-                            best_clamp_tuple = (c_min, c_max)
+                for i in range(0, 31):
+                    factor = 2**i
+                    out, s_x = self.logquant(x_hat, s_x, factor)
+                    score = torch.norm(x_hat - out).item()
+                    # print(i, score)
+                    if score < best_score:
+                        best_score = score
+                        best_factor = factor
 
                 self.factor = best_factor
-                self.clamp_tuple = best_clamp_tuple
-                print(f"Best factor: {best_factor}, Best clamp tuple: {best_clamp_tuple} with score: {best_score}")
+                print(f"Best factor: {best_factor}, with score: {best_score}")
 
-            x_hat, s_x = self.logquant(x_hat, s_x, self.factor, self.clamp_tuple)
+            x_hat, s_x = self.logquant(x_hat, s_x, self.factor)
             return x_hat, s_x
         else:
             return x_hat, s_x
