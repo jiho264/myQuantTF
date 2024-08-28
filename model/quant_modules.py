@@ -524,7 +524,7 @@ class IntSoftMax(nn.Module):
             return F.softmax(input, dim=dim), s_pre
 
 
-class log_sqrt_2_quantizer(nn.Module):
+class LogSqrt2Quantizer(nn.Module):
     def __init__(self, args_softmax):
         super().__init__()
         """ log sqrt 2 quantizer for attention map """
@@ -565,28 +565,57 @@ class log_sqrt_2_quantizer(nn.Module):
         # [1] log2
         # tensor([-3., -2., -1., -0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10.,
         #         11., 12., 13., inf], device='cuda:0') 18
-        _max = x_int_log[x_int_log != float("inf")].max()
-        # x_int_log = x_int_log.clamp(-2, 13)
         x_int_log = x_int_log.clamp(0, self.n_levels - 1)
 
-        # x_int_log = x_int_log.clamp(_max - self.n_levels + 1, _max)
+        # [2] clamped  >> [0, 15]
+        # _max = x_int_log[x_int_log != float("inf")].max()
+        # _Lshift = (_max - 1 - x_int_log).to(torch.int32) 
+        """
+        Best factor: 1, with score: 18.125041961669922
+        Best factor: 1, with score: 21.528587341308594
+        Best factor: 1, with score: 45.12434768676758
+        Best factor: 1, with score: 40.94997024536133
+        Best factor: 1, with score: 28.58502769470215
+        Best factor: 1, with score: 23.167654037475586
+        Best factor: 1, with score: 26.552051544189453
+        Best factor: 1, with score: 21.345569610595703
+        Best factor: 1, with score: 18.197187423706055
+        Best factor: 1, with score: 14.477062225341797
+        Best factor: 2, with score: 13.706231117248535
+        Best factor: 1, with score: 15.561084747314453
+        # >> max==15이고 xlog==15일때 -1
+        # >> max==15이고 xlog==0일때 14
+        # >> max==14이고 xlog==14일때 -1
+        # >> max==14이고 xlog==0일때 13
+            Quantized model Evaluation accuracy on 50000 images, 80.750%, 95.142%
+        """
 
-        # print("[2] clamped\n", x_int_log.unique(), torch.unique(x_int_log).numel())
-        # [2] clamped
-        #  tensor([-2., -1., -0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11.,
-        #         12., 13.], device='cuda:0') 16
-        # tensor([    0,     2,     4,     8,    16,    32,    64,   128,   256,   512,
-        #          1024,  2048,  4096,  8192, 16384, 32768], device='cuda:0',
-        #        dtype=torch.int32)
-        _Lshift = (_max - 1 - x_int_log).to(torch.int32)
+        _Lshift = (self.n_levels - 1  - x_int_log).to(torch.int32) 
+        
+        """
+        # >> 14 - x_int_log >> 출현 가능 [0, 15]
+        Best factor: 1, with score: 18.125041961669922
+        Best factor: 1, with score: 21.528587341308594
+        Best factor: 1, with score: 45.12434768676758
+        Best factor: 1, with score: 40.94997024536133
+        Best factor: 1, with score: 28.58502769470215
+        Best factor: 1, with score: 23.167654037475586
+        Best factor: 1, with score: 26.552051544189453
+        Best factor: 1, with score: 21.345569610595703
+        Best factor: 1, with score: 18.197187423706055
+        Best factor: 1, with score: 14.477062225341797
+        Best factor: 1, with score: 13.706607818603516
+        Best factor: 1, with score: 15.560178756713867
+            Quantized model Evaluation accuracy on 50000 images, 80.760%, 95.152%
+        """
+
         x_power_2 = torch.tensor(2, dtype=torch.int32).bitwise_left_shift(_Lshift)
-        # print(x_power_2.unique())
 
         # print("[3] encoded\n", x_power_2.unique(), torch.unique(x_power_2).numel())
         # print((x_power_2 * s_x).unique(), torch.unique(x_power_2 * s_x).numel())
-        # [3] encoded
-        # tensor([    0,     2,     4,     8,    16,    32,    64,   128,   256,   512,
-        #         1024,  2048,  4096,  8192, 16384, 32768], device='cuda:0',
+        # 1 뺀 경우.
+        # tensor([    1,     3,     7,    15,    31,    63,   127,   255,   511,  1023,
+        #         2047,  4095,  8191, 16383, 32767, 65535], device='cuda:0',
         #     dtype=torch.int32) 16
 
         s_x = 1 / 2**self.n_levels
@@ -642,6 +671,8 @@ class log_sqrt_2_quantizer(nn.Module):
                 print(f"Best factor: {best_factor}, with score: {best_score}")
 
             x_hat, s_x = self.logquant(x_hat, s_x, self.factor)
+            assert 0 <= x_hat.min(), f"{x_hat.min()}"
+            # assert x_hat.max() < 1, f"{x_hat.max()}"
             return x_hat, s_x
         else:
             return x_hat, s_x
