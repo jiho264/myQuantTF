@@ -513,12 +513,13 @@ class IntSoftMax(nn.Module):
             """ when other's non quantize """
             if s_pre == 0:
                 return self.int_forward(input, torch.tensor(1).to("cuda"))
-            
+
             """Verify under INT8 input"""
             with torch.no_grad():
                 _test_input_int = (input / s_pre).round()
                 assert -128 <= _test_input_int.min() and _test_input_int.max() <= 127
-            return self.int_forward(input, s_pre)
+            # return self.int_forward(input, s_pre)
+            return F.softmax(input, dim=dim), 1/2**self.bit_width
         else:
             # print("FP Softmax")
             return F.softmax(input, dim=dim), s_pre
@@ -592,25 +593,38 @@ class log_sqrt_2_quantizer(nn.Module):
                 - x_int.max().log2().round()
                 + torch.tensor(self.factor).log2().round()
             ).round()
-            # print("[1] log2\n", x_int_log.unique(), torch.unique(x_int_log).numel())
-            x_int_log = torch.clamp(x_int_log, 0, self.n_levels - 1)
-            # print("[2] clamped\n", x_int_log.unique(), torch.unique(x_int_log).numel())
 
+            print("[1] log2\n", x_int_log.unique(), torch.unique(x_int_log).numel())
+
+            # _max = x_int_log[x_int_log != float("inf")].max()
+            # x_int_log = torch.clamp(x_int_log, max= _max + 1)
+            # while x_int_log.max() != 15:
+            #     x_int_log = x_int_log + 1
+            x_int_log = torch.clamp(x_int_log, -2, 13)
+            print("[2] clamped\n", x_int_log.unique(), torch.unique(x_int_log).numel())
+            ## Big INT --------------------------------------------- Small INT
+            ## >>> [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
             ## >>> 다시 linear 도메인으로 꼭 돌아와야함. log 도메인 값 직접 쓸 순 없음.
             # ver 1
             # x_power_2 = (2 ** (-x_int_log) * (self.n_levels - 1)).round()
 
             # ver 2 bitshift
-            suf_n = self.n_levels - 1
+            suf_n = self.n_levels - 4
             x_power_2 = torch.tensor(2, dtype=torch.int32).bitwise_left_shift(suf_n - x_int_log.to(torch.int32))
+            # Small INT --------------------------------------------- Big INT
+            # [    2,     4,     8,    16,    32,    64,   128,   256,   512,  1024, 2048,  4096,  8192, 16384, 32768, 65536]
+            print(x_power_2.unique())
+            # x_power_2 = (x_power_2 * (self.n_levels))
+            # # Small INT --------------------------------------------- Big INT
+            # # [    30,     60,    120,    240,    480,    960,   1920,   3840,   7680, 15360,  30720,  61440, 122880, 245760, 491520, 983040],
             # print(x_power_2.unique())
-            x_power_2 = (x_power_2 * (self.n_levels-1))
-            # print(x_power_2.unique())
-            x_power_2 = x_power_2.bitwise_right_shift(suf_n)
+            # x_power_2 = x_power_2.bitwise_right_shift(suf_n -1)
+            # #tensor([  0,   1,   3,   7,  15,  30,  60, 120], device='cuda:0',dtype=torch.int32)
 
-            # print("[3] encoded\n", x_power_2.unique(), torch.unique(x_power_2).numel())
+            print("[3] encoded\n", x_power_2.unique(), torch.unique(x_power_2).numel())
 
-            s_x = 1 / (self.n_levels) / self.factor
+            # s_x = 1 / (self.n_levels) / self.factor / 2
+            s_x = 1 / 2**self.n_levels 
 
             # print("[4] out scaler", s_x, "outbit", self.bit_width, "factor", self.factor)
             # print()
