@@ -533,7 +533,8 @@ class log_sqrt_2_quantizer(nn.Module):
             # do not quantize
             return
 
-        self.bit_width = 4
+        self.bit_width = args_softmax.get("logquantbit")
+        self.factor = args_softmax.get("logquantfactor")
         self.n_levels = 2**self.bit_width
         # self.bit_width = args_a.get("bit_width")
         print(f"Int log_sqrt_2 quantizer | output bit : {self.bit_width}")
@@ -550,7 +551,6 @@ class log_sqrt_2_quantizer(nn.Module):
                 ), f"{x_hat.min()} {x_hat.max()}"
 
             x_int = x_hat / s_x
-            factor = 18
 
             """case1 log2
             [[ first batch ]]
@@ -569,21 +569,19 @@ class log_sqrt_2_quantizer(nn.Module):
 
                 Quantized model Evaluation accuracy on 50000 images, 92.188%
             
-            
-            softmaxoutput exp resolution  = 17
-            [bit shift code !!!]
+            IntSoftMax | output bit : 17, exp Lshift : 15
+            Int log_sqrt_2 quantizer | output bit : 4
             [1] log2
-            tensor([-4., -3., -2., -1., -0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9.,
-                    10., 11., 12., 13., 14., 15., 16., 17.], device='cuda:0') 22
+            tensor([-3., -2., -1., -0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10.,
+                    11., 12., 13., inf], device='cuda:0') 18
             [2] clamped
             tensor([ 0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12., 13.,
-                    14., 15.], device='cuda:0') 16
+                    15.], device='cuda:0') 15
             [3] encoded
-            tensor([ 0.,  1.,  2.,  4.,  8., 15.], device='cuda:0') 6
-            [4] out scaler 0.003472222222222222 outbit 4 factor 18
-                Quantized model Evaluation accuracy on 50000 images, 85.938%
-                
-            eval : 60.612%
+            tensor([ 0,  1,  3,  7, 15, 30], device='cuda:0', dtype=torch.int32) 6
+            [4] out scaler 0.00625 outbit 4 factor 10
+
+                Quantized model Evaluation accuracy on 50000 images, 90.625%
             """
             # x_int = torch.round(-1 * (x_int / x_int.max() * 3).log2())
 
@@ -591,11 +589,11 @@ class log_sqrt_2_quantizer(nn.Module):
             x_int_log = -1 * (
                 x_int.log2().round()
                 - x_int.max().log2().round()
-                + torch.tensor(factor).log2().round()
+                + torch.tensor(self.factor).log2().round()
             ).round()
-            # print("[1] log2\n", x_int_log.unique(), torch.unique(x_int_log).numel())
+            print("[1] log2\n", x_int_log.unique(), torch.unique(x_int_log).numel())
             x_int_log = torch.clamp(x_int_log, 0, self.n_levels - 1)
-            # print("[2] clamped\n", x_int_log.unique(), torch.unique(x_int_log).numel())
+            print("[2] clamped\n", x_int_log.unique(), torch.unique(x_int_log).numel())
 
             ## >>> 다시 linear 도메인으로 꼭 돌아와야함. log 도메인 값 직접 쓸 순 없음.
             # ver 1
@@ -607,12 +605,12 @@ class log_sqrt_2_quantizer(nn.Module):
             x_power_2 = (x_power_2 * (self.n_levels-1))
             x_power_2 = x_power_2.bitwise_right_shift(suf_n)
 
-            # print("[3] encoded\n", x_power_2.unique(), torch.unique(x_power_2).numel())
+            print("[3] encoded\n", x_power_2.unique(), torch.unique(x_power_2).numel())
 
-            s_x = 1 / (self.n_levels) / factor
+            s_x = 1 / (self.n_levels) / self.factor
 
-            # print("[4] out scaler", s_x, "outbit", self.bit_width, "factor", factor)
-            # print()
+            print("[4] out scaler", s_x, "outbit", self.bit_width, "factor", self.factor)
+            print()
             return x_power_2 * s_x, s_x
         else:
             return x_hat, s_x
