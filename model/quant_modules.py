@@ -533,27 +533,10 @@ class log_sqrt_2_quantizer(nn.Module):
             # do not quantize
             return
 
-        self.bit_width = 6
+        self.bit_width = 4
         self.n_levels = 2**self.bit_width
         # self.bit_width = args_a.get("bit_width")
         print(f"Int log_sqrt_2 quantizer | output bit : {self.bit_width}")
-        """
-        위에꺼랑 아래꺼랑 log2, log(sqrt(2)) 차이인데, 결과 완벽하게 동일함
-        근데 x_quant가
-        
-        log2는 
-        tensor([-2., -1., -0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11.,
-                12., 13., 14., inf], device='cuda:0')
-        tensor([ 0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12., 13.,
-                14., 15.], device='cuda:0')
-        log(sqrt(2))는 
-        tensor([-4., -2., -0.,  2.,  4.,  6.,  8., 10., 12., 14., 16., 18., 20., 22.,
-                24., 26., 28., inf], device='cuda:0')
-        tensor([ 0.,  2.,  4.,  6.,  8., 10., 12., 14., 15.], device='cuda:0')
-
-        인데 둘다 첫 배치에서 69.531나옴
-        10개도 둘다   70.234%
-        """
 
     def forward(self, x_hat: torch.Tensor, s_x: torch.Tensor):
         if self.do_quant:
@@ -566,89 +549,70 @@ class log_sqrt_2_quantizer(nn.Module):
                     0 <= x_hat.min() and x_hat.max() <= 1
                 ), f"{x_hat.min()} {x_hat.max()}"
 
-            caseNum = 1
-
             x_int = x_hat / s_x
-            factor = 2
-            # print(caseNum)
-            if caseNum == 0:
-                """case0 log(sqrt(2))"""
-                pass
-                # x_int = torch.round(-1 * (x_int / x_int.max() * 3).log2() * 2)
-                # x_int_log = -2 * (
-                #     x_int.log2().round()
-                #     - x_int.max().log2().round()
-                #     + torch.tensor(factor).log2().round()
-                # )
-                # print(x_int_log.unique(), torch.unique(x_int_log).numel())
-                # mask = x_int_log >= self.n_levels
-                # x_int_log = torch.clamp(x_int_log, 0, self.n_levels - 1)
-                # print(x_int_log.unique(), torch.unique(x_int_log).numel())
+            factor = 18
 
-                # odd_mask = (x_int_log % 2) * (math.sqrt(2) - 1) + 1
-                # s_x = odd_mask * (x_int * s_x).max() / factor
-                # x_float_q = 2 ** (-1 * torch.ceil(x_int_log / 2)) * s_x
-                # # x_float_q[x_float_q <= 2 ** (-self.n_levels)] = (
-                # #     0  # 2 ** (-self.n_levels) 보다 작은 값은 0으로 처리
-                # # ) # 둘 차이 없음. 최솟값이 0.0000이냐 0.0017이냐 차이
-                # x_float_q[mask] = 0  # 2 ** (-self.n_levels) 보다 작은 값은 0으로 처리
-                # """last softmax
-                # tensor([-4., -2., -0.,  2.,  4.,  6.,  8., 10., 12., 14., 16., 18., 20., 22.,
-                #         24., 26., 28., inf], device='cuda:0') 18
-                # tensor([ 0.,  2.,  4.,  6.,  8., 10., 12., 14., 15.], device='cuda:0') 9
-                # tensor([0.0000, 0.0024, 0.0049, 0.0098, 0.0196, 0.0392, 0.0783, 0.1566, 0.3132],
-                #     device='cuda:0') 9
-                # tensor(0., device='cuda:0') tensor(0.3132, device='cuda:0')
-                # """
+            """case1 log2
+            [[ first batch ]]
+            
+            softmaxoutput exp resolution 32bit
+            self.bit_width = 6 / factor = 2
+            ver 1 fp code : 92.188%
+            tensor([-1., -0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12.,
+                    13., 14., 15., 16., 17., 18., 19.], device='cuda:0') 21
+            tensor([ 0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12., 13.,
+                    14., 15., 16., 17., 18., 19.], device='cuda:0') 20
+            tensor([ 0.,  1.,  2.,  4.,  8., 16., 32., 63.], device='cuda:0') 8
+            out scaler 0.0078125
 
-            else:
-                """case1 log2"""
+            0%|                                                             | 0/391 [00:03<?, ?it/s]
 
-                """
-                self.bit_width = 6 / factor = 2
-                1
-                tensor([-1., -0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12.,
-                        13., 14., 15., inf], device='cuda:0') 18
-                tensor([ 0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12., 13.,
-                        14., 15., 63.], device='cuda:0') 17
-                tensor([ 0.,  1.,  2.,  4.,  8., 16., 32., 63.], device='cuda:0') 8
-                out scaler 0.0078125
-
-                    Quantized model Evaluation accuracy on 50000 images, 81.250%
+                Quantized model Evaluation accuracy on 50000 images, 92.188%
+            
+            
+            softmaxoutput exp resolution  = 17
+            [bit shift code !!!]
+            [1] log2
+            tensor([-4., -3., -2., -1., -0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9.,
+                    10., 11., 12., 13., 14., 15., 16., 17.], device='cuda:0') 22
+            [2] clamped
+            tensor([ 0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12., 13.,
+                    14., 15.], device='cuda:0') 16
+            [3] encoded
+            tensor([ 0.,  1.,  2.,  4.,  8., 15.], device='cuda:0') 6
+            [4] out scaler 0.003472222222222222 outbit 4 factor 18
+                Quantized model Evaluation accuracy on 50000 images, 85.938%
                 
-                
-                self.bit_width = 4 / factor = 4
-                1
-                tensor([-2., -1., -0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11.,
-                        12., 13., 14., inf], device='cuda:0') 18
-                tensor([ 0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12., 13.,
-                        14., 15.], device='cuda:0') 16
-                tensor([ 0.,  1.,  2.,  4.,  8., 15.], device='cuda:0') 6
-                out scaler 0.015625
-                
-                    Quantized model Evaluation accuracy on 50000 images, 71.875%
-                """
-                # x_int = torch.round(-1 * (x_int / x_int.max() * 3).log2())
+            eval : 60.612%
+            """
+            # x_int = torch.round(-1 * (x_int / x_int.max() * 3).log2())
 
-                ## >>> 여기서 log 도메인으로 한 번 보냈으면
-                x_int_log = -1 * (
-                    x_int.log2().round()
-                    - x_int.max().log2().round()
-                    + torch.tensor(factor).log2().round()
-                )
-                # print(x_int_log.unique(), torch.unique(x_int_log).numel())
-                x_int_log = torch.clamp(x_int_log, 0, self.n_levels - 1)
-                # print(x_int_log.unique(), torch.unique(x_int_log).numel())
+            ## >>> 여기서 log 도메인으로 한 번 보냈으면
+            x_int_log = -1 * (
+                x_int.log2().round()
+                - x_int.max().log2().round()
+                + torch.tensor(factor).log2().round()
+            ).round()
+            # print("[1] log2\n", x_int_log.unique(), torch.unique(x_int_log).numel())
+            x_int_log = torch.clamp(x_int_log, 0, self.n_levels - 1)
+            # print("[2] clamped\n", x_int_log.unique(), torch.unique(x_int_log).numel())
 
-                ## >>> 다시 linear 도메인으로 꼭 돌아와야함. log 도메인 값 직접 쓸 순 없음.
-                x_power_2 = (2 ** (-x_int_log) * (self.n_levels - 1)).round()
-                print(x_power_2.unique(), torch.unique(x_power_2).numel())
+            ## >>> 다시 linear 도메인으로 꼭 돌아와야함. log 도메인 값 직접 쓸 순 없음.
+            # ver 1
+            # x_power_2 = (2 ** (-x_int_log) * (self.n_levels - 1)).round()
+
+            # ver 2 bitshift
+            suf_n = x_int_log.max().to(torch.int32) -1
+            x_power_2 = torch.tensor(2, dtype=torch.int32).bitwise_left_shift(suf_n - x_int_log.to(torch.int32))
+            x_power_2 = (x_power_2 * (self.n_levels-1))
+            x_power_2 = x_power_2.bitwise_right_shift(suf_n)
+
+            # print("[3] encoded\n", x_power_2.unique(), torch.unique(x_power_2).numel())
 
             s_x = 1 / (self.n_levels) / factor
 
-            # print("out scaler", s_x)
+            # print("[4] out scaler", s_x, "outbit", self.bit_width, "factor", factor)
             # print()
-            print((x_power_2 * s_x).shape, (x_power_2 * s_x).unique().numel())
             return x_power_2 * s_x, s_x
         else:
             return x_hat, s_x
