@@ -535,10 +535,63 @@ class log_sqrt_2_quantizer(nn.Module):
             return
 
         self.bit_width = args_softmax.get("logquantbit")
-        self.factor = args_softmax.get("logquantfactor")
+        # self.factor = args_softmax.get("logquantfactor")
+        self.factor = None
         self.n_levels = 2**self.bit_width
         # self.bit_width = args_a.get("bit_width")
         print(f"Int log_sqrt_2 quantizer | output bit : {self.bit_width}")
+
+    def logquant(self, x_hat, s_x, factor):
+        x_int = x_hat / s_x
+        if factor == 0:
+            x_int_log = (
+                -1
+                * (
+                    x_int.log2().round()
+                    - x_int.max().log2().round()
+                ).round()
+            )
+        else:
+            x_int_log = (
+                -1
+                * (
+                    x_int.log2().round()
+                    - x_int.max().log2().round()
+                    + torch.tensor(factor).log2().round()
+                ).round()
+            )
+
+        # print("[1] log2\n", x_int_log.unique(), torch.unique(x_int_log).numel())
+        ## Big INT --------------------------------------------- Small INT
+        # [1] log2
+        # tensor([-3., -2., -1., -0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10.,
+        #         11., 12., 13., inf], device='cuda:0') 18
+        _max = x_int_log[x_int_log != float("inf")].max()
+        x_int_log = x_int_log.clamp(-2, 13)
+        # x_int_log = x_int_log.clamp(0, 15)
+
+        # x_int_log = x_int_log.clamp(_max - self.n_levels + 1, _max)
+
+        # print("[2] clamped\n", x_int_log.unique(), torch.unique(x_int_log).numel())
+        # [2] clamped
+        #  tensor([-2., -1., -0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11.,
+        #         12., 13.], device='cuda:0') 16
+        # tensor([    0,     2,     4,     8,    16,    32,    64,   128,   256,   512,
+        #          1024,  2048,  4096,  8192, 16384, 32768], device='cuda:0',
+        #        dtype=torch.int32)
+        _Lshift = (_max - 1 - x_int_log).to(torch.int32)
+        x_power_2 = torch.tensor(2, dtype=torch.int32).bitwise_left_shift(_Lshift)
+        # print(x_power_2.unique())
+
+        # print("[3] encoded\n", x_power_2.unique(), torch.unique(x_power_2).numel())
+        # [3] encoded
+        # tensor([    0,     2,     4,     8,    16,    32,    64,   128,   256,   512,
+        #         1024,  2048,  4096,  8192, 16384, 32768], device='cuda:0',
+        #     dtype=torch.int32) 16
+
+        s_x = 1 / 2**self.n_levels
+        # print()
+        return x_power_2 * s_x, s_x
 
     def forward(self, x_hat: torch.Tensor, s_x: torch.Tensor):
         if self.do_quant:
@@ -551,45 +604,43 @@ class log_sqrt_2_quantizer(nn.Module):
                     0 <= x_hat.min() and x_hat.max() <= 1
                 ), f"{x_hat.min()} {x_hat.max()}"
 
-            x_int = x_hat / s_x
-            
+            if self.factor is None:
+                """
+                log2(1) = 0
+                log2(2) = 1
+                log2(3) = 1.5849625007 = 2
+                log2(4) = 2
+                log2(5) = 2.32192809489 = 2
+                log2(6) = 2.58496250072 = 3
+                log2(8) = 3
+                log2(9) = 3.16992500144 = 3
+                log2(11) = 3.45943161864 = 3
+                log2(12) = 3.58496250072 = 4
+                log2(13) = 3.70043971814 = 4
+                log2(15) = 3.90689059561 = 4
+                log2(16) = 4
+                log2(17) = 4.08746284125 = 4
+                log2(31) = 4.95419631039 = 5
+                log2(32) = 5
+                """
+                best_score = 99999
+                best_factor = 0
+                for i in range(0, 13):
+                    factor = 2**i
+                    out, s_x = self.logquant(x_hat, s_x, factor)
+                    score = torch.norm(x_hat - out).item()
+                    # print(i, score)
+                    if score < best_score:
+                        best_score = score
+                        best_factor = factor
 
-            x_int_log = -1 * (
-                x_int.log2().round()
-                - x_int.max().log2().round()
-                + torch.tensor(self.factor).log2().round()
-            ).round()
+                    print(factor, score)
 
-            print("[1] log2\n", x_int_log.unique(), torch.unique(x_int_log).numel())
-            ## Big INT --------------------------------------------- Small INT
-            # [1] log2
-            # tensor([-3., -2., -1., -0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10.,
-            #         11., 12., 13., inf], device='cuda:0') 18
-            _max = x_int_log[x_int_log != float("inf")].max()
-            x_int_log = x_int_log.clamp(_max - self.n_levels + 1, _max)
+                self.factor = best_factor
+                print(f"Best factor: {best_factor}, score: {best_score}")
 
-
-            print("[2] clamped\n", x_int_log.unique(), torch.unique(x_int_log).numel())
-            # [2] clamped
-            #  tensor([-2., -1., -0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11.,
-            #         12., 13.], device='cuda:0') 16
-            # tensor([    0,     2,     4,     8,    16,    32,    64,   128,   256,   512,
-            #          1024,  2048,  4096,  8192, 16384, 32768], device='cuda:0',
-            #        dtype=torch.int32)
-            _Lshift = (_max -1 - x_int_log).to(torch.int32)
-            x_power_2 = torch.tensor(2, dtype=torch.int32).bitwise_left_shift(_Lshift)
-            print(x_power_2.unique())
-            
-            
-            print("[3] encoded\n", x_power_2.unique(), torch.unique(x_power_2).numel())
-            # [3] encoded
-            # tensor([    0,     2,     4,     8,    16,    32,    64,   128,   256,   512,
-            #         1024,  2048,  4096,  8192, 16384, 32768], device='cuda:0',
-            #     dtype=torch.int32) 16
-
-            s_x = 1 / 2**self.n_levels 
-            print()
-            return x_power_2 * s_x, s_x
+            x_hat, s_x = self.logquant(x_hat, s_x, self.factor)
+            return x_hat, s_x
         else:
             return x_hat, s_x
 
