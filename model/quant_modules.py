@@ -533,86 +533,65 @@ class LogSqrt2Quantizer(nn.Module):
             return
 
         self.bit_width = args_any.get("act_quant_bit_width")
-        self.factor = None
         self.n_levels = 2**self.bit_width
 
+        self.inited = False
+
+        self._map = nn.Parameter(
+            torch.tensor(
+                [
+                    233.0 - 15,
+                    144.0 - 14,
+                    89.0 - 13,
+                    55.0 - 12,
+                    44.0 - 11,
+                    34.0 - 10,
+                    27.0 - 9,
+                    21.0 - 8,
+                    17.0 - 7,
+                    13.0 - 6,
+                    8.0 - 5,
+                    5.0 - 4,
+                    3.0 - 3,
+                    2.0 - 2,
+                    1.0 - 1,
+                    0.0 - 0,
+                ]
+            ).to(torch.float32),
+            requires_grad=True,
+        )
+        # self._v = nn.Parameter(_v, requires_grad=True)
+        # assert (_residual - self._h()).abs().sum() == 0
+        # self.residual = _residual
+        # print("    Initiated the V")
         print(f"Int log_sqrt_2 quantizer | output bit : {self.bit_width}")
 
-    def _init_factor(self, x_hat, s_x):
-        """
-        log2(1) = 0
-        log2(2) = 1
-        log2(3) = 1.5849625007 = 2
-        log2(4) = 2
-        log2(5) = 2.32192809489 = 2
-        log2(6) = 2.58496250072 = 3
-        log2(8) = 3
-        log2(9) = 3.16992500144 = 3
-        log2(11) = 3.45943161864 = 3
-        log2(12) = 3.58496250072 = 4
-        log2(13) = 3.70043971814 = 4
-        log2(15) = 3.90689059561 = 4
-        log2(16) = 4
-        log2(17) = 4.08746284125 = 4
-        log2(31) = 4.95419631039 = 5
-        log2(32) = 5
-
-        이거 clamp range 를 sliding window로 찾는거나
-        log2에 식에 b곱해서 +log2(b)하는거나 원리가 아예 똑같음.
-        애초에 x_log 식의 계산결과에 직접적으로 정수 단위로 움직이는 것임.
-        """
-        best_score = 99999
-        best_factor = 0
-        best_i = 0
-        for i in range(-16, 16):
-            factor = 2**i
-            out, _ = self._logquant(x_hat, s_x, factor)
-            score = torch.norm(x_hat - out).item()
-
-            if score < best_score:
-                best_score = score
-                best_factor = factor
-                best_i = i
-
-        self.factor = best_factor
-        print(f"Best factor: 2**{best_i}={best_factor}, with score: {best_score}")
-
-    def _logquant(self, x_hat, s_x, factor):
+    def _logquant(self, x_hat, s_x):
         x_int = x_hat / s_x
 
-        if factor == 0:
-            x_int_log = -1 * (x_int.log2().round() - x_int.max().log2().round()).round()
-        else:
-            x_int_log = (
-                -1
-                * (
-                    x_int.log2().round()
-                    - x_int.max().log2().round()
-                    + torch.tensor(factor).log2().round()
-                ).round()
-            )
+        log_x_int = round_ste.apply(x_int.log2())
+        log_x_int_max = round_ste.apply(log_x_int.max())
+
+        x_int_log = -1 * ((log_x_int - log_x_int_max))
 
         # print("[1] log2\n", x_int_log.unique(), torch.unique(x_int_log).numel())
         ## Big INT --------------------------------------------- Small INT
         # [1] log2
         # tensor([-3., -2., -1., -0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10.,
         #         11., 12., 13., inf], device='cuda:0') 18
-        x_int_log = x_int_log.clamp(0, self.n_levels - 1)
-
+        x_int_log = x_int_log.clamp(0, self.n_levels - 1).to(torch.int32)
         # print("[2] clamped\n", x_int_log.unique(), torch.unique(x_int_log).numel())
-        _Lshift = (self.n_levels - 1 - x_int_log).to(torch.int32)
 
-        x_power_2 = torch.tensor(2, dtype=torch.int32).bitwise_left_shift(_Lshift)
+        for i in torch.arange(0, 16, dtype=torch.float32):
+            x_int_log[x_int_log == i] = self._map[i.to(torch.int32)]
+        x_power_2 = round_ste.apply(x_int_log)
+        # print(x_power_2.grad)
 
         # print("[3] encoded\n", x_power_2.unique(), torch.unique(x_power_2).numel())
-        s_x = 1 / (2**self.n_levels)
 
-        """ Verify softmax output """
-        x_hat = x_power_2 * s_x
-        assert 0 <= x_hat.min(), f"{x_hat.min()}"
-        # assert x_hat.max() < 1, f"{x_hat.max()}"
+        new_s_x = x_power_2.max() / 255
 
-        return x_hat, s_x
+        return x_hat, new_s_x
 
     def forward(self, x_hat: torch.Tensor, s_x: torch.Tensor):
         if self.do_quant:
@@ -623,10 +602,12 @@ class LogSqrt2Quantizer(nn.Module):
             """Verify under INT8 input"""
             assert 0 <= x_hat.min() and x_hat.max() <= 1, f"{x_hat.min()} {x_hat.max()}"
 
-            if self.factor is None:
-                self._init_factor(x_hat, s_x)
-
-            return self._logquant(x_hat, s_x, self.factor)
+            if self.inited == False:
+                # when not initialized with not yet Gradient Descent
+                return x_hat, s_x
+            elif self.inited == True:
+                ## when initialized
+                return self._logquant(x_hat, s_x)
         else:
             return x_hat, s_x
 
