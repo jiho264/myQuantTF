@@ -21,11 +21,11 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     args_a = {
         "scheme": "MovAvgAbsMaxQuantizer",
         "bit_width": 8,
-        "idadd_bit_width": 16,
+        "idadd_bit_width": 18,
         "per_channel": False,
         # below values are default in the class
         "momentum": 0.95,
-        "batches": 16,
+        "batches": 4,
         # "batches": 4,
     }
     args_gelu = {
@@ -81,6 +81,7 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     train_loader, test_loader = GetDataset(batch_size=_batch_size)
 
     """ 여기 지우고 돌리면 dynamic act quantization """
+    print("Training model for calibration...")
     # if args_a != {}:
     #     """calibration for activation"""
     #     _, _ = evaluate(model, test_loader, calib_len, "cuda")

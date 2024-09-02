@@ -7,7 +7,7 @@ from model.quant_modules import LogSqrt2Quantizer
 
 def _runner(model, module, cali_data, batch_size, lr, n_iter):
     model.eval()
-
+    print(f"   Get calibration data for {module}")
     # [1] get {Origin FP output(A_fp_lth), Quantized input and output(X_q_lth, A_q_lth)}
     model.set_quant_mode(False, False, False, False, False)
     _, _, OUTPUT_FP, _ = save_inp_oup_data(model, module, cali_data, batch_size)
@@ -26,39 +26,38 @@ def _runner(model, module, cali_data, batch_size, lr, n_iter):
 
     # [2] Define the optimizer and loss function
     criterion = nn.MSELoss()
-    optimizer_w = torch.optim.Adam([module._map], lr=10)
-    print(optimizer_w, n_iter)
-    # print(optimizer_w.param_groups[0])
-    # exit()
+    # optimizer = torch.optim.Adam(module.params, lr=4e-5)
+    # print(optimizer, n_iter)
+    # print(optimizer.param_groups[0]["params"])
 
     model.train()
     for i in range(1, n_iter + 1):
-
         idx = torch.randperm(INPUT_HAT.size(0))[:batch_size]
 
-        if optimizer_w:
-            optimizer_w.zero_grad()
+        # if optimizer:
+        #     optimizer.zero_grad()
 
         batch_input_fp = INPUT_HAT[idx].to("cuda").requires_grad_(True)
         batch_output_fp = OUTPUT_FP[idx].to("cuda").requires_grad_(True)
 
-        out_hat, _ = module._logquant(batch_input_fp, S_X_INPUT)
-        print(out_hat.grad)
-        if i % 100 == 0:
-            print(i, optimizer_w.param_groups[0])
+        # print(optimizer.param_groups[0]["params"])
+        out_hat, _ = module._map_quantize(batch_input_fp, S_X_INPUT)
+        module.inited = True
+        break
         loss = criterion(out_hat, batch_output_fp)
 
         loss.backward()
 
-        if optimizer_w:
-            optimizer_w.step()
-        if i % 100 == 0:
-            print(i, loss, optimizer_w.param_groups[0])
-            print()
+        # if optimizer:
+        #     optimizer.step()
+
+        if i % 10 == 0 or i == 1:
+            print(f"    {i} iter loss: {loss:.4f}")
+
             print()
 
     torch.cuda.empty_cache()
-    module._map.data = torch.round(module._map.data)
+    module.inited = True
     return None
 
 
@@ -68,7 +67,7 @@ def run_learnable_log_quant(
     model.eval()
 
     total_module_cnt = 0
-
+    print("Training model for softmax log quantizer...")
     cali_data = get_train_samples(train_loader, num_samples)
 
     module_num_cnt = 0
@@ -82,3 +81,5 @@ def run_learnable_log_quant(
             module_num_cnt += 1
             print(f"[{module_num_cnt}/{total_module_cnt}] {name}")
             _runner(model, module, cali_data, batch_size, lr, n_iter)
+
+    print("mapping Activation calibration is done.\n")

@@ -141,19 +141,8 @@ class QuantMSA(nn.Module):
         """ [3] INT8 -> return log softmax INT16 -> return INT8 (UINT7) """
         attn_map_hat_int16, s_amap = self.softmax(qk_hat_int8, s_qk, dim=-1)
 
-        assert (
-            0 <= attn_map_hat_int16.min() and attn_map_hat_int16.max() < 1
-        ), f"{attn_map_hat_int16.min()}, {attn_map_hat_int16.max()}"
-
         attn_map_hat_int8, s_amap = self.softmax_act(attn_map_hat_int16, s_amap)
 
-        if isinstance(self.softmax_act, LogSqrt2Quantizer):
-            # contain 1.00 for preserving Acc..
-            assert 0 <= attn_map_hat_int8.min() and attn_map_hat_int8.max() <= 1
-        else:
-            assert 0 <= attn_map_hat_int8.min() and attn_map_hat_int8.max() < 1
-
-        assert 0 <= attn_map_hat_int8.min()
         ## >> torch.Size([128, 12, 197, 197])
 
         """ [4] INT GEMM -> return INT32 -> return INT8 """
