@@ -37,7 +37,7 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     ## bit width : INT arithmetic으로 exp를 구하는 과정에서, e / (e + e.max)인 항이 있는데, 여기서 반환 값을 몇 비트로 펼칠 것인지 결정하는 숫자.
 
     args_softmax = {
-        "bit_width": 17,  # UINT16 of softmax output
+        "bit_width": 24,  # UINT16 of softmax output
         "left_shift_for_exp": 15,
         "act_quant_bit_width": 4,  # LogSqrt2Quantizer
         # "act_quant_bit_width": 8,  # QuantAct
@@ -87,8 +87,8 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     #     _, _ = evaluate(model, test_loader, calib_len, "cuda")
     #     print("Activation calibration is done.\n")
 
-    if args_softmax.get("act_quant_bit_width", None) == 4:
-        run_learnable_log_quant(model, train_loader)
+    # if args_softmax.get("act_quant_bit_width", None) == 4:
+    #     run_learnable_log_quant(model, train_loader)
 
     if args_w.get("AdaRound", None):
         scheme = args_w.get("AdaRound")
@@ -96,8 +96,8 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         print(f"AdaRound for {scheme} weights is done.")
 
     """ evaluation """
-    _top1, _top5 = evaluate(model, test_loader, len(test_loader), "cuda")
-    # _top1, _top5 = evaluate(model, test_loader, 1, "cuda")
+    # _top1, _top5 = evaluate(model, test_loader, len(test_loader), "cuda")
+    _top1, _top5 = evaluate(model, test_loader, 1, "cuda")
     print(
         f"\n    Quantized model Evaluation accuracy on 50000 images, {_top1.avg:2.3f}%, {_top5.avg:2.3f}%"
     )

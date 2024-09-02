@@ -577,10 +577,10 @@ class LogSqrt2Quantizer(nn.Module):
 
         print(f"Int log_sqrt_2 quantizer | output bit : {self.bit_width}")
 
-        self.bias = None
-        self.base = None
-        self.minv = None
-        self.maxv = None
+        self.int_bias = None
+        self.times = None
+        self.int_minv = None
+        self.int_maxv = None
 
     # def _f_map(self, x_q):
     #     """Dirac Delta Function"""
@@ -605,12 +605,17 @@ class LogSqrt2Quantizer(nn.Module):
 
     def int_huge_16bit_log_to_int(self, x, times):
         base = torch.exp(torch.log(torch.tensor(2)) / 2**times)
-        return base ** (-1 * x)
+        return base ** (-1 * x), base
 
-    def tmp_uniform_quant_dequant(self, x_int):
-
-        min = x_int.min()
-        max = x_int.max()
+    def tmp_uniform_quant_dequant(self, x_int, min=None, max=None):
+        if min is None and max is None:
+            # for searching min, max
+            min = x_int.min()
+            max = x_int.max()
+        else:
+            # for inference
+            min = min
+            max = max
 
         scale = (max - min) / (self.n_levels - 1)
         zp = torch.round(-min / scale)
@@ -622,43 +627,53 @@ class LogSqrt2Quantizer(nn.Module):
         # 어차피 숫자 엄청 커서 라운딩해봤자 큰 차이 없음.
         # print(x_int_log_q_deuant.unique())
 
-        return x_int_log_q_deuant
+        return x_int_log_q_deuant, min, max
 
     def init_bias_16bit(self, input):
         x_int = input.clone().detach()
         best_times = -10
         best_score = 1e10
         best_bias = None
+        best_min = None
+        best_max = None
         dja = None
-
-        for times in range(10, 24):
+        tmp_base_for_indicate = None
+        for times in range(10, 28):
             for bias in [
-                1,
                 2,
                 3,
                 4,
                 5,
                 6,
                 7,
-                # 8,
-                # 9,
-                # 10,
-                # 11,
-                # 12,
-                # 13,
-                # 14,
-                # 15,
-                # 30,
-                # 40,
-                # 50,
-                # 60,
-                # 300,
-                # 400,
-                # 500,
-                # 600,
-                # 1300,
-                # 1400,
-                # 1650,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                20,
+                24,
+                25,
+                26,
+                27,
+                28,
+                30,
+                40,
+                50,
+                65,
+                327,
+                655,
+                1310,
+                1966,
+                2621,
+                3276,
+                6553,
+                13107,
+                32768,
+                65536,
             ]:
                 # [1] add bias for remove Inf
                 x_int = x_int + bias
@@ -669,10 +684,12 @@ class LogSqrt2Quantizer(nn.Module):
                 # print(f"[1] {x_int_log_q.unique()} {x_int_log_q.unique().numel()}")
 
                 # [3] Uniform Quantization for log values
-                x_int_log_q_q_dq = self.tmp_uniform_quant_dequant(x_int_log_q)
+                x_int_log_q_q_dq, min, max = self.tmp_uniform_quant_dequant(x_int_log_q)
 
                 # [4] dequantization from log values to INT16
-                x_int_log_dq = self.int_huge_16bit_log_to_int(x_int_log_q_q_dq, times)
+                x_int_log_dq, base = self.int_huge_16bit_log_to_int(
+                    x_int_log_q_q_dq, times
+                )
                 x_int_log_dq = x_int_log_dq - bias
                 # print(f"[2] {x_int_log_dq.unique()} {x_int_log_dq.unique().numel()}")
                 # print(torch.norm(x_int - x_int_log_dq, p=2))
@@ -683,59 +700,45 @@ class LogSqrt2Quantizer(nn.Module):
                 if score < best_score:
                     best_score = score
                     best_bias = bias
+                    best_min = min
+                    best_max = max
                     best_times = times
+
                     dja = x_int_log_q.unique()
+                    tmp_base_for_indicate = base
         print(
             f"best bias : {best_bias }, best times : {times} best score : {best_score}"
         )
-        print(f"best dja : {dja},{dja.numel()}")
-        self.bias = best_bias
-        self.base = torch.exp(torch.log(torch.tensor(2)) / 2**best_times)
-        self.minv = x_int.min()
-        self.maxv = x_int.max()
+        print(f"best min : {best_min}, best max : {best_max}")
+        print(f"best result : {dja},{dja.numel()}, base: {tmp_base_for_indicate}")
+        print()
+
+        self.int_bias = best_bias
+        self.times = torch.exp(torch.log(torch.tensor(2)) / 2**best_times)
+        self.int_minv = best_min
+        self.int_maxv = best_max
 
         return
 
     def _map_quantize(self, x_hat, s_x):
-
+        # [1] add bias for remove Inf
         x_int = round_ste.apply(x_hat / s_x)
-        assert x_int.max() < 2**16, f"{x_int.max()}. it is not UINT16"
+        x_int = x_int + self.int_bias
 
-        # bias = round_ste.apply(self.bias / s_x)
-        # x_int = x_int + bias
-        # x_hat = x_hat + self.bias
-        # numerator = -1 * (self.int_log2(x_hat) - self.int _log2(s_x))
-        print(f"input x_hat : {x_hat.min()} {x_hat.max()}")
-        print(f"input x_int {x_int.min()} {x_int.max()}")
-        self.init_bias_16bit(x_int)
-        # """Log Quantizer"""
-        # times = 14
-        # x_log2, times = self.int_huge_16bit_int_to_log(x_int, times)
-        # print(f"[1] {x_log2.unique()} {x_log2.unique().numel()}")
+        # [2] log quantization in huge domain
+        x_int_log_q, _ = self.int_huge_16bit_int_to_log(x_int, self.times)
 
-        # dja = self.int_huge_16bit_log_to_int(x_log2, times)
-        # print(f"[1] {dja.unique()} {dja.unique().numel()}")
-        # print(torch.norm(x_int - dja, p=2))
-        # exit()
-        # """re uniform quantization"""
-        # s_shift = (x_log2.max() - x_log2.min()) / 15
-        # zp_shift = -round_ste.apply(x_log2.min() / s_shift)
-        # x_log2_quant = round_ste.apply(x_log2 / s_shift) + zp_shift
+        # [3] Uniform Quantization for log values
+        x_int_log_q_q_dq, _, _ = self.tmp_uniform_quant_dequant(x_int_log_q)
 
-        # print(f"[2] {x_log2_quant.unique()} {x_log2_quant.unique().numel()}")
+        # [4] dequantization from log values to INT16
+        x_int_log_dq, base = self.int_huge_16bit_log_to_int(
+            x_int_log_q_q_dq, self.times
+        )
 
-        # x_log2_quant.clamp_(0, self.n_levels - 1)
-        # x_int_dequant = self.base ** (-x_log2_quant)
+        x_int_log_dq = x_int_log_dq - self.int_bias
 
-        # print(f"[3] {x_int_dequant.unique()} {x_int_dequant.unique().numel()}")
-        # exit()
-        # print()
-        # print()
-        # x_int_dequant = self._f_map(x_int_quant)
-        # print(f"[3] {x_int_dequant.unique()} {x_int_dequant.unique().numel()}")
-        # print()
-        # return x_int_dequant * self.s_x, self.s_x
-        return x_hat, s_x
+        return x_int_log_dq * s_x, s_x
 
     def forward(self, x_hat: torch.Tensor, s_x: torch.Tensor):
         if self.do_quant:
@@ -747,14 +750,17 @@ class LogSqrt2Quantizer(nn.Module):
             assert 0 <= x_hat.min() and x_hat.max() <= 1, f"{x_hat.min()} {x_hat.max()}"
 
             if self.inited == False:
-                # when not initialized with not yet Gradient Descent
-                # if self.bias == None and self.base == None:
-                #     self.init_quantization_scale(x_hat, s_x)
-                #     self.inited = True
-                return x_hat, s_x
-            else:
 
-                return self._map_quantize(x_hat, s_x)
+                self.init_bias_16bit(round_ste.apply(x_hat / s_x))
+
+                self.inited = True
+            dja, wns = self._map_quantize(x_hat, s_x)
+            print(dja.min(), dja.max())
+            print()
+            print()
+            print()
+            print()
+            return dja, wns
         else:
             return x_hat, s_x
 
