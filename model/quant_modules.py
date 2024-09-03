@@ -660,7 +660,7 @@ class LogSqrt2Quantizer(nn.Module):
                 _map = x_int_log_dq.unique()
 
                 # [7] calculate the score
-                score = torch.norm(x_int - x_int_log_dq, p=2)
+                score = torch.norm(input - x_int_log_dq, p=2)
                 if score < best_score:
                     best_score = score
                     best_bias = bias
@@ -715,6 +715,8 @@ class LogSqrt2Quantizer(nn.Module):
         if verbose:
             print(f"-after INT domain tensor norm : {torch.norm(out, p=2)}")
             print(f"- diff norm : {torch.norm(out - x_int, p=2)}")
+            print()
+            print()
 
         return out
 
