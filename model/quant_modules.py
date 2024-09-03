@@ -640,7 +640,7 @@ class LogSqrt2Quantizer(nn.Module):
         tmp_base_for_indicate = None
 
         best_map = None
-        for times in range(10, 31):
+        for times in range(8, 19):
             for bias in [
                 2,
                 3,
@@ -692,9 +692,11 @@ class LogSqrt2Quantizer(nn.Module):
                 x_int_log_dq, base = self.int_huge_16bit_log_to_int(
                     x_int_log_q_q_dq, times
                 )
+
                 x_int_log_dq = x_int_log_dq - bias
-                if x_int_log_dq.unique().numel() != self.n_levels:
-                    continue
+                x_int_log_dq = x_int_log_dq.clamp(0, 65535).round()
+                # if x_int_log_dq.unique().numel() != self.n_levels:
+                #     continue
                 map = x_int_log_dq.unique()
                 # print(f"[2] {x_int_log_dq.unique()} {x_int_log_dq.unique().numel()}")
                 # print(torch.norm(x_int - x_int_log_dq, p=2))
@@ -712,7 +714,7 @@ class LogSqrt2Quantizer(nn.Module):
                     dja = x_int_log_q.unique()
                     tmp_base_for_indicate = base
         print(
-            f"best bias : {best_bias }, best times : {times} best score : {best_score}"
+            f"best bias : {best_bias }, best times : {self.times} best score : {best_score}"
         )
         print(f"best min : {best_min}, best max : {best_max}")
         print(f"best result : {dja},{dja.numel()}, base: {tmp_base_for_indicate}")
@@ -729,6 +731,7 @@ class LogSqrt2Quantizer(nn.Module):
     def _map_quantize(self, x_hat, s_x):
         # [1] add bias for remove Inf
         x_int = round_ste.apply(x_hat / s_x)
+        print(torch.norm(x_int, p=2))
         x_int = x_int + self.int_bias
 
         # [2] log quantization in huge domain
@@ -740,10 +743,13 @@ class LogSqrt2Quantizer(nn.Module):
 
         unq = x_int_log_q_q_dq.unique()
 
-        for lognum, idx in zip(unq, range(unq.numel())):
+        for lognum, idx in zip(unq, range(len(self.map))):
+            i = (len(self.map)) - 1 - idx
+            print(lognum, self.map[i])
             x_int_log_q_q_dq = torch.where(
-                x_int_log_q_q_dq == lognum, self.map[idx], x_int_log_q_q_dq
+                x_int_log_q_q_dq == lognum, self.map[i], x_int_log_q_q_dq
             )
+        print(torch.norm(x_int_log_q_q_dq, p=2))
         out = x_int_log_q_q_dq
 
         return out * s_x, s_x

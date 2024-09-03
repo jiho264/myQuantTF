@@ -37,7 +37,7 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     ## bit width : INT arithmetic으로 exp를 구하는 과정에서, e / (e + e.max)인 항이 있는데, 여기서 반환 값을 몇 비트로 펼칠 것인지 결정하는 숫자.
 
     args_softmax = {
-        "bit_width": 24,  # UINT16 of softmax output
+        "bit_width": 17,  # UINT16 of softmax output
         "left_shift_for_exp": 15,
         "act_quant_bit_width": 4,  # LogSqrt2Quantizer
         # "act_quant_bit_width": 8,  # QuantAct
