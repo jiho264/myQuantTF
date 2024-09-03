@@ -547,34 +547,6 @@ class LogSqrt2Quantizer(nn.Module):
 
         self.inited = False
 
-        # self._k = nn.Parameter(
-        #     torch.tensor(0.0001, dtype=torch.float32), requires_grad=True
-        # )
-        # self._a = nn.Parameter(
-        #     torch.tensor(
-        #         [
-        #             1.0000,
-        #             0.7071,
-        #             0.5000,
-        #             0.3536,
-        #             0.2500,
-        #             0.1768,
-        #             0.1250,
-        #             0.0884,
-        #             0.0625,
-        #             0.0442,
-        #             0.0313,
-        #             0.0221,
-        #             0.0156,
-        #             0.0110,
-        #             0.0078,
-        #             0.0055,
-        #         ]
-        #     ),
-        #     requires_grad=True,
-        # )
-        self.pi = torch.tensor(math.pi)
-
         print(f"Int log_sqrt_2 quantizer | output bit : {self.bit_width}")
 
         self.int_bias = None
@@ -582,43 +554,29 @@ class LogSqrt2Quantizer(nn.Module):
         self.int_minv = None
         self.int_maxv = None
 
-    # def _f_map(self, x_q):
-    #     """Dirac Delta Function"""
-    #     assert 0 <= x_q.min() and x_q.max() <= self.n_levels - 1, f"{x_q.unique()}"
-
-    #     def _dirac_delta(x, offset, pi, a):
-    #         a = a[offset]
-    #         ddf = (1 / (a.abs() * pi.sqrt())) * torch.exp(-(((x - offset) / a) ** 2))
-
-    #         return ddf
-
-    #     _sum = torch.zeros_like(x_q)
-
-    #     for i in range(self.n_levels):
-    #         _sum = _sum + _dirac_delta(x_q, i, self.pi, self._a)
-
-    #     return _sum
-
     def int_huge_16bit_int_to_log(self, x, times):
         """ref from desmos graphs"""
         return -1 * x.log2().round() * 2**times, times
 
     def int_huge_16bit_log_to_int(self, x, times):
+        # unnecesary rounding
+        # it is ran only Init phase
+        # >> when inference, would not be used
         base = torch.exp(torch.log(torch.tensor(2)) / 2**times)
         return base ** (-1 * x), base
 
-    def tmp_uniform_quant_dequant(self, x_int, min=None, max=None):
-        if min is None and max is None:
+    def tmp_uniform_quant_dequant(self, x_int, _min=None, _max=None):
+        if _min is None and _max is None:
             # for searching min, max
-            min = x_int.min()
-            max = x_int.max()
+            _min = x_int.min()
+            _max = x_int.max()
         else:
             # for inference
-            min = min
-            max = max
+            _min = _min
+            _max = _max
 
-        scale = (max - min) / (self.n_levels - 1)
-        zp = torch.round(-min / scale)
+        scale = (_max - _min) / (self.n_levels - 1)
+        zp = torch.round(-_min / scale)
 
         x_int_log_q_quant = torch.round(x_int / scale) + zp
         # print(x_int_log_q_quant.unique())
@@ -627,7 +585,7 @@ class LogSqrt2Quantizer(nn.Module):
         # 어차피 숫자 엄청 커서 라운딩해봤자 큰 차이 없음.
         # print(x_int_log_q_deuant.unique())
 
-        return x_int_log_q_deuant, min, max
+        return x_int_log_q_deuant, _min, _max
 
     def init_bias_16bit(self, input):
         x_int = input.clone().detach()
@@ -636,11 +594,10 @@ class LogSqrt2Quantizer(nn.Module):
         best_bias = None
         best_min = None
         best_max = None
-        dja = None
         tmp_base_for_indicate = None
 
         best_map = None
-        for times in range(8, 19):
+        for times in torch.arange(8, 19):
             for bias in [
                 2,
                 3,
@@ -677,88 +634,89 @@ class LogSqrt2Quantizer(nn.Module):
                 32768,
                 65536,
             ]:
-                # [1] add bias for remove Inf
+                bias = torch.tensor(bias)
+
+                # [1] add bias for avoid Inf
                 x_int = x_int + bias
 
                 # [2] log quantization in huge domain
                 x_int_log_q, _ = self.int_huge_16bit_int_to_log(x_int, times)
-                # print(f"bias : {bias}, times : {times}")
-                # print(f"[1] {x_int_log_q.unique()} {x_int_log_q.unique().numel()}")
 
                 # [3] Uniform Quantization for log values
-                # x_int_log_q_q_dq, min, max = self.tmp_uniform_quant_dequant(x_int_log_q)
+                x_int_log_q_q_dq, _min, _max = self.tmp_uniform_quant_dequant(
+                    x_int_log_q, None, None
+                )
 
                 # [4] dequantization from log values to INT16
-                x_int_log_dq, base = self.int_huge_16bit_log_to_int(x_int_log_q, times)
+                x_int_log_dq, base = self.int_huge_16bit_log_to_int(
+                    x_int_log_q_q_dq, times
+                )
 
+                # [5] remove bias
                 x_int_log_dq = x_int_log_dq - bias
                 x_int_log_dq = x_int_log_dq.clamp(0, 65535).round()
-                # if x_int_log_dq.unique().numel() != self.n_levels:
-                #     continue
-                map = x_int_log_dq.unique()
-                # print(f"[2] {x_int_log_dq.unique()} {x_int_log_dq.unique().numel()}")
-                # print(torch.norm(x_int - x_int_log_dq, p=2))
-                # print()
-                # [5] calculate the score
 
+                # [6] build map
+                _map = x_int_log_dq.unique()
+
+                # [7] calculate the score
                 score = torch.norm(x_int - x_int_log_dq, p=2)
                 if score < best_score:
                     best_score = score
                     best_bias = bias
-                    best_min = min
-                    best_max = max
-                    self.times = times
-                    best_map = map
-                    dja = x_int_log_q.unique()
+                    best_min = _min
+                    best_max = _max
+                    best_times = times
+                    best_map = _map
                     tmp_base_for_indicate = base
+
+        self.int_bias = best_bias.clone().detach()
+        self.times = best_times.clone().detach()
+        self.int_minv = best_min.clone().detach()
+        self.int_maxv = best_max.clone().detach()
+        self.map = best_map.clone().detach()
+        print(f"Score : {best_score}")
         print(
-            f"best bias : {best_bias }, best times : {self.times} best score : {best_score}"
+            f"base: {tmp_base_for_indicate}, best bias : {self.int_bias}, best times : {self.times}"
         )
-        print(f"best min : {best_min}, best max : {best_max}")
-        print(f"best result : {dja},{dja.numel()}, base: {tmp_base_for_indicate}")
+
+        print(f"map size: {self.map.numel()}")
+        print(f"    {self.map}")
         print()
+        _ = self._map_quantize(input, verbose=True)
 
-        self.int_bias = best_bias
-        # self.times = torch.exp(torch.log(torch.tensor(2)) / 2**best_times)
-        self.int_minv = best_min
-        self.int_maxv = best_max
-        self.map = best_map
-        print(self.map)
-        return
+        return None
 
-    def _map_quantize(self, x_hat, s_x):
+    def _map_quantize(self, x_int, verbose=False):
         # [1] add bias for remove Inf
-        x_int = round_ste.apply(x_hat / s_x)
-        print(torch.norm(x_int, p=2))
+
+        if verbose:
+            print(f"-org input INT domain tensor norm : {torch.norm(x_int, p=2)}")
         x_int = x_int + self.int_bias
 
         # [2] log quantization in huge domain
         x_int_log_q, _ = self.int_huge_16bit_int_to_log(x_int, self.times)
 
         # [3] Uniform Quantization for log values
-        x_int_log_q_q_dq, _, _ = self.tmp_uniform_quant_dequant(x_int_log_q)
-        print("log -> quant ", x_int_log_q_q_dq.unique())
+        x_int_log_q_q_dq, _, _ = self.tmp_uniform_quant_dequant(
+            x_int_log_q, self.int_minv, self.int_maxv
+        )
 
         unq = x_int_log_q_q_dq.unique()
-
+        out = x_int_log_q_q_dq
+        if verbose:
+            print(f"forward unique : {unq.numel()}")
         for lognum, idx in zip(unq, range(len(self.map))):
             i = (len(self.map)) - 1 - idx
-            print(lognum, self.map[i])
-            x_int_log_q_q_dq = torch.where(
-                x_int_log_q_q_dq == lognum, self.map[i], x_int_log_q_q_dq
-            )
-        print(torch.norm(x_int_log_q_q_dq, p=2))
-        out = x_int_log_q_q_dq
+            if verbose:
+                print(f"lognum : {lognum} -> map : {self.map[i]}")
+            out = torch.where(out == lognum, self.map[i], out)
 
-        return out * s_x, s_x
-        # # [4] dequantization from log values to INT16
-        # x_int_log_dq, base = self.int_huge_16bit_log_to_int(
-        #     x_int_log_q_q_dq, self.times
-        # )
+        if verbose:
+            print(f"-after INT domain tensor norm : {torch.norm(out, p=2)}")
+            print(f"- diff norm : {torch.norm(out - x_int, p=2)}")
 
-        # x_int_log_dq = x_int_log_dq - self.int_bias
-
-        # return x_int_log_dq * s_x, s_x
+        return out
 
     def forward(self, x_hat: torch.Tensor, s_x: torch.Tensor):
         if self.do_quant:
@@ -769,18 +727,16 @@ class LogSqrt2Quantizer(nn.Module):
             """Verify under INT8 input"""
             assert 0 <= x_hat.min() and x_hat.max() <= 1, f"{x_hat.min()} {x_hat.max()}"
 
+            x_int = round_ste.apply(x_hat / s_x)
+
             if self.inited == False:
-
-                self.init_bias_16bit(round_ste.apply(x_hat / s_x))
-
+                self.init_bias_16bit(x_int)
                 self.inited = True
-            dja, wns = self._map_quantize(x_hat, s_x)
-            print(dja.min(), dja.max())
-            print()
-            print()
-            print()
-            print()
-            return dja, wns
+
+            x_int_out = self._map_quantize(x_int)
+            x_hat = x_int_out * s_x
+
+            return x_hat, s_x
         else:
             return x_hat, s_x
 
