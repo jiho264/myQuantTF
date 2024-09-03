@@ -686,12 +686,10 @@ class LogSqrt2Quantizer(nn.Module):
                 # print(f"[1] {x_int_log_q.unique()} {x_int_log_q.unique().numel()}")
 
                 # [3] Uniform Quantization for log values
-                x_int_log_q_q_dq, min, max = self.tmp_uniform_quant_dequant(x_int_log_q)
+                # x_int_log_q_q_dq, min, max = self.tmp_uniform_quant_dequant(x_int_log_q)
 
                 # [4] dequantization from log values to INT16
-                x_int_log_dq, base = self.int_huge_16bit_log_to_int(
-                    x_int_log_q_q_dq, times
-                )
+                x_int_log_dq, base = self.int_huge_16bit_log_to_int(x_int_log_q, times)
 
                 x_int_log_dq = x_int_log_dq - bias
                 x_int_log_dq = x_int_log_dq.clamp(0, 65535).round()
