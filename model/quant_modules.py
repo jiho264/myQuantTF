@@ -542,7 +542,7 @@ class LogSqrt2Quantizer(nn.Module):
             # do not quantize
             return
 
-        self.bit_width = 3  # args_any.get("act_quant_bit_width")
+        self.bit_width = args_any.get("act_quant_bit_width")
         self.n_levels = 2**self.bit_width
 
         self.inited = False
