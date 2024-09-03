@@ -557,7 +557,9 @@ class LogSqrt2Quantizer(nn.Module):
 
     def int_huge_16bit_int_to_log(self, x, k):
         """ref from desmos graphs"""
-        return round_ste.apply(-1 * x.log2()) * 2 ** (self.pre_bits - k)
+        return round_ste.apply(-1 * x.log2()) * round_ste.apply(
+            2 ** (self.pre_bits - k)
+        )
 
         """
         (-1 * torch.log2(x)).round() * 2 ** (bits - k)
@@ -633,7 +635,9 @@ class LogSqrt2Quantizer(nn.Module):
                 x_int_log_dq = self.int_huge_16bit_log_to_int(x_int_log_q_q_dq, k)
                 # [5] remove bias
                 x_int_log_dq = x_int_log_dq - bias
-                x_int_log_dq = x_int_log_dq.clamp(0, 65535).round()
+                x_int_log_dq = x_int_log_dq.clamp(
+                    torch.tensor(0).to(input.device), 2**self.pre_bits - 1
+                ).round()
 
                 # [6] build map
                 _map = x_int_log_dq.unique()
@@ -662,12 +666,12 @@ class LogSqrt2Quantizer(nn.Module):
 
         return None
 
-    def _map_quantize(self, x_int, verbose=False):
+    def _map_quantize(self, input, verbose=False):
         # [1] add bias for remove Inf
 
         if verbose:
-            print(f"-org input INT domain tensor norm : {torch.norm(x_int, p=2)}")
-        x_int = x_int + self.int_bias
+            print(f"-org input INT domain tensor norm : {torch.norm(input, p=2)}")
+        x_int = input + self.int_bias
 
         # [2] log quantization in huge domain
         x_int_log_q = self.int_huge_16bit_int_to_log(x_int, self.k)
@@ -689,8 +693,9 @@ class LogSqrt2Quantizer(nn.Module):
 
         if verbose:
             print(f"-after INT domain tensor norm : {torch.norm(out, p=2)}")
-            print(f"- diff norm : {torch.norm(out - x_int, p=2)}")
-
+            print(f"- diff norm : {torch.norm(out - input, p=2)}")
+            print()
+            print()
         return out
 
     def forward(self, x_hat: torch.Tensor, s_x: torch.Tensor):
