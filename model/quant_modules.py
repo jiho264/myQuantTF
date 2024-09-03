@@ -588,17 +588,18 @@ class LogSqrt2Quantizer(nn.Module):
         return x_int_log_q_deuant, _min, _max
 
     def init_bias_16bit(self, input):
-        x_int = input.clone().detach()
+        x_int_org = input.clone().detach()
         best_times = -10
-        best_score = 1e10
+        best_score = 1e19
         best_bias = None
         best_min = None
         best_max = None
         tmp_base_for_indicate = None
 
         best_map = None
-        for times in torch.arange(8, 19):
+        for times in torch.arange(14, 20):
             for bias in [
+                1,
                 2,
                 3,
                 4,
@@ -637,7 +638,7 @@ class LogSqrt2Quantizer(nn.Module):
                 bias = torch.tensor(bias)
 
                 # [1] add bias for avoid Inf
-                x_int = x_int + bias
+                x_int = x_int_org + bias
 
                 # [2] log quantization in huge domain
                 x_int_log_q, _ = self.int_huge_16bit_int_to_log(x_int, times)
@@ -739,6 +740,15 @@ class LogSqrt2Quantizer(nn.Module):
             x_hat = x_int_out * s_x
 
             return x_hat, s_x
+
+            # x_int_out = x_int_out * 1024
+            # x_int_out = (x_int_out / 2**8).round()
+
+            # s_x = s_x / 2**8
+            # x_int_out = (x_int_out / 1024).round().clamp(0, 255)
+            # print(x_int_out.unique())
+            # return x_int_out * s_x, s_x
+
         else:
             return x_hat, s_x
 
