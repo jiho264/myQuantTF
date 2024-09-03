@@ -596,36 +596,28 @@ class LogSqrt2Quantizer(nn.Module):
         best_max = None
 
         best_map = None
-        for k in torch.arange(9.3, 11.8, 0.01):
+        for k in torch.arange(13, 17, 0.1):
             for bias in [
                 # 0.00001,
                 # 0.00005,
                 # 0.0001,
                 # 0.00035,
                 # 0.0005,
-                # 0.0006,
-                # 0.0008,
-                # 0.001,
-                # 0.002,
+                0.0006,
+                0.0007,
+                0.00075,
+                0.0008,
+                0.00085,
+                0.0009,
+                0.00095,
+                0.001,
+                0.002,
                 # 0.003,
                 # 0.005,
-                # 0.006,
-                # 0.007,
-                0.008,
-                0.009,
-                0.01,
-                0.012,
-                0.015,
-                0.018,
-                0.02,
-                0.03,
-                0.04,
-                0.05,
-                0.06,
-                0.08,
-                0.02,
-                0.03,
-                0.04,
+                # 0.01,
+                # 0.02,
+                # 0.03,
+                # 0.04,
                 # 0.05,
                 # 0.1,
                 # 0.2,
@@ -651,9 +643,7 @@ class LogSqrt2Quantizer(nn.Module):
                 x_int_log_dq = x_int_log_dq.clamp(
                     torch.tensor(0).to(input.device), 2**self.pre_bits - 1
                 ).round()
-
-                x_int_log_dq = (x_int_log_dq / 255).round() * 255
-
+                x_int_log_dq = (x_int_log_dq / 255).round().clamp(0, 255) * 255
                 # [6] build map
                 _map = x_int_log_dq.unique()
                 # [7] calculate the score
