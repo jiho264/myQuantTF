@@ -87,17 +87,14 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     #     _, _ = evaluate(model, test_loader, calib_len, "cuda")
     #     print("Activation calibration is done.\n")
 
-    # if args_softmax.get("act_quant_bit_width", None) == 4:
-    #     run_learnable_log_quant(model, train_loader)
-
     if args_w.get("AdaRound", None):
         scheme = args_w.get("AdaRound")
         run_AdaRound(model, train_loader, scheme)
         print(f"AdaRound for {scheme} weights is done.")
 
     """ evaluation """
-    _top1, _top5 = evaluate(model, test_loader, len(test_loader), "cuda")
-    # _top1, _top5 = evaluate(model, test_loader, 1, "cuda")
+    # _top1, _top5 = evaluate(model, test_loader, len(test_loader), "cuda")
+    _top1, _top5 = evaluate(model, test_loader, 1, "cuda")
     print(
         f"\n    Quantized model Evaluation accuracy on 50000 images, {_top1.avg:2.3f}%, {_top5.avg:2.3f}%"
     )
