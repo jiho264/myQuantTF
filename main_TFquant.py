@@ -81,11 +81,12 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     train_loader, test_loader = GetDataset(batch_size=_batch_size)
 
     """ 여기 지우고 돌리면 dynamic act quantization """
-    print("Training model for calibration...")
-    # if args_a != {}:
-    #     """calibration for activation"""
-    #     _, _ = evaluate(model, test_loader, calib_len, "cuda")
-    #     print("Activation calibration is done.\n")
+
+    if args_a != {}:
+        """calibration for activation"""
+        print("Training model for calibration...")
+        _, _ = evaluate(model, test_loader, calib_len, "cuda")
+        print("Activation calibration is done.\n")
 
     if args_w.get("AdaRound", None):
         scheme = args_w.get("AdaRound")
@@ -93,8 +94,8 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         print(f"AdaRound for {scheme} weights is done.")
 
     """ evaluation """
-    # _top1, _top5 = evaluate(model, test_loader, len(test_loader), "cuda")
-    _top1, _top5 = evaluate(model, test_loader, 1, "cuda")
+    _top1, _top5 = evaluate(model, test_loader, len(test_loader), "cuda")
+    # _top1, _top5 = evaluate(model, test_loader, 1, "cuda")
     print(
         f"\n    Quantized model Evaluation accuracy on 50000 images, {_top1.avg:2.3f}%, {_top5.avg:2.3f}%"
     )
