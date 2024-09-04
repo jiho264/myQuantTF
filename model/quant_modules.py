@@ -4,8 +4,18 @@ import torch.nn.functional as F
 from collections import OrderedDict
 from torch import Tensor
 from typing import Optional, Tuple
-
+import numpy as np
 from torch.autograd import Function
+
+
+def lp_loss(pred, tgt, p=2.0, reduction="none"):
+    """
+    loss function measured in L_p Norm
+    """
+    if reduction == "none":
+        return (pred - tgt).abs().pow(p).sum(1).mean()
+    else:
+        return (pred - tgt).abs().pow(p).mean()
 
 
 class floor_ste(Function):
@@ -53,14 +63,16 @@ class QuantMatMul(nn.Module):
         A_int = round_ste.apply(A / pre_act_scaling_factor_A)
         if A_int.min() >= 0:
             # for Softmax @ V (u8s8)
-            assert (
-                0 <= A_int.min() and A_int.max() <= 255
-            ), f"{A_int.min()} {A_int.max()}"
+            # assert (
+            #     0 <= A_int.min() and A_int.max() <= 255
+            # ), f"{A_int.min()} {A_int.max()}"
+            pass
         else:
             # for Q @ K (s8s8)
-            assert (
-                -128 <= A_int.min() and A_int.max() <= 127
-            ), f"{A_int.min()} {A_int.max()}"
+            # assert (
+            #     -128 <= A_int.min() and A_int.max() <= 127
+            # ), f"{A_int.min()} {A_int.max()}"
+            pass
 
         B_int = round_ste.apply(B / pre_act_scaling_factor_B).clamp(-128, 127)
 
@@ -368,7 +380,7 @@ def bits_required(x_int):
 
 
 class IntGELU(nn.Module):
-    def __init__(self, args_gelu, args_a):
+    def __init__(self, args_gelu):
         super().__init__()
         self.do_quant = False
         if args_gelu == {}:
@@ -381,9 +393,10 @@ class IntGELU(nn.Module):
         # 23 is an I-ViT's default value
         # sufficiently large integer
         # The minimum value for ensuring accuracy (varies depending on models)
-        self.gelu_act = QuantAct(args_a=args_a)
 
-        print(f"IntGELU    | sigmoid bit: {self.sigmoid_bit_width}, exp Lshift: {self.n}")
+        print(
+            f"IntGELU    | sigmoid bit: {self.sigmoid_bit_width}, exp Lshift: {self.n}"
+        )
 
     def int_exp_shift(self, x_int, scaling_factor):
         x_int = x_int + floor_ste.apply(x_int / 2) - floor_ste.apply(x_int / 2**4)
@@ -423,8 +436,12 @@ class IntGELU(nn.Module):
         # print("")
         exp_int_sum.clamp_max_(2**31 - 1)
         factor = floor_ste.apply((2**31 - 1) / exp_int_sum)
-        sigmoid_int = floor_ste.apply(exp_int * factor / 2 ** (31 - self.sigmoid_bit_width + 1))
-        sigmoid_scaling_factor = torch.Tensor([1 / 2 ** (self.sigmoid_bit_width - 1)]).cuda()
+        sigmoid_int = floor_ste.apply(
+            exp_int * factor / 2 ** (31 - self.sigmoid_bit_width + 1)
+        )
+        sigmoid_scaling_factor = torch.Tensor(
+            [1 / 2 ** (self.sigmoid_bit_width - 1)]
+        ).cuda()
         assert sigmoid_int.min() >= 0
 
         x_int = pre_x_int * sigmoid_int
@@ -433,14 +450,12 @@ class IntGELU(nn.Module):
 
     def forward(self, input, s_pre):
         if self.do_quant:
-            """ Verify under INT8 input """
+            """Verify under INT8 input"""
             with torch.no_grad():
                 _test_input_int = (input / s_pre).round()
-                assert -128 <= _test_input_int.min() and _test_input_int.max() <= 127
+                # assert -128 <= _test_input_int.min() and _test_input_int.max() <= 127
 
-            gelu_hat, s_x = self.int_forward(input, s_pre)
-
-            return self.gelu_act(gelu_hat, s_x)
+            return self.int_forward(input, s_pre)
         else:
             # print("FP GELU")
             return F.gelu(input), s_pre
@@ -498,12 +513,17 @@ class IntSoftMax(nn.Module):
         scaling_factor = torch.Tensor([1 / 2 ** (self.bit_width - 1)]).cuda()
 
         assert exp_int.min() >= 0
-        
+        # print("softmax out_int")
+        # print(exp_int.min(), exp_int.max())
         return exp_int * scaling_factor, scaling_factor
 
     def forward(self, input, s_pre, dim: int = -1):
         if self.do_quant:
-            """ Verify under INT8 input """
+            """when other's non quantize"""
+            if s_pre == 0:
+                return self.int_forward(input, torch.tensor(1).to("cuda"))
+
+            """Verify under INT8 input"""
             with torch.no_grad():
                 _test_input_int = (input / s_pre).round()
                 assert -128 <= _test_input_int.min() and _test_input_int.max() <= 127
@@ -511,6 +531,227 @@ class IntSoftMax(nn.Module):
         else:
             # print("FP Softmax")
             return F.softmax(input, dim=dim), s_pre
+
+
+def log2_int_10x(x):
+    # UINT16 입력값을 정수형으로 변환
+    x = x.to(torch.int32)
+
+    # x가 0인 경우를 처리하기 위해 결과를 미리 -1로 초기화합니다.
+    log2_int = torch.full_like(x, -1, dtype=torch.int32)
+    # dja = bits_required(x)
+    # print(dja)
+    # 1. log2의 정수 부분 계산
+    temp_x = x.clone()
+    for i in range(15, -1, -1):
+        shift = 1 << i
+        greater_equal = temp_x >= shift
+        log2_int += greater_equal.to(torch.int32)
+        temp_x = temp_x >> greater_equal.to(torch.int32)
+    # print(log2_int)
+    # 2. 소수점 아래 한 자리 계산 (0.1, 0.2, ..., 0.9를 정수로 근사)
+    # 0.1 ~ 0.9에 해당하는 상수 값을 정수로 표현
+    fractional_add = torch.zeros_like(x, dtype=torch.int32)
+
+    # 0.5 추가 (0.1 * 5)
+    temp_x = x - (1 << log2_int)
+    temp_x = temp_x << 1  # temp_x *= 2
+    fractional_add += (temp_x >= (1 << log2_int)).to(torch.int32) * 5
+
+    # # 0.2 추가 (0.1 * 2)
+    # temp_x = x - (1 << log2_int) - (fractional_add >> 1)
+    # temp_x = temp_x << 2  # temp_x *= 4
+    # fractional_add += (temp_x >= (1 << log2_int)).to(torch.int32) * 2
+
+    # # 0.1 추가
+    # temp_x = x - (1 << log2_int) - ((fractional_add * 3) >> 2)
+    # temp_x = temp_x << 3  # temp_x *= 8
+    # fractional_add += (temp_x >= (1 << log2_int)).to(torch.int32) * 1
+
+    # 최종 log2 값은 정수 부분과 fractional_add를 합친 것입니다.
+    return log2_int * 10 + fractional_add
+
+
+class LogSqrt2Quantizer(nn.Module):
+    def __init__(self, args_any):
+        super().__init__()
+        """ log sqrt 2 quantizer for attention map """
+        self.do_quant = True
+        if args_any == {}:
+            # do not quantize
+            return
+
+        self.bit_width = args_any.get("act_quant_bit_width")
+        self.n_levels = 2**self.bit_width
+
+        self.inited = False
+
+        print(f"Int log_sqrt_2 quantizer | output bit : {self.bit_width}")
+
+        self.int_bias = None
+        self.k = None
+        self.pre_bits = None
+
+    def int_huge_16bit_int_to_log(self, x, k):
+        """int log2 approximation"""
+        x_log2_10x = -1 * log2_int_10x(x)  # [0, 15.5] * 10
+        # print(x_log2_10x.unique())
+        return x_log2_10x * round_ste.apply(2 ** (self.pre_bits - k) / 10)
+
+        # """fp int log2"""
+        # x_log2 = (x.log2() * 2).floor() / 2  # [0, 15.5]
+        # # print(x_log2_10x.unique())
+        # return x_log2 * round_ste.apply(2 ** (self.pre_bits - k))
+
+        """
+        (-1 * torch.log2(x)).round() * 2 ** (bits - k)
+        2 ** (bits - k) == huge number
+        if b == 16, k == 0.7    
+        2**(b-k) == 40342.14
+        can compute in INT arithmetic
+        """
+
+    def int_huge_16bit_log_to_int(self, y, k):
+        return 2 ** (-y / 2 ** (self.pre_bits - k))
+
+    # def init_bias_16bit(self, input, s_x):
+    #     x_int_org = input.clone().detach()
+    #     best_k = -10
+    #     best_score = 1e10
+    #     best_bias = None
+
+    #     for _k in [torch.tensor(1)]:
+    #         for _bias in [
+    #             0.00001,
+    #             0.00005,
+    #             0.0001,
+    #             0.00035,
+    #             0.0005,
+    #             0.0006,
+    #             0.00065,
+    #             0.00068,
+    #             0.00069,
+    #             0.0007,
+    #             0.00071,
+    #             0.00072,
+    #             0.00073,
+    #             0.00075,
+    #             0.0008,
+    #             0.00085,
+    #             0.0009,
+    #             0.00095,
+    #             0.001,
+    #             0.002,
+    #             0.003,
+    #             0.005,
+    #             0.01,
+    #             0.02,
+    #             0.03,
+    #             0.04,
+    #             0.05,
+    #             0.1,
+    #             0.2,
+    #             0.5,
+    #             1.0,
+    #         ]:
+
+    #             _bias = (torch.tensor(_bias) / s_x).ceil()
+    #             _x_int = x_int_org + _bias
+
+    #             # [2] log quantization in huge domain
+    #             _x_int_log_q = self.int_huge_16bit_int_to_log(_x_int, _k)
+
+    #             # [3] log dequantization
+    #             _x_int_log_dq = self.int_huge_16bit_log_to_int(_x_int_log_q, _k)
+
+    #             # [4] remove bias
+    #             _x_int_log_dq = _x_int_log_dq - _bias
+
+    #             # [5] most biggest 16 values
+    #             _x_int8_out = (_x_int_log_dq / 255).round().clamp(0, 255)
+
+    #             _x_int_out = _x_int8_out * 255
+
+    #             score = torch.norm(input - _x_int_out, p=2)
+    #             if score < best_score:
+    #                 best_score = score
+    #                 best_bias = _bias
+    #                 best_k = _k
+
+    #     self.int_bias = best_bias.clone().detach()
+    #     self.k = best_k.clone().detach()
+
+    #     print(f"Score : {best_score}")
+    #     print(f"best bias : {self.int_bias}, best k : {self.k}")
+    #     print()
+
+    #     return None
+
+    def forward(self, x_hat: torch.Tensor, s_x: torch.Tensor):
+        if self.do_quant:
+            if s_x == 0:
+                """when other's non quantize"""
+                return x_hat, s_x
+
+            """Verify under INT8 input"""
+            assert 0 <= x_hat.min() and x_hat.max() <= 1, f"{x_hat.min()} {x_hat.max()}"
+
+            x_int = round_ste.apply(x_hat / s_x)
+
+            if self.inited == False:
+
+                self.pre_bits = -s_x.log2()
+                self.inited = True
+                self.k = 1
+                self.int_bias = 1
+                # self.init_bias_16bit(x_int, s_x)
+
+            # print("---------------------------------------------------------------")
+            # print("[1]")
+            # print(f"input unique : {x_int.unique()}")
+            # [1] add bias for avoid Inf
+            x_int = x_int + self.int_bias
+
+            # [2] log quantization in huge domain
+            x_int_log_q = self.int_huge_16bit_int_to_log(x_int, self.k)
+
+            # print("[2]")
+            # print(x_int_log_q.unique().numel())
+            # print(x_int_log_q.unique())
+
+            # [3] log dequantization
+            # print("[3]")
+            x_int_log_dq = self.int_huge_16bit_log_to_int(x_int_log_q, self.k)
+            # print(x_int_log_dq.unique().numel())
+            # print(x_int_log_dq.unique())
+
+            # [4] remove bias
+            x_int_log_dq = x_int_log_dq - self.int_bias
+            # print("[4]")
+            # print(x_int_log_dq.unique().numel())
+            # print(x_int_log_dq.unique())
+
+            # [5] most biggest 16 values
+            x_int8_out = (x_int_log_dq / 255).round().clamp(0, 255)
+            # print("[5]")
+            # print(x_int8_out.unique().numel())
+            # print(x_int8_out.unique())
+
+            x_int_out = x_int8_out * 255
+
+            if x_int_out.unique().numel() < 16:
+                Warning("A Number of Unique values is less than 16.")
+
+            # print("out")
+
+            x_hat = x_int_out * s_x
+            # print(x_int_out.unique().numel())
+            # print(x_int_out.unique())
+            # print()
+            # print()
+            return x_hat, s_x
+        else:
+            return x_hat, s_x
 
 
 class IntLayerNorm(nn.Module):

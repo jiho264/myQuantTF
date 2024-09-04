@@ -76,7 +76,7 @@ class QuantEncoderBlock(nn.Module):
 class QuantEncoder(nn.Module):
     def __init__(self, orgModule: Encoder, **kwargs):
         super().__init__()
-        self.pos_embedding = orgModule.pos_embedding
+        self.pos_embedding = orgModule.pos_embedding.clone().detach()
         self.pos_embedding_act = QuantAct(args_a=kwargs["args_a"])
 
         self.idAdd_pos_cls_x = QuantAct(args_a=kwargs["args_a"], which="idAdd")
@@ -124,7 +124,7 @@ class QuantViT(nn.Module):
         self.patch_size = orgViT.patch_size
         self.image_size = orgViT.image_size
         self.hidden_dim = orgViT.hidden_dim
-        self.class_token = orgViT.class_token
+        self.class_token = orgViT.class_token.clone().detach()
         self.representation_size = orgViT.representation_size
 
         """ [1] define the quantized modules """
