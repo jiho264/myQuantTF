@@ -591,6 +591,7 @@ class LogSqrt2Quantizer(nn.Module):
         self.int_bias = None
         self.k = None
         self.pre_bits = None
+        self.int8_map = None
 
     def int_huge_16bit_int_to_log(self, x, k):
         """int log2 approximation"""
@@ -686,6 +687,64 @@ class LogSqrt2Quantizer(nn.Module):
     #     print()
 
     #     return None
+    def init_map(self, x_int, x_hat, s_x):
+        self.pre_bits = -s_x.log2()
+        self.inited = True
+        self.k = 1
+        self.int_bias = 1
+
+        count = (x_hat < 2**8 / 2**16).sum()
+        print("---------------------------------------------------------------")
+        print(
+            f"Percentage of values less than 2^8/2^16 : {count / x_hat.numel() * 100:2.2f} % "
+        )
+        # [1] add bias for avoid Inf
+        x_int = (x_int + self.int_bias).round()
+
+        # [2] log quantization in huge domain
+        x_int_log_q = self.int_huge_16bit_int_to_log(x_int, self.k).round()
+
+        # [3] log dequantization
+        # print("[3]")
+        x_int_log_dq = self.int_huge_16bit_log_to_int(x_int_log_q, self.k).round()
+
+        # [4] remove bias
+        x_int_log_dq = (x_int_log_dq - self.int_bias).round()
+
+        # [5] most biggest 16 values
+        x_int8_out = (x_int_log_dq / 255).round().clamp(0, 255)
+        assert x_int8_out.unique().numel() <= 16
+
+        self.int8_map = x_int8_out.unique().sort(descending=True).values
+        # print("out")
+        print(f"log quantized entries : {x_int_log_q.unique().numel()}")
+        print(f"{x_int_log_q.unique()}")
+        print(f"log dequantized entries : {x_int_log_dq.unique().numel()}")
+        print(f"{x_int_log_dq.unique()}")
+        print(f"[int8_map] : {self.int8_map.unique().numel()}")
+        print(f"{self.int8_map.unique()}")
+        print()
+
+        """indecation"""
+        """only for first time"""
+        # [3] set 0 the values less than 16th value (threshold)
+        threshold = x_int_log_q.unique()[self.n_levels - 1]  # 16th value
+        # print(f"threshold : {threshold}")
+        x_int_log_q_4bit = torch.where(x_int_log_q < threshold, x_int_log_q, 0)
+        assert (
+            x_int_log_q_4bit.unique().numel() <= 16
+        ), f"A Number of Unique values is less than 16."
+
+        # [4] mapping from map
+        unq = x_int_log_q_4bit.unique()
+        for lognum, idx in zip(unq, range(unq.numel())):
+            print(f"    Domein : log -> UINT8 = {lognum} -> {self.int8_map[idx]}")
+            x_int_log_q_4bit = torch.where(
+                x_int_log_q_4bit == lognum, self.int8_map[idx], x_int_log_q_4bit
+            )
+        print()
+        print()
+        return None
 
     def forward(self, x_hat: torch.Tensor, s_x: torch.Tensor):
         if self.do_quant:
@@ -699,56 +758,33 @@ class LogSqrt2Quantizer(nn.Module):
             x_int = round_ste.apply(x_hat / s_x)
 
             if self.inited == False:
-
-                self.pre_bits = -s_x.log2()
+                self.init_map(x_int, x_hat, s_x)
                 self.inited = True
-                self.k = 1
-                self.int_bias = 1
-                # self.init_bias_16bit(x_int, s_x)
 
-            # print("---------------------------------------------------------------")
-            # print("[1]")
-            # print(f"input unique : {x_int.unique()}")
             # [1] add bias for avoid Inf
-            x_int = x_int + self.int_bias
+            x_int = (x_int + self.int_bias).round()
 
             # [2] log quantization in huge domain
-            x_int_log_q = self.int_huge_16bit_int_to_log(x_int, self.k)
+            x_int_log_q = self.int_huge_16bit_int_to_log(x_int, self.k).round()
 
-            # print("[2]")
-            # print(x_int_log_q.unique().numel())
-            # print(x_int_log_q.unique())
+            # [3] set 0 the values less than 16th value (threshold)
+            threshold = x_int_log_q.unique()[self.n_levels - 1]  # 16th value
+            # print(f"threshold : {threshold}")
+            x_int_log_q_4bit = torch.where(x_int_log_q < threshold, x_int_log_q, 0)
+            assert (
+                x_int_log_q_4bit.unique().numel() <= 16
+            ), f"A Number of Unique values is less than 16."
 
-            # [3] log dequantization
-            # print("[3]")
-            x_int_log_dq = self.int_huge_16bit_log_to_int(x_int_log_q, self.k)
-            # print(x_int_log_dq.unique().numel())
-            # print(x_int_log_dq.unique())
+            # [4] mapping from map
+            unq = x_int_log_q_4bit.unique()
+            for lognum, idx in zip(unq, range(unq.numel())):
+                x_int_log_q_4bit = torch.where(
+                    x_int_log_q_4bit == lognum, self.int8_map[idx], x_int_log_q_4bit
+                )
 
-            # [4] remove bias
-            x_int_log_dq = x_int_log_dq - self.int_bias
-            # print("[4]")
-            # print(x_int_log_dq.unique().numel())
-            # print(x_int_log_dq.unique())
+            s_x = s_x * 255
+            x_hat = x_int_log_q_4bit * s_x
 
-            # [5] most biggest 16 values
-            x_int8_out = (x_int_log_dq / 255).round().clamp(0, 255)
-            # print("[5]")
-            # print(x_int8_out.unique().numel())
-            # print(x_int8_out.unique())
-
-            x_int_out = x_int8_out * 255
-
-            if x_int_out.unique().numel() < 16:
-                Warning("A Number of Unique values is less than 16.")
-
-            # print("out")
-
-            x_hat = x_int_out * s_x
-            # print(x_int_out.unique().numel())
-            # print(x_int_out.unique())
-            # print()
-            # print()
             return x_hat, s_x
         else:
             return x_hat, s_x
