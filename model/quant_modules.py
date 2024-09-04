@@ -699,6 +699,7 @@ class LogSqrt2Quantizer(nn.Module):
             x_int = round_ste.apply(x_hat / s_x)
 
             if self.inited == False:
+
                 self.pre_bits = -s_x.log2()
                 self.inited = True
                 self.k = 1
