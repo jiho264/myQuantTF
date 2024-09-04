@@ -299,5 +299,5 @@ lognum : -21.0 -> map : 0.0
 
 
 
-    Quantized model Evaluation accuracy on 50000 images, 85.156%, 96.094%
-Total time: 82.82 sec
+    Quantized model Evaluation accuracy on 50000 images, 72.240%, 90.528%
+Total time: 624.23 sec

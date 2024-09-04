@@ -1,0 +1,341 @@
+(py312) lee@AI-LAP:~/Desktop/myQuantTF$ python "/home/lee/Desktop/myQuantTF/main_TFquant.py" | tee 4bit_full.log
+
+
+- main_args params:
+    - arch: ViT_B_16
+    - batch_size: 128
+    - num_samples: 1024
+
+- weight params:
+    - scheme: AbsMaxQuantizer
+    - bit_width: 4
+    - per_channel: True
+
+- activation params:
+    - scheme: MovAvgAbsMaxQuantizer
+    - bit_width: 8
+    - idadd_bit_width: 18
+    - per_channel: False
+    - momentum: 0.95
+    - batches: 4
+    - Identity addition : INT16 (The input of each LayerNorm)
+
+- softmax params:
+    - bit_width: 17
+    - left_shift_for_exp: 15
+    - act_quant_bit_width: 4
+    - Activation of Softmax(Q@K/d_K) (attn_map) : UINT8
+
+- layer_norm params:
+    - using: True
+
+- gelu params:
+    - sigmoid_bit_width: 8
+    - left_shift_for_exp: 23
+    - act_quant_bit_width: 8
+
+IntSoftMax | output bit : 17, exp Lshift : 15
+Int log_sqrt_2 quantizer | output bit : 4
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+Int log_sqrt_2 quantizer | output bit : 4
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+Int log_sqrt_2 quantizer | output bit : 4
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+Int log_sqrt_2 quantizer | output bit : 4
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+Int log_sqrt_2 quantizer | output bit : 4
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+Int log_sqrt_2 quantizer | output bit : 4
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+Int log_sqrt_2 quantizer | output bit : 4
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+Int log_sqrt_2 quantizer | output bit : 4
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+Int log_sqrt_2 quantizer | output bit : 4
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+Int log_sqrt_2 quantizer | output bit : 4
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+Int log_sqrt_2 quantizer | output bit : 4
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+Int log_sqrt_2 quantizer | output bit : 4
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+Training model for calibration...
+100%|██████████████████████████████████████████████████████████▊| 390/391 [10:34<00:01,  1.63s/it]
+Score : 1104268.5
+best bias : tensor([40.], device='cuda:0'), best k : 16.0
+map size: 10
+    tensor([    0.,   255.,   510.,  1020.,  2040.,  4080.,  8160., 16320., 32640.,
+        65025.], device='cuda:0')
+
+-org input INT domain tensor norm : 4765246.5
+forward unique : 12
+lognum : -16.0 -> map : 65025.0
+lognum : -15.0 -> map : 32640.0
+lognum : -14.0 -> map : 16320.0
+lognum : -13.0 -> map : 8160.0
+lognum : -12.0 -> map : 4080.0
+lognum : -11.0 -> map : 2040.0
+lognum : -10.0 -> map : 1020.0
+lognum : -9.0 -> map : 510.0
+lognum : -8.0 -> map : 255.0
+lognum : -7.0 -> map : 0.0
+-after INT domain tensor norm : 5150775.5
+- diff norm : 1105086.75
+
+
+Score : 1217751.875
+best bias : tensor([40.], device='cuda:0'), best k : 16.0
+map size: 10
+    tensor([    0.,   255.,   510.,  1020.,  2040.,  4080.,  8160., 16320., 32640.,
+        65025.], device='cuda:0')
+
+-org input INT domain tensor norm : 5395894.5
+forward unique : 12
+lognum : -16.0 -> map : 65025.0
+lognum : -15.0 -> map : 32640.0
+lognum : -14.0 -> map : 16320.0
+lognum : -13.0 -> map : 8160.0
+lognum : -12.0 -> map : 4080.0
+lognum : -11.0 -> map : 2040.0
+lognum : -10.0 -> map : 1020.0
+lognum : -9.0 -> map : 510.0
+lognum : -8.0 -> map : 255.0
+lognum : -7.0 -> map : 0.0
+-after INT domain tensor norm : 5730860.5
+- diff norm : 1218739.625
+
+
+Score : 2651550.0
+best bias : tensor([40.], device='cuda:0'), best k : 16.0
+map size: 10
+    tensor([    0.,   255.,   510.,  1020.,  2040.,  4080.,  8160., 16320., 32640.,
+        65025.], device='cuda:0')
+
+-org input INT domain tensor norm : 11999912.0
+forward unique : 12
+lognum : -16.0 -> map : 65025.0
+lognum : -15.0 -> map : 32640.0
+lognum : -14.0 -> map : 16320.0
+lognum : -13.0 -> map : 8160.0
+lognum : -12.0 -> map : 4080.0
+lognum : -11.0 -> map : 2040.0
+lognum : -10.0 -> map : 1020.0
+lognum : -9.0 -> map : 510.0
+lognum : -8.0 -> map : 255.0
+lognum : -7.0 -> map : 0.0
+-after INT domain tensor norm : 12698454.0
+- diff norm : 2652240.75
+
+
+Score : 2492120.25
+best bias : tensor([40.], device='cuda:0'), best k : 16.0
+map size: 10
+    tensor([    0.,   255.,   510.,  1020.,  2040.,  4080.,  8160., 16320., 32640.,
+        65025.], device='cuda:0')
+
+-org input INT domain tensor norm : 11125973.0
+forward unique : 12
+lognum : -16.0 -> map : 65025.0
+lognum : -15.0 -> map : 32640.0
+lognum : -14.0 -> map : 16320.0
+lognum : -13.0 -> map : 8160.0
+lognum : -12.0 -> map : 4080.0
+lognum : -11.0 -> map : 2040.0
+lognum : -10.0 -> map : 1020.0
+lognum : -9.0 -> map : 510.0
+lognum : -8.0 -> map : 255.0
+lognum : -7.0 -> map : 0.0
+-after INT domain tensor norm : 11896790.0
+- diff norm : 2492850.5
+
+
+Score : 1591548.375
+best bias : tensor([40.], device='cuda:0'), best k : 16.0
+map size: 10
+    tensor([    0.,   255.,   510.,  1020.,  2040.,  4080.,  8160., 16320., 32640.,
+        65025.], device='cuda:0')
+
+-org input INT domain tensor norm : 7431600.5
+forward unique : 12
+lognum : -16.0 -> map : 65025.0
+lognum : -15.0 -> map : 32640.0
+lognum : -14.0 -> map : 16320.0
+lognum : -13.0 -> map : 8160.0
+lognum : -12.0 -> map : 4080.0
+lognum : -11.0 -> map : 2040.0
+lognum : -10.0 -> map : 1020.0
+lognum : -9.0 -> map : 510.0
+lognum : -8.0 -> map : 255.0
+lognum : -7.0 -> map : 0.0
+-after INT domain tensor norm : 7790825.5
+- diff norm : 1593280.25
+
+
+Score : 1464838.125
+best bias : tensor([40.], device='cuda:0'), best k : 16.0
+map size: 10
+    tensor([    0.,   255.,   510.,  1020.,  2040.,  4080.,  8160., 16320., 32640.,
+        65025.], device='cuda:0')
+
+-org input INT domain tensor norm : 6722442.5
+forward unique : 12
+lognum : -16.0 -> map : 65025.0
+lognum : -15.0 -> map : 32640.0
+lognum : -14.0 -> map : 16320.0
+lognum : -13.0 -> map : 8160.0
+lognum : -12.0 -> map : 4080.0
+lognum : -11.0 -> map : 2040.0
+lognum : -10.0 -> map : 1020.0
+lognum : -9.0 -> map : 510.0
+lognum : -8.0 -> map : 255.0
+lognum : -7.0 -> map : 0.0
+-after INT domain tensor norm : 7063740.0
+- diff norm : 1466397.0
+
+
+Score : 1589468.0
+best bias : tensor([40.], device='cuda:0'), best k : 16.0
+map size: 10
+    tensor([    0.,   255.,   510.,  1020.,  2040.,  4080.,  8160., 16320., 32640.,
+        65025.], device='cuda:0')
+
+-org input INT domain tensor norm : 7403898.0
+forward unique : 12
+lognum : -16.0 -> map : 65025.0
+lognum : -15.0 -> map : 32640.0
+lognum : -14.0 -> map : 16320.0
+lognum : -13.0 -> map : 8160.0
+lognum : -12.0 -> map : 4080.0
+lognum : -11.0 -> map : 2040.0
+lognum : -10.0 -> map : 1020.0
+lognum : -9.0 -> map : 510.0
+lognum : -8.0 -> map : 255.0
+lognum : -7.0 -> map : 0.0
+-after INT domain tensor norm : 7746991.5
+- diff norm : 1591039.875
+
+
+Score : 1391043.375
+best bias : tensor([40.], device='cuda:0'), best k : 16.0
+map size: 10
+    tensor([    0.,   255.,   510.,  1020.,  2040.,  4080.,  8160., 16320., 32640.,
+        65025.], device='cuda:0')
+
+-org input INT domain tensor norm : 6341310.5
+forward unique : 12
+lognum : -16.0 -> map : 65025.0
+lognum : -15.0 -> map : 32640.0
+lognum : -14.0 -> map : 16320.0
+lognum : -13.0 -> map : 8160.0
+lognum : -12.0 -> map : 4080.0
+lognum : -11.0 -> map : 2040.0
+lognum : -10.0 -> map : 1020.0
+lognum : -9.0 -> map : 510.0
+lognum : -8.0 -> map : 255.0
+lognum : -7.0 -> map : 0.0
+-after INT domain tensor norm : 6680860.5
+- diff norm : 1392832.875
+
+
+Score : 1326996.0
+best bias : tensor([40.], device='cuda:0'), best k : 16.0
+map size: 10
+    tensor([    0.,   255.,   510.,  1020.,  2040.,  4080.,  8160., 16320., 32640.,
+        65025.], device='cuda:0')
+
+-org input INT domain tensor norm : 5973833.0
+forward unique : 12
+lognum : -16.0 -> map : 65025.0
+lognum : -15.0 -> map : 32640.0
+lognum : -14.0 -> map : 16320.0
+lognum : -13.0 -> map : 8160.0
+lognum : -12.0 -> map : 4080.0
+lognum : -11.0 -> map : 2040.0
+lognum : -10.0 -> map : 1020.0
+lognum : -9.0 -> map : 510.0
+lognum : -8.0 -> map : 255.0
+lognum : -7.0 -> map : 0.0
+-after INT domain tensor norm : 6309727.5
+- diff norm : 1328558.0
+
+
+Score : 1100557.5
+best bias : tensor([40.], device='cuda:0'), best k : 16.0
+map size: 10
+    tensor([    0.,   255.,   510.,  1020.,  2040.,  4080.,  8160., 16320., 32640.,
+        65025.], device='cuda:0')
+
+-org input INT domain tensor norm : 4672173.5
+forward unique : 12
+lognum : -16.0 -> map : 65025.0
+lognum : -15.0 -> map : 32640.0
+lognum : -14.0 -> map : 16320.0
+lognum : -13.0 -> map : 8160.0
+lognum : -12.0 -> map : 4080.0
+lognum : -11.0 -> map : 2040.0
+lognum : -10.0 -> map : 1020.0
+lognum : -9.0 -> map : 510.0
+lognum : -8.0 -> map : 255.0
+lognum : -7.0 -> map : 0.0
+-after INT domain tensor norm : 4994459.0
+- diff norm : 1101595.5
+
+
+Score : 1013468.125
+best bias : tensor([40.], device='cuda:0'), best k : 16.0
+map size: 10
+    tensor([    0.,   255.,   510.,  1020.,  2040.,  4080.,  8160., 16320., 32640.,
+        65025.], device='cuda:0')
+
+-org input INT domain tensor norm : 4139732.5
+forward unique : 12
+lognum : -16.0 -> map : 65025.0
+lognum : -15.0 -> map : 32640.0
+lognum : -14.0 -> map : 16320.0
+lognum : -13.0 -> map : 8160.0
+lognum : -12.0 -> map : 4080.0
+lognum : -11.0 -> map : 2040.0
+lognum : -10.0 -> map : 1020.0
+lognum : -9.0 -> map : 510.0
+lognum : -8.0 -> map : 255.0
+lognum : -7.0 -> map : 0.0
+-after INT domain tensor norm : 4462670.0
+- diff norm : 1014477.0625
+
+
+Score : 1056877.875
+best bias : tensor([40.], device='cuda:0'), best k : 16.0
+map size: 10
+    tensor([    0.,   255.,   510.,  1020.,  2040.,  4080.,  8160., 16320., 32640.,
+        65025.], device='cuda:0')
+
+-org input INT domain tensor norm : 4464121.5
+forward unique : 12
+lognum : -16.0 -> map : 65025.0
+lognum : -15.0 -> map : 32640.0
+lognum : -14.0 -> map : 16320.0
+lognum : -13.0 -> map : 8160.0
+lognum : -12.0 -> map : 4080.0
+lognum : -11.0 -> map : 2040.0
+lognum : -10.0 -> map : 1020.0
+lognum : -9.0 -> map : 510.0
+lognum : -8.0 -> map : 255.0
+lognum : -7.0 -> map : 0.0
+-after INT domain tensor norm : 4782500.0
+- diff norm : 1057904.75
+
+
+
+    Quantized model Evaluation accuracy on 50000 images, 72.748%, 90.934%
+Total time: 637.38 sec
