@@ -20,7 +20,7 @@ class QuantMLP(nn.Module):
 
         # [2] GELU(approximate='none')
         self.gelu = IntGELU(args_gelu=args_gelu)
-        if args_gelu.get("act_quant_bit_width", None) == 4:
+        if args_gelu.get("act_quant_bit_width", None) <= 4:
             self.gelu_act = LogSqrt2Quantizer(args_any=args_gelu)
         else:
             self.gelu_act = QuantAct(args_a=args_a)
