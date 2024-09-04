@@ -171,7 +171,9 @@ class QuantAct(nn.Module):
                     self.running_stat -= 1
                     if self.running_stat == 0:
                         s_out = self._compute_scaler(self.min_val, self.max_val)
-                        self.s_out = nn.Parameter(s_out, requires_grad=True)
+                        # self.s_out = nn.Parameter(s_out, requires_grad=True)
+                        # FIXME : if u using adaround, you have to use nn.Parameter
+                        self.s_out = s_out
 
             if self.s_out == None:
                 s_out = self._compute_scaler(self.min_val, self.max_val)
@@ -582,6 +584,9 @@ class LogSqrt2Quantizer(nn.Module):
             return
 
         self.bit_width = args_any.get("act_quant_bit_width")
+        if self.bit_width != 4:
+            raise ValueError("Now only support 4bit")
+
         self.n_levels = 2**self.bit_width
 
         self.inited = False
@@ -607,6 +612,9 @@ class LogSqrt2Quantizer(nn.Module):
         return self.base ** (-y)
 
     def init_map(self, x_int, x_hat, s_x):
+        if x_hat.requires_grad:
+            raise ValueError("The input tensor must be detached from the graph.")
+
         self.pre_bits = -s_x.log2()
         self.inited = True
         self.base = torch.tensor(1.0001)
@@ -646,7 +654,7 @@ class LogSqrt2Quantizer(nn.Module):
         """only for first time"""
         # [3] set 0 the values less than 16th value (threshold)
         threshold = x_int_log_q.unique()[self.n_levels - 1]  # 16th value
-        # print(f"threshold : {threshold}")
+        print(f"threshold : {threshold }")
         x_int_log_q_4bit = torch.where(x_int_log_q < threshold, x_int_log_q, 0)
         assert (
             x_int_log_q_4bit.unique().numel() <= 16
@@ -655,6 +663,9 @@ class LogSqrt2Quantizer(nn.Module):
         # [4] mapping from map
         unq = x_int_log_q_4bit.unique()
         for lognum, idx in zip(unq, range(unq.numel())):
+            if idx == self.int8_map.numel():
+                print("    [Warning] The number of unique values is more than 16.")
+                break
             print(f"    Domein : log -> UINT8 = {lognum} -> {self.int8_map[idx]}")
             x_int_log_q_4bit = torch.where(
                 x_int_log_q_4bit == lognum, self.int8_map[idx], x_int_log_q_4bit
@@ -695,6 +706,9 @@ class LogSqrt2Quantizer(nn.Module):
             # [4] mapping from map
             unq = x_int_log_q_4bit.unique()
             for lognum, idx in zip(unq, range(unq.numel())):
+                if idx == self.int8_map.numel():
+                    print("    [Warning] The number of unique values is more than 16.")
+                    break
                 x_int_log_q_4bit = torch.where(
                     x_int_log_q_4bit == lognum, self.int8_map[idx], x_int_log_q_4bit
                 )

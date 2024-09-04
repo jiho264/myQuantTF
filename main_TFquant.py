@@ -3,6 +3,7 @@ import torch.nn as nn
 import torchvision.models.vision_transformer as vision_transformer
 
 from utils import *
+from model import *
 
 
 def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_gelu={}):
@@ -25,7 +26,7 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         "per_channel": False,
         # below values are default in the class
         "momentum": 0.95,
-        "batches": 4,
+        "batches": 16,
         # "batches": 4,
     }
     args_gelu = {
@@ -80,14 +81,28 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     _batch_size = args_main["batch_size"]
     train_loader, test_loader = GetDataset(batch_size=_batch_size)
 
-    """ 여기 지우고 돌리면 dynamic act quantization """
+    """[1] 구현 상, act calib이후에 log init할거라 잠시 그냥 pass"""
+    for name, module in model.named_modules():
+        if isinstance(module, LogSqrt2Quantizer):
+            module.do_quant = False
 
-    if args_a != {}:
-        """calibration for activation"""
-        print("Training model for calibration...")
-        _, _ = evaluate(model, test_loader, calib_len, "cuda")
-        print("Activation calibration is done.\n")
+    """[2] 여기 지우고 돌리면 dynamic act quantization """
+    # if args_a != {}:
+    #     """calibration for activation"""
+    #     print("Training model for calibration...")
+    #     _, _ = evaluate(model, test_loader, calib_len, "cuda")
+    #     print("Activation calibration is done.\n")
+    # torch.cuda.empty_cache()
 
+    """[1-2]구현 상, act calib이후에 log init할거라 잠시 그냥 pass"""
+    for name, module in model.named_modules():
+        if isinstance(module, LogSqrt2Quantizer):
+            module.do_quant = True
+    cali_data = get_train_samples(train_loader, 512)
+    _ = model(cali_data.to("cuda"))
+    torch.cuda.empty_cache()
+
+    """[3] AdaRound"""
     if args_w.get("AdaRound", None):
         scheme = args_w.get("AdaRound")
         run_AdaRound(model, train_loader, scheme)
