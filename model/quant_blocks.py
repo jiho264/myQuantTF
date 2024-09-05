@@ -87,7 +87,7 @@ class QuantMSA(nn.Module):
         # [3] Softmax(16bit) -> return INT8
         self.softmax = IntSoftMax(args_softmax=args_softmax)
 
-        if args_softmax.get("act_quant_bit_width", None) == 4:
+        if args_softmax.get("act_quant_bit_width", None) <= 4:
             self.softmax_act = LogSqrt2Quantizer(args_any=args_softmax)
         else:
             self.softmax_act = QuantAct(args_a=args_a, which="softmax_act")
