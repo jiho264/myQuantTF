@@ -1,0 +1,568 @@
+
+- main_args params:
+    - arch: ViT_B_16
+    - batch_size: 128
+    - num_samples: 1024
+
+- weight params:
+    - scheme: AbsMaxQuantizer
+    - bit_width: 4
+    - per_channel: True
+
+- activation params:
+    - scheme: MovAvgAbsMaxQuantizer
+    - bit_width: 8
+    - idadd_bit_width: 18
+    - per_channel: False
+    - momentum: 0.95
+    - batches: 16
+    - Identity addition : INT16 (The input of each LayerNorm)
+
+- softmax params:
+    - bit_width: 17
+    - left_shift_for_exp: 15
+    - act_quant_bit_width: 4
+    - Activation of Softmax(Q@K/d_K) (attn_map) : UINT8
+
+- layer_norm params:
+    - using: True
+
+- gelu params:
+    - sigmoid_bit_width: 8
+    - left_shift_for_exp: 23
+    - act_quant_bit_width: 8
+
+IntSoftMax | output bit : 17, exp Lshift : 15
+Int log_sqrt_2 quantizer | output bit : 4
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+Int log_sqrt_2 quantizer | output bit : 4
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+Int log_sqrt_2 quantizer | output bit : 4
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+Int log_sqrt_2 quantizer | output bit : 4
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+Int log_sqrt_2 quantizer | output bit : 4
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+Int log_sqrt_2 quantizer | output bit : 4
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+Int log_sqrt_2 quantizer | output bit : 4
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+Int log_sqrt_2 quantizer | output bit : 4
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+Int log_sqrt_2 quantizer | output bit : 4
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+Int log_sqrt_2 quantizer | output bit : 4
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+Int log_sqrt_2 quantizer | output bit : 4
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+Int log_sqrt_2 quantizer | output bit : 4
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+Training model for calibration...
+Activation calibration is done.
+
+---------------------------------------------------------------
+calib length : 512
+x_hat minmax : 0.0 0.9932
+x_int minmax : 0.0 65088.0
+Percentage of values less than 2^8/2^16 : 43.23 % 
+scaled x_int minmax : 0.0 65534.0
+log quantized entries : 31
+tensor([-155, -150, -145, -140, -135, -130, -125, -120, -115, -110, -105, -100,
+         -95,  -90,  -85,  -80,  -75,  -70,  -65,  -60,  -55,  -50,  -45,  -40,
+         -35,  -30,  -25,  -20,  -15,  -10,    0], device='cuda:0',
+       dtype=torch.int32)
+log dequantized entries : 31
+tensor([1.0000e+00, 2.0000e+00, 3.0000e+00, 4.0000e+00, 6.0000e+00, 8.0000e+00,
+        1.1000e+01, 1.6000e+01, 2.3000e+01, 3.2000e+01, 4.5000e+01, 6.4000e+01,
+        9.1000e+01, 1.2800e+02, 1.8100e+02, 2.5600e+02, 3.6200e+02, 5.1200e+02,
+        7.2400e+02, 1.0240e+03, 1.4480e+03, 2.0480e+03, 2.8960e+03, 4.0960e+03,
+        5.7930e+03, 8.1920e+03, 1.1585e+04, 1.6384e+04, 2.3170e+04, 3.2768e+04,
+        4.6341e+04], device='cuda:0')
+[int8_map] : 16
+tensor([  0.,   1.,   2.,   3.,   4.,   6.,   8.,  11.,  16.,  23.,  32.,  45.,
+         64.,  91., 128., 182.], device='cuda:0')
+
+threshold : -80
+    Domein : log -> UINT8 = -155 -> 182.0
+    Domein : log -> UINT8 = -150 -> 128.0
+    Domein : log -> UINT8 = -145 -> 91.0
+    Domein : log -> UINT8 = -140 -> 64.0
+    Domein : log -> UINT8 = -135 -> 45.0
+    Domein : log -> UINT8 = -130 -> 32.0
+    Domein : log -> UINT8 = -125 -> 23.0
+    Domein : log -> UINT8 = -120 -> 16.0
+    Domein : log -> UINT8 = -115 -> 11.0
+    Domein : log -> UINT8 = -110 -> 8.0
+    Domein : log -> UINT8 = -105 -> 6.0
+    Domein : log -> UINT8 = -100 -> 4.0
+    Domein : log -> UINT8 = -95 -> 3.0
+    Domein : log -> UINT8 = -90 -> 2.0
+    Domein : log -> UINT8 = -85 -> 1.0
+    Domein : log -> UINT8 = 0 -> 0.0
+
+
+---------------------------------------------------------------
+calib length : 512
+x_hat minmax : 0.0 0.9862
+x_int minmax : 0.0 64629.0
+Percentage of values less than 2^8/2^16 : 53.47 % 
+scaled x_int minmax : 0.0 65534.0
+log quantized entries : 31
+tensor([-155, -150, -145, -140, -135, -130, -125, -120, -115, -110, -105, -100,
+         -95,  -90,  -85,  -80,  -75,  -70,  -65,  -60,  -55,  -50,  -45,  -40,
+         -35,  -30,  -25,  -20,  -15,  -10,    0], device='cuda:0',
+       dtype=torch.int32)
+log dequantized entries : 31
+tensor([1.0000e+00, 2.0000e+00, 3.0000e+00, 4.0000e+00, 6.0000e+00, 8.0000e+00,
+        1.1000e+01, 1.6000e+01, 2.3000e+01, 3.2000e+01, 4.5000e+01, 6.4000e+01,
+        9.1000e+01, 1.2800e+02, 1.8100e+02, 2.5600e+02, 3.6200e+02, 5.1200e+02,
+        7.2400e+02, 1.0240e+03, 1.4480e+03, 2.0480e+03, 2.8960e+03, 4.0960e+03,
+        5.7930e+03, 8.1920e+03, 1.1585e+04, 1.6384e+04, 2.3170e+04, 3.2768e+04,
+        4.6341e+04], device='cuda:0')
+[int8_map] : 16
+tensor([  0.,   1.,   2.,   3.,   4.,   6.,   8.,  11.,  16.,  23.,  32.,  45.,
+         64.,  91., 128., 182.], device='cuda:0')
+
+threshold : -80
+    Domein : log -> UINT8 = -155 -> 182.0
+    Domein : log -> UINT8 = -150 -> 128.0
+    Domein : log -> UINT8 = -145 -> 91.0
+    Domein : log -> UINT8 = -140 -> 64.0
+    Domein : log -> UINT8 = -135 -> 45.0
+    Domein : log -> UINT8 = -130 -> 32.0
+    Domein : log -> UINT8 = -125 -> 23.0
+    Domein : log -> UINT8 = -120 -> 16.0
+    Domein : log -> UINT8 = -115 -> 11.0
+    Domein : log -> UINT8 = -110 -> 8.0
+    Domein : log -> UINT8 = -105 -> 6.0
+    Domein : log -> UINT8 = -100 -> 4.0
+    Domein : log -> UINT8 = -95 -> 3.0
+    Domein : log -> UINT8 = -90 -> 2.0
+    Domein : log -> UINT8 = -85 -> 1.0
+    Domein : log -> UINT8 = 0 -> 0.0
+
+
+---------------------------------------------------------------
+calib length : 512
+x_hat minmax : 0.0 0.9930
+x_int minmax : 0.0 65079.0
+Percentage of values less than 2^8/2^16 : 68.23 % 
+scaled x_int minmax : 0.0 65534.0
+log quantized entries : 31
+tensor([-155, -150, -145, -140, -135, -130, -125, -120, -115, -110, -105, -100,
+         -95,  -90,  -85,  -80,  -75,  -70,  -65,  -60,  -55,  -50,  -45,  -40,
+         -35,  -30,  -25,  -20,  -15,  -10,    0], device='cuda:0',
+       dtype=torch.int32)
+log dequantized entries : 31
+tensor([1.0000e+00, 2.0000e+00, 3.0000e+00, 4.0000e+00, 6.0000e+00, 8.0000e+00,
+        1.1000e+01, 1.6000e+01, 2.3000e+01, 3.2000e+01, 4.5000e+01, 6.4000e+01,
+        9.1000e+01, 1.2800e+02, 1.8100e+02, 2.5600e+02, 3.6200e+02, 5.1200e+02,
+        7.2400e+02, 1.0240e+03, 1.4480e+03, 2.0480e+03, 2.8960e+03, 4.0960e+03,
+        5.7930e+03, 8.1920e+03, 1.1585e+04, 1.6384e+04, 2.3170e+04, 3.2768e+04,
+        4.6341e+04], device='cuda:0')
+[int8_map] : 16
+tensor([  0.,   1.,   2.,   3.,   4.,   6.,   8.,  11.,  16.,  23.,  32.,  45.,
+         64.,  91., 128., 182.], device='cuda:0')
+
+threshold : -80
+    Domein : log -> UINT8 = -155 -> 182.0
+    Domein : log -> UINT8 = -150 -> 128.0
+    Domein : log -> UINT8 = -145 -> 91.0
+    Domein : log -> UINT8 = -140 -> 64.0
+    Domein : log -> UINT8 = -135 -> 45.0
+    Domein : log -> UINT8 = -130 -> 32.0
+    Domein : log -> UINT8 = -125 -> 23.0
+    Domein : log -> UINT8 = -120 -> 16.0
+    Domein : log -> UINT8 = -115 -> 11.0
+    Domein : log -> UINT8 = -110 -> 8.0
+    Domein : log -> UINT8 = -105 -> 6.0
+    Domein : log -> UINT8 = -100 -> 4.0
+    Domein : log -> UINT8 = -95 -> 3.0
+    Domein : log -> UINT8 = -90 -> 2.0
+    Domein : log -> UINT8 = -85 -> 1.0
+    Domein : log -> UINT8 = 0 -> 0.0
+
+
+---------------------------------------------------------------
+calib length : 512
+x_hat minmax : 0.0 0.9874
+x_int minmax : 0.0 64708.0
+Percentage of values less than 2^8/2^16 : 67.64 % 
+scaled x_int minmax : 0.0 65534.0
+log quantized entries : 31
+tensor([-155, -150, -145, -140, -135, -130, -125, -120, -115, -110, -105, -100,
+         -95,  -90,  -85,  -80,  -75,  -70,  -65,  -60,  -55,  -50,  -45,  -40,
+         -35,  -30,  -25,  -20,  -15,  -10,    0], device='cuda:0',
+       dtype=torch.int32)
+log dequantized entries : 31
+tensor([1.0000e+00, 2.0000e+00, 3.0000e+00, 4.0000e+00, 6.0000e+00, 8.0000e+00,
+        1.1000e+01, 1.6000e+01, 2.3000e+01, 3.2000e+01, 4.5000e+01, 6.4000e+01,
+        9.1000e+01, 1.2800e+02, 1.8100e+02, 2.5600e+02, 3.6200e+02, 5.1200e+02,
+        7.2400e+02, 1.0240e+03, 1.4480e+03, 2.0480e+03, 2.8960e+03, 4.0960e+03,
+        5.7930e+03, 8.1920e+03, 1.1585e+04, 1.6384e+04, 2.3170e+04, 3.2768e+04,
+        4.6341e+04], device='cuda:0')
+[int8_map] : 16
+tensor([  0.,   1.,   2.,   3.,   4.,   6.,   8.,  11.,  16.,  23.,  32.,  45.,
+         64.,  91., 128., 182.], device='cuda:0')
+
+threshold : -80
+    Domein : log -> UINT8 = -155 -> 182.0
+    Domein : log -> UINT8 = -150 -> 128.0
+    Domein : log -> UINT8 = -145 -> 91.0
+    Domein : log -> UINT8 = -140 -> 64.0
+    Domein : log -> UINT8 = -135 -> 45.0
+    Domein : log -> UINT8 = -130 -> 32.0
+    Domein : log -> UINT8 = -125 -> 23.0
+    Domein : log -> UINT8 = -120 -> 16.0
+    Domein : log -> UINT8 = -115 -> 11.0
+    Domein : log -> UINT8 = -110 -> 8.0
+    Domein : log -> UINT8 = -105 -> 6.0
+    Domein : log -> UINT8 = -100 -> 4.0
+    Domein : log -> UINT8 = -95 -> 3.0
+    Domein : log -> UINT8 = -90 -> 2.0
+    Domein : log -> UINT8 = -85 -> 1.0
+    Domein : log -> UINT8 = 0 -> 0.0
+
+
+---------------------------------------------------------------
+calib length : 512
+x_hat minmax : 0.0 0.9016
+x_int minmax : 0.0 59088.0
+Percentage of values less than 2^8/2^16 : 69.23 % 
+scaled x_int minmax : 0.0 65534.0
+log quantized entries : 31
+tensor([-155, -150, -145, -140, -135, -130, -125, -120, -115, -110, -105, -100,
+         -95,  -90,  -85,  -80,  -75,  -70,  -65,  -60,  -55,  -50,  -45,  -40,
+         -35,  -30,  -25,  -20,  -15,  -10,    0], device='cuda:0',
+       dtype=torch.int32)
+log dequantized entries : 31
+tensor([1.0000e+00, 2.0000e+00, 3.0000e+00, 4.0000e+00, 6.0000e+00, 8.0000e+00,
+        1.1000e+01, 1.6000e+01, 2.3000e+01, 3.2000e+01, 4.5000e+01, 6.4000e+01,
+        9.1000e+01, 1.2800e+02, 1.8100e+02, 2.5600e+02, 3.6200e+02, 5.1200e+02,
+        7.2400e+02, 1.0240e+03, 1.4480e+03, 2.0480e+03, 2.8960e+03, 4.0960e+03,
+        5.7930e+03, 8.1920e+03, 1.1585e+04, 1.6384e+04, 2.3170e+04, 3.2768e+04,
+        4.6341e+04], device='cuda:0')
+[int8_map] : 16
+tensor([  0.,   1.,   2.,   3.,   4.,   6.,   8.,  11.,  16.,  23.,  32.,  45.,
+         64.,  91., 128., 182.], device='cuda:0')
+
+threshold : -80
+    Domein : log -> UINT8 = -155 -> 182.0
+    Domein : log -> UINT8 = -150 -> 128.0
+    Domein : log -> UINT8 = -145 -> 91.0
+    Domein : log -> UINT8 = -140 -> 64.0
+    Domein : log -> UINT8 = -135 -> 45.0
+    Domein : log -> UINT8 = -130 -> 32.0
+    Domein : log -> UINT8 = -125 -> 23.0
+    Domein : log -> UINT8 = -120 -> 16.0
+    Domein : log -> UINT8 = -115 -> 11.0
+    Domein : log -> UINT8 = -110 -> 8.0
+    Domein : log -> UINT8 = -105 -> 6.0
+    Domein : log -> UINT8 = -100 -> 4.0
+    Domein : log -> UINT8 = -95 -> 3.0
+    Domein : log -> UINT8 = -90 -> 2.0
+    Domein : log -> UINT8 = -85 -> 1.0
+    Domein : log -> UINT8 = 0 -> 0.0
+
+
+---------------------------------------------------------------
+calib length : 512
+x_hat minmax : 0.0 0.9485
+x_int minmax : 0.0 62160.0
+Percentage of values less than 2^8/2^16 : 65.63 % 
+scaled x_int minmax : 0.0 65534.0
+log quantized entries : 31
+tensor([-155, -150, -145, -140, -135, -130, -125, -120, -115, -110, -105, -100,
+         -95,  -90,  -85,  -80,  -75,  -70,  -65,  -60,  -55,  -50,  -45,  -40,
+         -35,  -30,  -25,  -20,  -15,  -10,    0], device='cuda:0',
+       dtype=torch.int32)
+log dequantized entries : 31
+tensor([1.0000e+00, 2.0000e+00, 3.0000e+00, 4.0000e+00, 6.0000e+00, 8.0000e+00,
+        1.1000e+01, 1.6000e+01, 2.3000e+01, 3.2000e+01, 4.5000e+01, 6.4000e+01,
+        9.1000e+01, 1.2800e+02, 1.8100e+02, 2.5600e+02, 3.6200e+02, 5.1200e+02,
+        7.2400e+02, 1.0240e+03, 1.4480e+03, 2.0480e+03, 2.8960e+03, 4.0960e+03,
+        5.7930e+03, 8.1920e+03, 1.1585e+04, 1.6384e+04, 2.3170e+04, 3.2768e+04,
+        4.6341e+04], device='cuda:0')
+[int8_map] : 16
+tensor([  0.,   1.,   2.,   3.,   4.,   6.,   8.,  11.,  16.,  23.,  32.,  45.,
+         64.,  91., 128., 182.], device='cuda:0')
+
+threshold : -80
+    Domein : log -> UINT8 = -155 -> 182.0
+    Domein : log -> UINT8 = -150 -> 128.0
+    Domein : log -> UINT8 = -145 -> 91.0
+    Domein : log -> UINT8 = -140 -> 64.0
+    Domein : log -> UINT8 = -135 -> 45.0
+    Domein : log -> UINT8 = -130 -> 32.0
+    Domein : log -> UINT8 = -125 -> 23.0
+    Domein : log -> UINT8 = -120 -> 16.0
+    Domein : log -> UINT8 = -115 -> 11.0
+    Domein : log -> UINT8 = -110 -> 8.0
+    Domein : log -> UINT8 = -105 -> 6.0
+    Domein : log -> UINT8 = -100 -> 4.0
+    Domein : log -> UINT8 = -95 -> 3.0
+    Domein : log -> UINT8 = -90 -> 2.0
+    Domein : log -> UINT8 = -85 -> 1.0
+    Domein : log -> UINT8 = 0 -> 0.0
+
+
+---------------------------------------------------------------
+calib length : 512
+x_hat minmax : 0.0 0.9223
+x_int minmax : 0.0 60445.0
+Percentage of values less than 2^8/2^16 : 68.93 % 
+scaled x_int minmax : 0.0 65534.0
+log quantized entries : 31
+tensor([-155, -150, -145, -140, -135, -130, -125, -120, -115, -110, -105, -100,
+         -95,  -90,  -85,  -80,  -75,  -70,  -65,  -60,  -55,  -50,  -45,  -40,
+         -35,  -30,  -25,  -20,  -15,  -10,    0], device='cuda:0',
+       dtype=torch.int32)
+log dequantized entries : 31
+tensor([1.0000e+00, 2.0000e+00, 3.0000e+00, 4.0000e+00, 6.0000e+00, 8.0000e+00,
+        1.1000e+01, 1.6000e+01, 2.3000e+01, 3.2000e+01, 4.5000e+01, 6.4000e+01,
+        9.1000e+01, 1.2800e+02, 1.8100e+02, 2.5600e+02, 3.6200e+02, 5.1200e+02,
+        7.2400e+02, 1.0240e+03, 1.4480e+03, 2.0480e+03, 2.8960e+03, 4.0960e+03,
+        5.7930e+03, 8.1920e+03, 1.1585e+04, 1.6384e+04, 2.3170e+04, 3.2768e+04,
+        4.6341e+04], device='cuda:0')
+[int8_map] : 16
+tensor([  0.,   1.,   2.,   3.,   4.,   6.,   8.,  11.,  16.,  23.,  32.,  45.,
+         64.,  91., 128., 182.], device='cuda:0')
+
+threshold : -80
+    Domein : log -> UINT8 = -155 -> 182.0
+    Domein : log -> UINT8 = -150 -> 128.0
+    Domein : log -> UINT8 = -145 -> 91.0
+    Domein : log -> UINT8 = -140 -> 64.0
+    Domein : log -> UINT8 = -135 -> 45.0
+    Domein : log -> UINT8 = -130 -> 32.0
+    Domein : log -> UINT8 = -125 -> 23.0
+    Domein : log -> UINT8 = -120 -> 16.0
+    Domein : log -> UINT8 = -115 -> 11.0
+    Domein : log -> UINT8 = -110 -> 8.0
+    Domein : log -> UINT8 = -105 -> 6.0
+    Domein : log -> UINT8 = -100 -> 4.0
+    Domein : log -> UINT8 = -95 -> 3.0
+    Domein : log -> UINT8 = -90 -> 2.0
+    Domein : log -> UINT8 = -85 -> 1.0
+    Domein : log -> UINT8 = 0 -> 0.0
+
+
+---------------------------------------------------------------
+calib length : 512
+x_hat minmax : 0.0 0.9458
+x_int minmax : 0.0 61985.0
+Percentage of values less than 2^8/2^16 : 68.11 % 
+scaled x_int minmax : 0.0 65534.0
+log quantized entries : 31
+tensor([-155, -150, -145, -140, -135, -130, -125, -120, -115, -110, -105, -100,
+         -95,  -90,  -85,  -80,  -75,  -70,  -65,  -60,  -55,  -50,  -45,  -40,
+         -35,  -30,  -25,  -20,  -15,  -10,    0], device='cuda:0',
+       dtype=torch.int32)
+log dequantized entries : 31
+tensor([1.0000e+00, 2.0000e+00, 3.0000e+00, 4.0000e+00, 6.0000e+00, 8.0000e+00,
+        1.1000e+01, 1.6000e+01, 2.3000e+01, 3.2000e+01, 4.5000e+01, 6.4000e+01,
+        9.1000e+01, 1.2800e+02, 1.8100e+02, 2.5600e+02, 3.6200e+02, 5.1200e+02,
+        7.2400e+02, 1.0240e+03, 1.4480e+03, 2.0480e+03, 2.8960e+03, 4.0960e+03,
+        5.7930e+03, 8.1920e+03, 1.1585e+04, 1.6384e+04, 2.3170e+04, 3.2768e+04,
+        4.6341e+04], device='cuda:0')
+[int8_map] : 16
+tensor([  0.,   1.,   2.,   3.,   4.,   6.,   8.,  11.,  16.,  23.,  32.,  45.,
+         64.,  91., 128., 182.], device='cuda:0')
+
+threshold : -80
+    Domein : log -> UINT8 = -155 -> 182.0
+    Domein : log -> UINT8 = -150 -> 128.0
+    Domein : log -> UINT8 = -145 -> 91.0
+    Domein : log -> UINT8 = -140 -> 64.0
+    Domein : log -> UINT8 = -135 -> 45.0
+    Domein : log -> UINT8 = -130 -> 32.0
+    Domein : log -> UINT8 = -125 -> 23.0
+    Domein : log -> UINT8 = -120 -> 16.0
+    Domein : log -> UINT8 = -115 -> 11.0
+    Domein : log -> UINT8 = -110 -> 8.0
+    Domein : log -> UINT8 = -105 -> 6.0
+    Domein : log -> UINT8 = -100 -> 4.0
+    Domein : log -> UINT8 = -95 -> 3.0
+    Domein : log -> UINT8 = -90 -> 2.0
+    Domein : log -> UINT8 = -85 -> 1.0
+    Domein : log -> UINT8 = 0 -> 0.0
+
+
+---------------------------------------------------------------
+calib length : 512
+x_hat minmax : 0.0 0.9688
+x_int minmax : 0.0 63492.0
+Percentage of values less than 2^8/2^16 : 65.03 % 
+scaled x_int minmax : 0.0 65534.0
+log quantized entries : 31
+tensor([-155, -150, -145, -140, -135, -130, -125, -120, -115, -110, -105, -100,
+         -95,  -90,  -85,  -80,  -75,  -70,  -65,  -60,  -55,  -50,  -45,  -40,
+         -35,  -30,  -25,  -20,  -15,  -10,    0], device='cuda:0',
+       dtype=torch.int32)
+log dequantized entries : 31
+tensor([1.0000e+00, 2.0000e+00, 3.0000e+00, 4.0000e+00, 6.0000e+00, 8.0000e+00,
+        1.1000e+01, 1.6000e+01, 2.3000e+01, 3.2000e+01, 4.5000e+01, 6.4000e+01,
+        9.1000e+01, 1.2800e+02, 1.8100e+02, 2.5600e+02, 3.6200e+02, 5.1200e+02,
+        7.2400e+02, 1.0240e+03, 1.4480e+03, 2.0480e+03, 2.8960e+03, 4.0960e+03,
+        5.7930e+03, 8.1920e+03, 1.1585e+04, 1.6384e+04, 2.3170e+04, 3.2768e+04,
+        4.6341e+04], device='cuda:0')
+[int8_map] : 16
+tensor([  0.,   1.,   2.,   3.,   4.,   6.,   8.,  11.,  16.,  23.,  32.,  45.,
+         64.,  91., 128., 182.], device='cuda:0')
+
+threshold : -80
+    Domein : log -> UINT8 = -155 -> 182.0
+    Domein : log -> UINT8 = -150 -> 128.0
+    Domein : log -> UINT8 = -145 -> 91.0
+    Domein : log -> UINT8 = -140 -> 64.0
+    Domein : log -> UINT8 = -135 -> 45.0
+    Domein : log -> UINT8 = -130 -> 32.0
+    Domein : log -> UINT8 = -125 -> 23.0
+    Domein : log -> UINT8 = -120 -> 16.0
+    Domein : log -> UINT8 = -115 -> 11.0
+    Domein : log -> UINT8 = -110 -> 8.0
+    Domein : log -> UINT8 = -105 -> 6.0
+    Domein : log -> UINT8 = -100 -> 4.0
+    Domein : log -> UINT8 = -95 -> 3.0
+    Domein : log -> UINT8 = -90 -> 2.0
+    Domein : log -> UINT8 = -85 -> 1.0
+    Domein : log -> UINT8 = 0 -> 0.0
+
+
+---------------------------------------------------------------
+calib length : 512
+x_hat minmax : 0.0 0.9147
+x_int minmax : 0.0 59943.0
+Percentage of values less than 2^8/2^16 : 58.49 % 
+scaled x_int minmax : 0.0 65534.0
+log quantized entries : 31
+tensor([-155, -150, -145, -140, -135, -130, -125, -120, -115, -110, -105, -100,
+         -95,  -90,  -85,  -80,  -75,  -70,  -65,  -60,  -55,  -50,  -45,  -40,
+         -35,  -30,  -25,  -20,  -15,  -10,    0], device='cuda:0',
+       dtype=torch.int32)
+log dequantized entries : 31
+tensor([1.0000e+00, 2.0000e+00, 3.0000e+00, 4.0000e+00, 6.0000e+00, 8.0000e+00,
+        1.1000e+01, 1.6000e+01, 2.3000e+01, 3.2000e+01, 4.5000e+01, 6.4000e+01,
+        9.1000e+01, 1.2800e+02, 1.8100e+02, 2.5600e+02, 3.6200e+02, 5.1200e+02,
+        7.2400e+02, 1.0240e+03, 1.4480e+03, 2.0480e+03, 2.8960e+03, 4.0960e+03,
+        5.7930e+03, 8.1920e+03, 1.1585e+04, 1.6384e+04, 2.3170e+04, 3.2768e+04,
+        4.6341e+04], device='cuda:0')
+[int8_map] : 16
+tensor([  0.,   1.,   2.,   3.,   4.,   6.,   8.,  11.,  16.,  23.,  32.,  45.,
+         64.,  91., 128., 182.], device='cuda:0')
+
+threshold : -80
+    Domein : log -> UINT8 = -155 -> 182.0
+    Domein : log -> UINT8 = -150 -> 128.0
+    Domein : log -> UINT8 = -145 -> 91.0
+    Domein : log -> UINT8 = -140 -> 64.0
+    Domein : log -> UINT8 = -135 -> 45.0
+    Domein : log -> UINT8 = -130 -> 32.0
+    Domein : log -> UINT8 = -125 -> 23.0
+    Domein : log -> UINT8 = -120 -> 16.0
+    Domein : log -> UINT8 = -115 -> 11.0
+    Domein : log -> UINT8 = -110 -> 8.0
+    Domein : log -> UINT8 = -105 -> 6.0
+    Domein : log -> UINT8 = -100 -> 4.0
+    Domein : log -> UINT8 = -95 -> 3.0
+    Domein : log -> UINT8 = -90 -> 2.0
+    Domein : log -> UINT8 = -85 -> 1.0
+    Domein : log -> UINT8 = 0 -> 0.0
+
+
+---------------------------------------------------------------
+calib length : 512
+x_hat minmax : 0.0 0.7472
+x_int minmax : 0.0 48971.0
+Percentage of values less than 2^8/2^16 : 53.33 % 
+scaled x_int minmax : 0.0 65534.0
+log quantized entries : 30
+tensor([-155, -150, -145, -140, -135, -130, -125, -120, -115, -110, -105, -100,
+         -95,  -90,  -85,  -80,  -75,  -70,  -65,  -60,  -55,  -50,  -45,  -40,
+         -35,  -30,  -25,  -20,  -10,    0], device='cuda:0',
+       dtype=torch.int32)
+log dequantized entries : 30
+tensor([1.0000e+00, 2.0000e+00, 4.0000e+00, 6.0000e+00, 8.0000e+00, 1.1000e+01,
+        1.6000e+01, 2.3000e+01, 3.2000e+01, 4.5000e+01, 6.4000e+01, 9.1000e+01,
+        1.2800e+02, 1.8100e+02, 2.5600e+02, 3.6200e+02, 5.1200e+02, 7.2400e+02,
+        1.0240e+03, 1.4480e+03, 2.0480e+03, 2.8960e+03, 4.0960e+03, 5.7930e+03,
+        8.1920e+03, 1.1585e+04, 1.6384e+04, 2.3170e+04, 3.2768e+04, 4.6341e+04],
+       device='cuda:0')
+[int8_map] : 16
+tensor([  0.,   1.,   2.,   3.,   4.,   6.,   8.,  11.,  16.,  23.,  32.,  45.,
+         64.,  91., 128., 182.], device='cuda:0')
+
+threshold : -80
+    Domein : log -> UINT8 = -155 -> 182.0
+    Domein : log -> UINT8 = -150 -> 128.0
+    Domein : log -> UINT8 = -145 -> 91.0
+    Domein : log -> UINT8 = -140 -> 64.0
+    Domein : log -> UINT8 = -135 -> 45.0
+    Domein : log -> UINT8 = -130 -> 32.0
+    Domein : log -> UINT8 = -125 -> 23.0
+    Domein : log -> UINT8 = -120 -> 16.0
+    Domein : log -> UINT8 = -115 -> 11.0
+    Domein : log -> UINT8 = -110 -> 8.0
+    Domein : log -> UINT8 = -105 -> 6.0
+    Domein : log -> UINT8 = -100 -> 4.0
+    Domein : log -> UINT8 = -95 -> 3.0
+    Domein : log -> UINT8 = -90 -> 2.0
+    Domein : log -> UINT8 = -85 -> 1.0
+    Domein : log -> UINT8 = 0 -> 0.0
+
+
+---------------------------------------------------------------
+calib length : 512
+x_hat minmax : 0.0 0.9553
+x_int minmax : 0.0 62608.0
+Percentage of values less than 2^8/2^16 : 50.91 % 
+scaled x_int minmax : 0.0 65534.0
+log quantized entries : 31
+tensor([-155, -150, -145, -140, -135, -130, -125, -120, -115, -110, -105, -100,
+         -95,  -90,  -85,  -80,  -75,  -70,  -65,  -60,  -55,  -50,  -45,  -40,
+         -35,  -30,  -25,  -20,  -15,  -10,    0], device='cuda:0',
+       dtype=torch.int32)
+log dequantized entries : 31
+tensor([1.0000e+00, 2.0000e+00, 3.0000e+00, 4.0000e+00, 6.0000e+00, 8.0000e+00,
+        1.1000e+01, 1.6000e+01, 2.3000e+01, 3.2000e+01, 4.5000e+01, 6.4000e+01,
+        9.1000e+01, 1.2800e+02, 1.8100e+02, 2.5600e+02, 3.6200e+02, 5.1200e+02,
+        7.2400e+02, 1.0240e+03, 1.4480e+03, 2.0480e+03, 2.8960e+03, 4.0960e+03,
+        5.7930e+03, 8.1920e+03, 1.1585e+04, 1.6384e+04, 2.3170e+04, 3.2768e+04,
+        4.6341e+04], device='cuda:0')
+[int8_map] : 16
+tensor([  0.,   1.,   2.,   3.,   4.,   6.,   8.,  11.,  16.,  23.,  32.,  45.,
+         64.,  91., 128., 182.], device='cuda:0')
+
+threshold : -80
+    Domein : log -> UINT8 = -155 -> 182.0
+    Domein : log -> UINT8 = -150 -> 128.0
+    Domein : log -> UINT8 = -145 -> 91.0
+    Domein : log -> UINT8 = -140 -> 64.0
+    Domein : log -> UINT8 = -135 -> 45.0
+    Domein : log -> UINT8 = -130 -> 32.0
+    Domein : log -> UINT8 = -125 -> 23.0
+    Domein : log -> UINT8 = -120 -> 16.0
+    Domein : log -> UINT8 = -115 -> 11.0
+    Domein : log -> UINT8 = -110 -> 8.0
+    Domein : log -> UINT8 = -105 -> 6.0
+    Domein : log -> UINT8 = -100 -> 4.0
+    Domein : log -> UINT8 = -95 -> 3.0
+    Domein : log -> UINT8 = -90 -> 2.0
+    Domein : log -> UINT8 = -85 -> 1.0
+    Domein : log -> UINT8 = 0 -> 0.0
+
+
+
+    Quantized model Evaluation accuracy on 50000 images, 70.924%, 89.716%
+Total time: 902.69 sec

@@ -597,6 +597,12 @@ class LogSqrt2Quantizer(nn.Module):
         # return x_log2 * round_ste.apply(2 ** (self.pre_bits - k))
 
     def int_log_dequant_10x(self, y):
+        """This OP requires the FP computation"""
+        if self.int8_map is not None:
+            print(
+                "    [Warning] The int8_map was initialized. This func requires the FP computation. USEING int8_map"
+            )
+
         return self.base ** (-y / 10)
 
     def init_map(self, x_int, x_hat, s_x):
@@ -610,6 +616,7 @@ class LogSqrt2Quantizer(nn.Module):
 
         count = (x_hat < 2**8 / 2**16).sum()
         print("---------------------------------------------------------------")
+        print(f"calib length : {x_hat.shape[0]}")
         print(f"x_hat minmax : {x_hat.min()} {x_hat.max():.4f}")
         print(f"x_int minmax : {x_int.min()} {x_int.max()}")
         print(
@@ -619,7 +626,7 @@ class LogSqrt2Quantizer(nn.Module):
 
         # [0] scaling (strach)
         org_x_int_max = x_int.max()
-        tmp = (x_int * 2**self.pre_bits).round()
+        tmp = (x_int * (2**self.pre_bits - 1 - self.int_bias)).round()
         x_int = (tmp / org_x_int_max).round()
         print(f"scaled x_int minmax : {x_int.min()} {x_int.max()}")
 
@@ -692,7 +699,9 @@ class LogSqrt2Quantizer(nn.Module):
 
             # [0] scaling (strach)
             org_x_int_max = x_int.max()
-            tmp = (x_int * 2**self.pre_bits).round()
+            tmp = (x_int * (2**self.pre_bits - 1 - self.int_bias)).round()
+            # WARRING if org input.max is almost 2^16, it will be 42B.
+            # USING UINT32. else -> OVERFLOW ERROR
             x_int = (tmp / org_x_int_max).round()
 
             # [1] add bias for avoid Inf
@@ -726,6 +735,36 @@ class LogSqrt2Quantizer(nn.Module):
             x_hat = x_int_log_q_4bit * s_x
 
             return x_hat, s_x
+            # FIXME """[test]floor(log2(x)) version"""
+            # x_int = round_ste.apply(x_hat / s_x)
+
+            # x_int = x_int / x_int.max() * 2**16 - 2
+
+            # x_int = (x_int + 1).clamp(0, 2**16 - 1)
+
+            # x_int_log_q = -x_int.log2().floor()
+            # # print(x_int_log_q.unique())
+            # x_int_log_dq = 2**-x_int_log_q
+
+            # x_int_log_dq_neg = -x_int_log_dq
+            # # print(x_int_log_dq.unique())
+
+            # deq_table = x_int_log_dq_neg.unique()
+            # mapping_table = torch.tensor(
+            #     [182, 128, 91, 64, 45, 32, 23, 16, 11, 8, 6, 4, 3, 2, 1, 0]
+            # )
+            # _sum = torch.zeros_like(x_int_log_dq_neg)
+            # for bef, aft in zip(deq_table, mapping_table):
+            #     print(f"    {bef} -> {aft}")
+            #     _out = torch.where(x_int_log_dq_neg == bef, aft, 0)
+            #     _sum = _sum + _out
+
+            # _sum = _sum * 2**8
+
+            # x_hat = _sum * s_x
+            # return x_hat, s_x
+            # """old"""
+
         else:
             return x_hat, s_x
 
