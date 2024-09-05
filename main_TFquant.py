@@ -87,12 +87,12 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
             module.do_quant = False
 
     """[2] 여기 지우고 돌리면 dynamic act quantization """
-    # if args_a != {}:
-    #     """calibration for activation"""
-    #     print("Training model for calibration...")
-    #     _, _ = evaluate(model, test_loader, calib_len, "cuda")
-    #     print("Activation calibration is done.\n")
-    # torch.cuda.empty_cache()
+    if args_a != {}:
+        """calibration for activation"""
+        print("Training model for calibration...")
+        _, _ = evaluate(model, test_loader, calib_len, "cuda")
+        print("Activation calibration is done.\n")
+    torch.cuda.empty_cache()
 
     """[1-2]구현 상, act calib이후에 log init할거라 잠시 그냥 pass"""
     for name, module in model.named_modules():
@@ -109,8 +109,8 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
         print(f"AdaRound for {scheme} weights is done.")
 
     """ evaluation """
-    # _top1, _top5 = evaluate(model, test_loader, len(test_loader), "cuda")
-    _top1, _top5 = evaluate(model, test_loader, 1, "cuda")
+    _top1, _top5 = evaluate(model, test_loader, len(test_loader), "cuda")
+    # _top1, _top5 = evaluate(model, test_loader, 1, "cuda")
     print(
         f"\n    Quantized model Evaluation accuracy on 50000 images, {_top1.avg:2.3f}%, {_top5.avg:2.3f}%"
     )
