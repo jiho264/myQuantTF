@@ -111,12 +111,16 @@ threshold : -80
     Domein : log -> UINT8 = -85 -> 1.0
     Domein : log -> UINT8 = 0 -> 0.0
 
+    scalied map : tensor([  0.,   1.,   3.,   4.,   6.,   8.,  11.,  15.,  22.,  32.,  45.,  63.,
+         89., 127., 178., 253.], device='cuda:0')
+    scalied ratio : 0.9921569228172302
+
 
 ---------------------------------------------------------------
 calib length : 512
-x_hat minmax : 0.0 0.9862
-x_int minmax : 0.0 64629.0
-Percentage of values less than 2^8/2^16 : 53.47 % 
+x_hat minmax : 0.0 0.9826
+x_int minmax : 0.0 64395.0
+Percentage of values less than 2^8/2^16 : 52.92 % 
 scaled x_int minmax : 0.0 65534.0
 log quantized entries : 31
 tensor([-155, -150, -145, -140, -135, -130, -125, -120, -115, -110, -105, -100,
@@ -152,12 +156,16 @@ threshold : -80
     Domein : log -> UINT8 = -85 -> 1.0
     Domein : log -> UINT8 = 0 -> 0.0
 
+    scalied map : tensor([  0.,   1.,   3.,   4.,   6.,   8.,  11.,  15.,  22.,  32.,  44.,  62.,
+         88., 125., 176., 251.], device='cuda:0')
+    scalied ratio : 0.9843137860298157
+
 
 ---------------------------------------------------------------
 calib length : 512
-x_hat minmax : 0.0 0.9930
-x_int minmax : 0.0 65079.0
-Percentage of values less than 2^8/2^16 : 68.23 % 
+x_hat minmax : 0.0 0.9924
+x_int minmax : 0.0 65037.0
+Percentage of values less than 2^8/2^16 : 68.01 % 
 scaled x_int minmax : 0.0 65534.0
 log quantized entries : 31
 tensor([-155, -150, -145, -140, -135, -130, -125, -120, -115, -110, -105, -100,
@@ -193,12 +201,16 @@ threshold : -80
     Domein : log -> UINT8 = -85 -> 1.0
     Domein : log -> UINT8 = 0 -> 0.0
 
+    scalied map : tensor([  0.,   1.,   3.,   4.,   6.,   8.,  11.,  15.,  22.,  32.,  44.,  63.,
+         89., 127., 178., 253.], device='cuda:0')
+    scalied ratio : 0.9921569228172302
+
 
 ---------------------------------------------------------------
 calib length : 512
-x_hat minmax : 0.0 0.9874
-x_int minmax : 0.0 64708.0
-Percentage of values less than 2^8/2^16 : 67.64 % 
+x_hat minmax : 0.0 0.9857
+x_int minmax : 0.0 64596.0
+Percentage of values less than 2^8/2^16 : 67.56 % 
 scaled x_int minmax : 0.0 65534.0
 log quantized entries : 31
 tensor([-155, -150, -145, -140, -135, -130, -125, -120, -115, -110, -105, -100,
@@ -234,12 +246,16 @@ threshold : -80
     Domein : log -> UINT8 = -85 -> 1.0
     Domein : log -> UINT8 = 0 -> 0.0
 
+    scalied map : tensor([  0.,   1.,   3.,   4.,   6.,   8.,  11.,  15.,  22.,  32.,  44.,  62.,
+         88., 126., 177., 251.], device='cuda:0')
+    scalied ratio : 0.9843137860298157
+
 
 ---------------------------------------------------------------
 calib length : 512
-x_hat minmax : 0.0 0.9016
-x_int minmax : 0.0 59088.0
-Percentage of values less than 2^8/2^16 : 69.23 % 
+x_hat minmax : 0.0 0.9124
+x_int minmax : 0.0 59796.0
+Percentage of values less than 2^8/2^16 : 70.00 % 
 scaled x_int minmax : 0.0 65534.0
 log quantized entries : 31
 tensor([-155, -150, -145, -140, -135, -130, -125, -120, -115, -110, -105, -100,
@@ -275,12 +291,16 @@ threshold : -80
     Domein : log -> UINT8 = -85 -> 1.0
     Domein : log -> UINT8 = 0 -> 0.0
 
+    scalied map : tensor([  0.,   1.,   3.,   4.,   5.,   8.,  10.,  14.,  20.,  29.,  41.,  58.,
+         82., 116., 164., 233.], device='cuda:0')
+    scalied ratio : 0.9137255549430847
+
 
 ---------------------------------------------------------------
 calib length : 512
-x_hat minmax : 0.0 0.9485
-x_int minmax : 0.0 62160.0
-Percentage of values less than 2^8/2^16 : 65.63 % 
+x_hat minmax : 0.0 0.9465
+x_int minmax : 0.0 62028.0
+Percentage of values less than 2^8/2^16 : 66.33 % 
 scaled x_int minmax : 0.0 65534.0
 log quantized entries : 31
 tensor([-155, -150, -145, -140, -135, -130, -125, -120, -115, -110, -105, -100,
@@ -316,12 +336,16 @@ threshold : -80
     Domein : log -> UINT8 = -85 -> 1.0
     Domein : log -> UINT8 = 0 -> 0.0
 
+    scalied map : tensor([  0.,   1.,   3.,   4.,   5.,   8.,  11.,  15.,  21.,  31.,  42.,  60.,
+         85., 121., 170., 241.], device='cuda:0')
+    scalied ratio : 0.9450981020927429
+
 
 ---------------------------------------------------------------
 calib length : 512
-x_hat minmax : 0.0 0.9223
-x_int minmax : 0.0 60445.0
-Percentage of values less than 2^8/2^16 : 68.93 % 
+x_hat minmax : 0.0 0.9408
+x_int minmax : 0.0 61655.0
+Percentage of values less than 2^8/2^16 : 67.98 % 
 scaled x_int minmax : 0.0 65534.0
 log quantized entries : 31
 tensor([-155, -150, -145, -140, -135, -130, -125, -120, -115, -110, -105, -100,
@@ -357,12 +381,16 @@ threshold : -80
     Domein : log -> UINT8 = -85 -> 1.0
     Domein : log -> UINT8 = 0 -> 0.0
 
+    scalied map : tensor([  0.,   1.,   3.,   4.,   5.,   8.,  11.,  14.,  21.,  30.,  42.,  59.,
+         84., 120., 169., 240.], device='cuda:0')
+    scalied ratio : 0.9411765336990356
+
 
 ---------------------------------------------------------------
 calib length : 512
-x_hat minmax : 0.0 0.9458
-x_int minmax : 0.0 61985.0
-Percentage of values less than 2^8/2^16 : 68.11 % 
+x_hat minmax : 0.0 0.9740
+x_int minmax : 0.0 63833.0
+Percentage of values less than 2^8/2^16 : 67.50 % 
 scaled x_int minmax : 0.0 65534.0
 log quantized entries : 31
 tensor([-155, -150, -145, -140, -135, -130, -125, -120, -115, -110, -105, -100,
@@ -398,12 +426,16 @@ threshold : -80
     Domein : log -> UINT8 = -85 -> 1.0
     Domein : log -> UINT8 = 0 -> 0.0
 
+    scalied map : tensor([  0.,   1.,   3.,   4.,   5.,   8.,  11.,  15.,  22.,  31.,  44.,  61.,
+         87., 124., 175., 248.], device='cuda:0')
+    scalied ratio : 0.9725490808486938
+
 
 ---------------------------------------------------------------
 calib length : 512
-x_hat minmax : 0.0 0.9688
-x_int minmax : 0.0 63492.0
-Percentage of values less than 2^8/2^16 : 65.03 % 
+x_hat minmax : 0.0 0.9614
+x_int minmax : 0.0 63008.0
+Percentage of values less than 2^8/2^16 : 63.36 % 
 scaled x_int minmax : 0.0 65534.0
 log quantized entries : 31
 tensor([-155, -150, -145, -140, -135, -130, -125, -120, -115, -110, -105, -100,
@@ -439,12 +471,16 @@ threshold : -80
     Domein : log -> UINT8 = -85 -> 1.0
     Domein : log -> UINT8 = 0 -> 0.0
 
+    scalied map : tensor([  0.,   1.,   3.,   4.,   5.,   8.,  11.,  15.,  22.,  31.,  43.,  61.,
+         86., 123., 172., 245.], device='cuda:0')
+    scalied ratio : 0.960784375667572
+
 
 ---------------------------------------------------------------
 calib length : 512
-x_hat minmax : 0.0 0.9147
-x_int minmax : 0.0 59943.0
-Percentage of values less than 2^8/2^16 : 58.49 % 
+x_hat minmax : 0.0 0.8792
+x_int minmax : 0.0 57616.0
+Percentage of values less than 2^8/2^16 : 56.87 % 
 scaled x_int minmax : 0.0 65534.0
 log quantized entries : 31
 tensor([-155, -150, -145, -140, -135, -130, -125, -120, -115, -110, -105, -100,
@@ -480,12 +516,16 @@ threshold : -80
     Domein : log -> UINT8 = -85 -> 1.0
     Domein : log -> UINT8 = 0 -> 0.0
 
+    scalied map : tensor([  0.,   1.,   2.,   4.,   5.,   7.,  10.,  14.,  20.,  28.,  39.,  55.,
+         79., 112., 158., 224.], device='cuda:0')
+    scalied ratio : 0.8784314393997192
+
 
 ---------------------------------------------------------------
 calib length : 512
-x_hat minmax : 0.0 0.7472
-x_int minmax : 0.0 48971.0
-Percentage of values less than 2^8/2^16 : 53.33 % 
+x_hat minmax : 0.0 0.7976
+x_int minmax : 0.0 52273.0
+Percentage of values less than 2^8/2^16 : 52.21 % 
 scaled x_int minmax : 0.0 65534.0
 log quantized entries : 30
 tensor([-155, -150, -145, -140, -135, -130, -125, -120, -115, -110, -105, -100,
@@ -521,12 +561,16 @@ threshold : -80
     Domein : log -> UINT8 = -85 -> 1.0
     Domein : log -> UINT8 = 0 -> 0.0
 
+    scalied map : tensor([  0.,   1.,   2.,   3.,   4.,   7.,   9.,  12.,  18.,  26.,  36.,  50.,
+         72., 102., 143., 203.], device='cuda:0')
+    scalied ratio : 0.7960785031318665
+
 
 ---------------------------------------------------------------
 calib length : 512
-x_hat minmax : 0.0 0.9553
-x_int minmax : 0.0 62608.0
-Percentage of values less than 2^8/2^16 : 50.91 % 
+x_hat minmax : 0.0 0.9199
+x_int minmax : 0.0 60288.0
+Percentage of values less than 2^8/2^16 : 52.75 % 
 scaled x_int minmax : 0.0 65534.0
 log quantized entries : 31
 tensor([-155, -150, -145, -140, -135, -130, -125, -120, -115, -110, -105, -100,
@@ -562,7 +606,11 @@ threshold : -80
     Domein : log -> UINT8 = -85 -> 1.0
     Domein : log -> UINT8 = 0 -> 0.0
 
+    scalied map : tensor([  0.,   1.,   3.,   4.,   5.,   8.,  10.,  14.,  21.,  30.,  41.,  58.,
+         82., 117., 165., 235.], device='cuda:0')
+    scalied ratio : 0.9215686917304993
 
 
-    Quantized model Evaluation accuracy on 50000 images, 70.924%, 89.716%
-Total time: 902.69 sec
+
+    Quantized model Evaluation accuracy on 50000 images, 71.006%, 89.666%
+Total time: 902.44 sec

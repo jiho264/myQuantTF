@@ -613,7 +613,7 @@ class LogSqrt2Quantizer(nn.Module):
         self.inited = True
         self.base = torch.tensor(2)
         self.int_bias = torch.tensor(1)
-
+        ratio = x_int.max() / 2**self.pre_bits
         count = (x_hat < 2**8 / 2**16).sum()
         print("---------------------------------------------------------------")
         print(f"calib length : {x_hat.shape[0]}")
@@ -679,6 +679,17 @@ class LogSqrt2Quantizer(nn.Module):
                 x_int_log_q_4bit == lognum, self.int8_map[idx], x_int_log_q_4bit
             )
         print()
+
+        # """정의상 원래 스케일대로 하려면 이 식이 맞는데 왜 정확도 삐리한지 진짜 모르겟음."""
+        # self.int8_map = (
+        #     self.int8_map / self.int8_map.max() * org_x_int_max / 65535 * 255
+        # ).round()
+
+        """얘는 규칙없이 그냥 더 펴주는데 정확도 더 높음."""
+        self.int8_map = ((self.int8_map * 2**self.pre_bits) / org_x_int_max).round()
+        print(f"    scalied map : {self.int8_map.unique()}")
+        print(f"    scalied ratio : {self.int8_map.max() / 255}")
+        print()
         print()
         return None
 
@@ -732,9 +743,9 @@ class LogSqrt2Quantizer(nn.Module):
                 )
 
             s_x = s_x * 255
-            x_hat = x_int_log_q_4bit * s_x
+            out = x_int_log_q_4bit * s_x
 
-            return x_hat, s_x
+            return out, s_x
             # FIXME """[test]floor(log2(x)) version"""
             # x_int = round_ste.apply(x_hat / s_x)
 
