@@ -1,0 +1,65 @@
+
+- main_args params:
+    - arch: ViT_B_16
+    - batch_size: 128
+    - num_samples: 1024
+
+- weight params:
+    - scheme: AbsMaxQuantizer
+    - bit_width: 4
+    - per_channel: True
+
+- activation params:
+    - scheme: MovAvgAbsMaxQuantizer
+    - bit_width: 8
+    - idadd_bit_width: 18
+    - per_channel: False
+    - momentum: 0.95
+    - batches: 16
+    - Identity addition : INT16 (The input of each LayerNorm)
+
+- softmax params:
+    - bit_width: 17
+    - left_shift_for_exp: 15
+    - scheme: affine
+    - act_quant_bit_width: 4
+    - Activation of Softmax(Q@K/d_K) (attn_map) : UINT8
+
+- layer_norm params:
+    - using: True
+
+- gelu params:
+    - sigmoid_bit_width: 8
+    - left_shift_for_exp: 23
+    - act_quant_bit_width: 8
+
+IntSoftMax | output bit : 17, exp Lshift : 15
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+IntSoftMax | output bit : 17, exp Lshift : 15
+IntGELU    | sigmoid bit: 8, exp Lshift: 23
+Training model for calibration...
+Activation calibration is done.
+
+
+    Quantized model Evaluation accuracy on 50000 images, 74.680%, 92.020%
+Total time: 496.08 sec

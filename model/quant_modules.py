@@ -535,34 +535,6 @@ class IntSoftMax(nn.Module):
             return F.softmax(input, dim=dim), s_pre
 
 
-def log2_int_10x(x):
-    # UINT16 입력값을 정수형으로 변환
-    x = x.to(torch.int32)
-
-    # x가 0인 경우를 처리하기 위해 결과를 미리 -1로 초기화합니다.
-    log2_int = torch.full_like(x, -1, dtype=torch.int32)
-    # dja = bits_required(x)
-    # print(dja)
-    # 1. log2의 정수 부분 계산
-    temp_x = x.clone()
-    for i in range(15, -1, -1):
-        shift = 1 << i
-        greater_equal = temp_x >= shift
-        log2_int += greater_equal.to(torch.int32)
-        temp_x = temp_x >> greater_equal.to(torch.int32)
-    # print(log2_int)
-    # 2. 소수점 아래 한 자리 계산 (0.1, 0.2, ..., 0.9를 정수로 근사)
-    # 0.1 ~ 0.9에 해당하는 상수 값을 정수로 표현
-    fractional_add = torch.zeros_like(x, dtype=torch.int32)
-
-    # 0.5 추가 (0.1 * 5)
-    temp_x = x - (1 << log2_int)
-    temp_x = temp_x << 1  # temp_x *= 2
-    fractional_add += (temp_x >= (1 << log2_int)).to(torch.int32) * 5
-
-    return log2_int * 10 + fractional_add
-
-
 class LogSqrt2Quantizer(nn.Module):
     def __init__(self, args_any):
         super().__init__()
@@ -589,92 +561,47 @@ class LogSqrt2Quantizer(nn.Module):
 
     def int_log_quant_10x(self, x):
         """int log2 approximation"""
+
+        def log2_int_10x(x):
+            # UINT16 입력값을 정수형으로 변환
+            x = x.to(torch.int32)
+
+            # x가 0인 경우를 처리하기 위해 결과를 미리 -1로 초기화합니다.
+            log2_int = torch.full_like(x, -1, dtype=torch.int32)
+            # dja = bits_required(x)
+            # print(dja)
+            # 1. log2의 정수 부분 계산
+            temp_x = x.clone()
+            for i in range(15, -1, -1):
+                shift = 1 << i
+                greater_equal = temp_x >= shift
+                log2_int += greater_equal.to(torch.int32)
+                temp_x = temp_x >> greater_equal.to(torch.int32)
+            # print(log2_int)
+            # 2. 소수점 아래 한 자리 계산 (0.1, 0.2, ..., 0.9를 정수로 근사)
+            # 0.1 ~ 0.9에 해당하는 상수 값을 정수로 표현
+            fractional_add = torch.zeros_like(x, dtype=torch.int32)
+
+            # 0.5 추가 (0.1 * 5)
+            temp_x = x - (1 << log2_int)
+            temp_x = temp_x << 1  # temp_x *= 2
+            fractional_add += (temp_x >= (1 << log2_int)).to(torch.int32) * 5
+
+            return log2_int * 10 + fractional_add
+
         return -1 * log2_int_10x(x)  # [0, 15.5] * 10
 
-        # """fp int log2"""
-        # x_log2 = (x.log2() * 2).floor() / 2  # [0, 15.5]
-        # # print(x_log2_10x.unique())
-        # return x_log2 * round_ste.apply(2 ** (self.pre_bits - k))
-
     def int_log_dequant_10x(self, y):
-        return self.base ** (-y / 10)
+        y = -y
+        """This OP requires the FP computation"""
+        int_part = y // 10
+        frac_part = y % 10 / 5
 
-    def init_map(self, x_int, x_hat, s_x):
-        if x_hat.requires_grad:
-            raise ValueError("The input tensor must be detached from the graph.")
+        int_num = 2**int_part
+        frac_num = frac_part * 2 ** (int_part - 1)
+        return (int_num + frac_num).floor()
 
-        self.pre_bits = -s_x.log2()
-        self.inited = True
-        self.base = torch.tensor(2)
-        self.int_bias = torch.tensor(1)
-
-        count = (x_hat < 2**8 / 2**16).sum()
-        print("---------------------------------------------------------------")
-        print(f"x_hat minmax : {x_hat.min()} {x_hat.max():.4f}")
-        print(f"x_int minmax : {x_int.min()} {x_int.max()}")
-        print(
-            f"Percentage of values less than 2^8/2^16 : {count / x_hat.numel() * 100:2.2f} % "
-        )
-        # TODO add after indecator for percentage
-
-        # [0] scaling (strach)
-        org_x_int_max = x_int.max()
-        tmp = (x_int * 2**self.pre_bits).round()
-        x_int = (tmp / org_x_int_max).round()
-        print(f"scaled x_int minmax : {x_int.min()} {x_int.max()}")
-
-        # [1] add bias for avoid Inf
-        x_int = (x_int + self.int_bias).round()
-
-        # [2] log quantization in huge domain
-        x_int_log_q = self.int_log_quant_10x(x_int).round()
-        print(f"log quantized entries : {x_int_log_q.unique().numel()}")
-        print(f"{x_int_log_q.unique()}")
-        # [3] log dequantization
-        # print("[3]")
-        x_int_log_dq = self.int_log_dequant_10x(x_int_log_q).round()
-        print(f"log dequantized entries : {x_int_log_dq.unique().numel()}")
-        print(f"{x_int_log_dq.unique()}")
-        # [4] remove bias
-        x_int_log_dq = (x_int_log_dq - self.int_bias).round()
-
-        # [5] most biggest 16 values
-        x_int8_out = (x_int_log_dq / 255).round().clamp(0, 255)
-        assert x_int8_out.unique().numel() <= 16, f"{x_int8_out.unique()}"
-
-        self.int8_map = (
-            x_int8_out.unique().sort(descending=True).values.clone().detach()
-        )
-        print(f"[int8_map] : {self.int8_map.unique().numel()}")
-        print(f"{self.int8_map.unique()}")
-        print()
-
-        """indecation"""
-        """only for first time"""
-        # [3] set 0 the values less than 16th value (threshold)
-        threshold = x_int_log_q.unique()[self.n_levels - 1]  # 16th value
-        print(f"threshold : {threshold }")
-        x_int_log_q_4bit = torch.where(x_int_log_q < threshold, x_int_log_q, 0)
-        assert (
-            x_int_log_q_4bit.unique().numel() <= 16
-        ), f"A Number of Unique values is less than 16."
-
-        # [4] mapping from map
-        unq = x_int_log_q_4bit.unique()
-        for lognum, idx in zip(unq, range(unq.numel())):
-            if idx == self.int8_map.numel():
-                print(
-                    "    [Warning] The number of unique values is more than 16. next mapping iter will bring out of indes error. so force exit of loop."
-                )
-                break
-            print(f"    Domein : log -> UINT8 = {lognum} -> {self.int8_map[idx]}")
-            x_int_log_q_4bit = torch.where(
-                x_int_log_q_4bit == lognum, self.int8_map[idx], x_int_log_q_4bit
-            )
-        print()
-        print()
-        return None
-
+    def asym_quant_dequant(self, x): ...
     def forward(self, x_hat: torch.Tensor, s_x: torch.Tensor):
         if self.do_quant:
             if s_x == 0:
@@ -687,45 +614,68 @@ class LogSqrt2Quantizer(nn.Module):
             x_int = round_ste.apply(x_hat / s_x)
 
             if self.inited == False:
-                self.init_map(x_int, x_hat, s_x)
+                # self.init_map(x_int, x_hat, s_x)
+                self.pre_bits = -s_x.log2()
                 self.inited = True
-
-            # [0] scaling (strach)
-            org_x_int_max = x_int.max()
-            tmp = (x_int * 2**self.pre_bits).round()
-            x_int = (tmp / org_x_int_max).round()
+                self.base = torch.tensor(2)
+                self.int_bias = torch.tensor(1)
+                self.inited = True
 
             # [1] add bias for avoid Inf
             x_int = (x_int + self.int_bias).round()
 
             # [2] log quantization in huge domain
-            x_int_log_q = self.int_log_quant_10x(x_int).round()
+            x_int_log_q = self.int_log_quant_10x(x_int)
+            # print(x_int_log_q.unique().numel(), x_int_log_q.unique())
+            # tensor([-155, -150, -145, -140, -135, -130, -125, -120, -115, -110, -105, -100,
+            #     -95,  -90,  -85,  -80,  -75,  -70,  -65,  -60,  -55,  -50,  -45,  -40,
+            #     -35,  -30,  -25,  -20,  -15,  -10,    0], device='cuda:0',
+            # dtype=torch.int32)
 
-            # [3] set 0 the values less than 16th value (threshold)
-            threshold = x_int_log_q.unique()[self.n_levels - 1]  # 16th value
-            # print(f"threshold : {threshold}")
-            x_int_log_q_4bit = torch.where(x_int_log_q < threshold, x_int_log_q, 0)
-            assert (
-                x_int_log_q_4bit.unique().numel() <= 16
-            ), f"A Number of Unique values is less than 16."
+            # # [3] asymm quant-dequant
+            # s_tmp = (x_int_log_q.max() - x_int_log_q.min()) / (self.n_levels - 1)
+            # zp_tmp = -(x_int_log_q.min() / s_tmp).round()
+            # asme_quant = ((x_int_log_q / s_tmp).round() + zp_tmp).clamp(
+            #     0, self.n_levels - 1
+            # )
+            # asme_dequant = (asme_quant - zp_tmp) * s_tmp
+            # print(asme_dequant.unique().numel(), asme_dequant.unique())
 
-            # [4] mapping from map
-            unq = x_int_log_q_4bit.unique()
-            for lognum, idx in zip(unq, range(unq.numel())):
-                if idx == self.int8_map.numel():
-                    # torch.save(round_ste.apply(x_hat / s_x), "15entries_xint.pt")
-                    print(
-                        "    [Warning] The number of unique values is more than 16. next mapping iter will bring out of indes error. so force exit of loop."
-                    )
-                    break
-                x_int_log_q_4bit = torch.where(
-                    x_int_log_q_4bit == lognum, self.int8_map[idx], x_int_log_q_4bit
-                )
+            # [4]
+            x_int_log_dq = self.int_log_dequant_10x(x_int_log_q)
+            # print(x_int_log_dq.unique().numel(), x_int_log_dq.unique())
+            # 31 tensor([1.0000e+00, 2.0000e+00, 3.0000e+00, 4.0000e+00, 6.0000e+00, 8.0000e+00,
+            #         1.2000e+01, 1.6000e+01, 2.4000e+01, 3.2000e+01, 4.8000e+01, 6.4000e+01,
+            #         9.6000e+01, 1.2800e+02, 1.9200e+02, 2.5600e+02, 3.8400e+02, 5.1200e+02,
+            #         7.6800e+02, 1.0240e+03, 1.5360e+03, 2.0480e+03, 3.0720e+03, 4.0960e+03,
+            #         6.1440e+03, 8.1920e+03, 1.2288e+04, 1.6384e+04, 2.4576e+04, 3.2768e+04,
+            #         4.9152e+04], device='cuda:0')
 
-            s_x = s_x * 255
-            x_hat = x_int_log_q_4bit * s_x
+            x_int_log_dq = x_int_log_dq - self.int_bias
+            # print(x_int_log_dq.unique().numel(), x_int_log_dq.unique())
+            # 31 tensor([0.0000e+00, 1.0000e+00, 2.0000e+00, 3.0000e+00, 5.0000e+00, 7.0000e+00,
+            #         1.1000e+01, 1.5000e+01, 2.3000e+01, 3.1000e+01, 4.7000e+01, 6.3000e+01,
+            #         9.5000e+01, 1.2700e+02, 1.9100e+02, 2.5500e+02, 3.8300e+02, 5.1100e+02,
+            #         7.6700e+02, 1.0230e+03, 1.5350e+03, 2.0470e+03, 3.0710e+03, 4.0950e+03,
+            #         6.1430e+03, 8.1910e+03, 1.2287e+04, 1.6383e+04, 2.4575e+04, 3.2767e+04,
+            #         4.9151e+04], device='cuda:0')
 
+            # [5] [0, 255]
+            x_int_log_dq = x_int_log_dq // 255
+            out = x_int_log_dq.clamp(0, 255)
+            assert out.min() >= 0
+            assert out.max() <= 255
+            assert out.unique().numel() <= self.n_levels
+            # print(out.unique().numel(), out.unique())
+            # 16 tensor([  0.,   1.,   2.,   3.,   4.,   6.,   8.,  12.,  16.,  24.,  32.,  48.,
+            #     64.,  96., 128., 192.], device='cuda:0')
+            # print()
+            # print()
+            out = out * 255
+
+            x_hat = out * s_x
             return x_hat, s_x
+
         else:
             return x_hat, s_x
 

@@ -40,8 +40,10 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     args_softmax = {
         "bit_width": 17,  # UINT16 of softmax output
         "left_shift_for_exp": 15,
-        "act_quant_bit_width": 4,  # LogSqrt2Quantizer
-        # "act_quant_bit_width": 8,  # QuantAct
+        # "act_quant_bit_width": 4,  # LogSqrt2Quantizer
+        "scheme": "log2",
+        # "scheme": "affine",
+        "act_quant_bit_width": 4,  # QuantAct
     }  # I-ViT default
     # # bit width : softmax의 out이 0~1인데, 이 값을 몇 비트에 펼쳐서 반환할 것인지 결정하는 숫자
 
@@ -81,25 +83,12 @@ def main(args_main={}, args_w={}, args_a={}, args_softmax={}, args_ln={}, args_g
     _batch_size = args_main["batch_size"]
     train_loader, test_loader = GetDataset(batch_size=_batch_size)
 
-    """[1] 구현 상, act calib이후에 log init할거라 잠시 그냥 pass"""
-    for name, module in model.named_modules():
-        if isinstance(module, LogSqrt2Quantizer):
-            module.do_quant = False
-
     """[2] 여기 지우고 돌리면 dynamic act quantization """
     if args_a != {}:
         """calibration for activation"""
         print("Training model for calibration...")
         _, _ = evaluate(model, test_loader, calib_len, "cuda")
         print("Activation calibration is done.\n")
-    torch.cuda.empty_cache()
-
-    """[1-2]구현 상, act calib이후에 log init할거라 잠시 그냥 pass"""
-    for name, module in model.named_modules():
-        if isinstance(module, LogSqrt2Quantizer):
-            module.do_quant = True
-    cali_data = get_train_samples(train_loader, 512)
-    _ = model(cali_data.to("cuda"))
     torch.cuda.empty_cache()
 
     """[3] AdaRound"""
